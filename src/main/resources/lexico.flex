@@ -115,7 +115,7 @@ Identifier = \p{L}[\p{L}\p{N}_]*
 
   /* operadores */
     ":="                 { return token("EQ",   yytext()); }
-    "=.="                 { return token("EQEQ", yytext()); }
+    "=="                 { return token("EQEQ", yytext()); }
     "+"                  { return token("PLUS", yytext()); }
     "-"                  { return token("MINUS", yytext()); }
     "*"                  { return token("MULT", yytext()); }
