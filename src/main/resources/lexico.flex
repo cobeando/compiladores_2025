@@ -43,12 +43,16 @@ import java.util.ArrayList;
 LineTerminator = \r|\n|\r\n
 WhiteSpace     = {LineTerminator} | [ \t\f]
 
-DecDuplaLiteral    = \(\s*\d+\.\d*\s*,\s*\d+\.?\d*\s*\)
 DecFloatLiteral   = ([0-9]+\.[0-9]*)|([0-9]*\.[0-9]+)
-DecIntegerLiteral = 0 | [1-9][0-9]* //todo arreglar 0123 toma 2 token 0 y 123  ej: 0$| [1-9][0-9]*
-ComentarioTerminallinea = \#.*{LineTerminator}?
+DecIntegerLiteral =  [0-9]+ 
+DecArrayFloat     = \[-?(([0-9]+\.[0-9]*)|([0-9]*\.[0-9]+))(,-?(([0-9]+\.[0-9]*)|([0-9]*\.[0-9]+)))*\]
+ComentarioTerminallinea = \$.*{LineTerminator}?
 OpenComment = \(\*
 CloseComment = \*\)
+OpenCommentBrackets = \[\*
+CloseCommentBrackets = \*\]
+OpenCommentCurlyBracket = \{\*
+CloseCommentCurlyBracket = \*\}
 
 Identifier = \p{L}[\p{L}\p{N}_]*
 
@@ -67,11 +71,13 @@ Identifier = \p{L}[\p{L}\p{N}_]*
   /* palabras reservadas */
   /*TODO Todos los tokens incorporan lexemas, aún cuando no es necesario,
     TODO como en el caso de palabras reservadas y operadores.*/
+
+    
   "BOOLEAN"            { return token("BOOLEAN", yytext());}
   "FALSE"              { return token("FALSE", yytext());}
   "TRUE"               { return token("TRUE", yytext());}
   "INT"                { return token("INTEGER", yytext());}
-  "DUPLE"              { return token("DUPLE", yytext());}
+  "FLOAT_ARRAY"        { return token("FLOAT_ARRAY", yytext());}
   "FLOAT"              { return token("FLOAT", yytext());}
   "STRING"             { return token("STRING");}
 
@@ -79,35 +85,41 @@ Identifier = \p{L}[\p{L}\p{N}_]*
   "OR"                 { return token("OR", yytext()); }
   "NOT"                { return token("NOT", yytext()); }
 
-  "REPEAT"             { return token("REPEAT", yytext()); }
-  "UNTIL"              { return token("UNTIL", yytext()); }
+  "LOOP"               { return token("LOOP", yytext()); }
+  "WHEN"               { return token("WHEN", yytext()); }
+  "BACKWARD_LOOP"      { return token("BACKWARD_LOOP", yytext()); }
+  "END_LOOP"           { return token("END_LOOP", yytext()); }
   "CONTINUE"           { return token("CONTINUE", yytext()); }
   "BREAK"              { return token("BREAK", yytext()); }
 
+
+  "CONDITION"          { return token("CONDITION", yytext()); }
+  "BACKWARD_CONDITION" { return token("BACKWARD_CONDITION", yytext()); }
   "THEN"               { return token("THEN", yytext()); }
-  "UNLESS"             { return token("UNLESS", yytext()); }
   "END"                { return token("END", yytext()); }
   "ELSE"               { return token("ELSE", yytext()); }
-  "SHOW"               { return token("SHOW", yytext()); }
+  "ELSE_BACKWARD"      { return token("ELSE_BACKWARD", yytext()); }
+  "DISPLAY"            { return token("DISPLAY", yytext()); }
+
+  "any"                { return token("ANY", yytext()); }
+  "all"                { return token("ALL", yytext()); }
 
   "INPUT_INT"          { return token("INPUT_INT", yytext()); }
   "INPUT_FLOAT"        { return token("INPUT_FLOAT", yytext()); }
   "INPUT_BOOL"         { return token("INPUT_BOOL", yytext()); }
-  "INPUT_DUPLE"        { return token("INPUT_DUPLE", yytext()); }
+  "INPUT_ARRAY"        { return token("INPUT_ARRAY", yytext()); }
 
   "DECLARE.SECTION"   { return token("DECLARE_SECTION"); }
   "ENDDECLARE.SECTION" { return token("ENDDECLARE_SECTION", yytext()); }
 
   "PROGRAM.SECTION"         { return token("PROGRAM_SECTION", yytext()); }
   "ENDPROGRAM.SECTION"      { return token("ENDPROGRAM_SECTION", yytext()); }
+  "valor_mas_cercano"       { return token("valor_mas_cercano", yytext()); }
 
-
-  "promr"              { return token("PROMR", yytext()); }
-  "PROMR"              { return token("PROMR", yytext()); }
 
   /* literales */
 
-  {DecDuplaLiteral}    { return token("DUPLA_LITERAL", yytext()); }
+  {DecArrayFloat}      { return token("DUPLA_LITERAL", yytext()); }
   {DecIntegerLiteral}  { return token("INTEGER_LITERAL", yytext()); }
   {DecFloatLiteral}    { return token("FLOAT_LITERAL", yytext()); }
 
@@ -173,16 +185,42 @@ Identifier = \p{L}[\p{L}\p{N}_]*
   [^]                  { string.append(yytext()); }
 }
 
+
+
 <COMENTARIO> {
 
-   // Incrementar contador de comentarios al encontrar "(*"
-    {OpenComment}                { comment_count = comment_count + 1; }
+    {CloseComment}                  { comment_count = comment_count - 1
+                                      if (comment_count == 0){
+                                        yybegin(YYINITIAL)
+                                      } yybegin(COMENTARIOCURLYBRACKET)
+                                    ;}
 
-    // Decrementar contador de comentarios al encontrar "*)"
-    {CloseComment}           { comment_count = comment_count - 1;
-                            if(comment_count == 0) {
-                                  yybegin(YYINITIAL);
-                            }}
+    {OpenCommentBrackets}           {yybegin(COMENTARIOBRACKETS);}
+                                  
+  /* Fin de archivo */
+  <<EOF>>              { throw new ar.edu.unnoba.comp.compilertp.exceptions.EOFLexerException("Comentario sin balancear: "+ yytext()); }
+
+   [^.]|.          { /* ignore */ }
+}
+
+<COMENTARIOBRACKETS> {
+
+    {CloseCommentBrackets}           {yybegin(COMENTARIO);}
+
+    {OpenCommentCurlyBracket}        {yybegin(COMENTARIOCURLYBRACKET);}
+
+  /* Fin de archivo */
+  <<EOF>>              { throw new ar.edu.unnoba.comp.compilertp.exceptions.EOFLexerException("Comentario sin balancear: "+ yytext()); }
+
+   [^.]|.          { /* ignore */ }
+}
+
+<COMENTARIOCURLYBRACKET> {
+
+    {CloseCommentCurlyBracket}       {yybegin(COMENTARIOBRACKETS);}
+
+    {OpenComment}                    {comment_count = comment_count + 1   
+                                      yybegin(COMENTARIO);}
 
   /* Fin de archivo */
   <<EOF>>              { throw new ar.edu.unnoba.comp.compilertp.exceptions.EOFLexerException("Comentario sin balancear: "+ yytext()); }
