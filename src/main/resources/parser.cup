@@ -49,8 +49,27 @@ terminal DECLARE_SECTION, ENDDECLARE_SECTION, VALOR_MAS_CERCANO;
 
 //Operaciones
 
-terminal IGUAL, EQUIVALE, MAS, MENOR_IGUAL_QUE, MULT, DIV;
+terminal IGUAL, EQUIVALE, MAS, MENOS, MENOR_IGUAL_QUE, MULT, DIV, MENOS_UNARIO;
 terminal MENOR_QUE, MAS, MAYOR_IGUAL_QUE, MENOR_IGUAL_QUE, DIFERENTE;
 terminal ABRE_PARENTESIS, CIERRA_PARENTESIS, ABRE_CORCHETE, CIERRA_CORCHETE, PUNTO, PUNTO_COMA, COMA, DOS_PUNTOS;
 
-nonterminal 
+nonterminal CompareCondition  comparacion;
+nonterminal Factor termino, factor;
+nonterminal BooleanCondition constante_bool;
+nonterminal Expression expresion_logica;
+nonterminal Expression expresion_simple, expresion;
+nonterminal Input inputs;
+nonterminal String numberList, ID_list,  literalNumber, data_type;
+nonterminal Program program;
+nonterminal StatementList program_lines, declarations, declaration_section, program_section;
+nonterminal DeclareStatement declaration;
+nonterminal RepeatStatement sentenciaRepeat;
+nonterminal Statement program_line, sentencia_de_seleccion, asignacion, sentenciaShow;
+
+precedence left MAS, MENOS;
+precedence left MULT, DIV;
+precedence left MENOS_UNARIO;
+precedence left AND;
+precedence right NOT;
+
+start with program;
