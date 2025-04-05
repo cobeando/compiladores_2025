@@ -76,10 +76,10 @@ Identifier = \p{L}[\p{L}\p{N}_]*
   "BOOLEAN"            { return token("BOOLEAN", yytext());}
   "FALSE"              { return token("FALSE", yytext());}
   "TRUE"               { return token("TRUE", yytext());}
-  "INT"                { return token("INTEGER", yytext());}
-  "FLOAT_ARRAY"        { return token("FLOAT_ARRAY", yytext());}
-  "FLOAT"              { return token("FLOAT", yytext());}
-  "STRING"             { return token("STRING");}
+  "INT"                { return token("ENTERO", yytext());}
+  "FLOAT_ARRAY"        { return token("ARREGLO_FLOTANTE", yytext());}
+  "FLOAT"              { return token("FLOTANTE", yytext());}
+  "STRING"             { return token("CADENA");}
 
   "AND"                { return token("AND", yytext()); }
   "OR"                 { return token("OR", yytext()); }
@@ -114,7 +114,7 @@ Identifier = \p{L}[\p{L}\p{N}_]*
 
   "PROGRAM.SECTION"         { return token("PROGRAM_SECTION", yytext()); }
   "ENDPROGRAM.SECTION"      { return token("ENDPROGRAM_SECTION", yytext()); }
-  "valor_mas_cercano"       { return token("valor_mas_cercano", yytext()); }
+  "valor_mas_cercano"       { return token("VALOR_MAS_CERCANO", yytext()); }
 
 
   /* literales */
@@ -126,22 +126,22 @@ Identifier = \p{L}[\p{L}\p{N}_]*
   {Identifier}         { return token("ID", yytext()); }
 
   /* operadores */
-    ":="                 { return token("EQ",   yytext()); }
-    "=="                 { return token("EQEQ", yytext()); }
-    "+"                  { return token("PLUS", yytext()); }
-    "-"                  { return token("MINUS", yytext()); }
+    ":="                 { return token("IGUAL",   yytext()); }
+    "=="                 { return token("EQUIVALE", yytext()); }
+    "+"                  { return token("MAS", yytext()); }
+    "-"                  { return token("MENOS", yytext()); }
     "*"                  { return token("MULT", yytext()); }
     "\/"                 { return token("DIV", yytext()); }
-    "<"                  { return token("LESS", yytext()); }
-    ">"                  { return token("GREATER", yytext()); }
-    ">="                 { return token("GEQ", yytext()); }
-    "<="                 { return token("LEQ", yytext()); }
-    "!="                 { return token("DIFFERENT", yytext()); }
-    "\("                 { return token("OPPARENT", yytext()); }
-    "\)"                 { return token("CLPARENT", yytext()); }
-    "\["                 { return token("OPBRACKETS", yytext()); }
-    "\]"                 { return token("CLBRACKETS", yytext()); }
-    "."                  { return token("DOT");}
+    "<"                  { return token("MENOR_QUE", yytext()); }
+    ">"                  { return token("MAYOR_QUE", yytext()); }
+    ">="                 { return token("MAYOR_IGUAL_QUE", yytext()); }
+    "<="                 { return token("MENOR_IGUAL_QUE", yytext()); }
+    "!="                 { return token("DIFERENTE", yytext()); }
+    "\("                 { return token("ABRE_PARENTESIS", yytext()); }
+    "\)"                 { return token("CIERRA_PARENTESIS", yytext()); }
+    "\["                 { return token("ABRE_CORCHETE", yytext()); }
+    "\]"                 { return token("CIERRA_CORCHETE", yytext()); }
+    "."                  { return token("PUNTO");}
     ";"                  { return token("PUNTO_COMA", yytext()); }
     ","                  { return token("COMA", yytext()); }
     ":"                  { return token("DOS_PUNTOS", yytext()); }

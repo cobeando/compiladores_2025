@@ -1,0 +1,56 @@
+package ar.edu.unnoba.comp.compilertp;
+
+import java_cup.runtime.*;
+import java.io.FileReader;
+import java.util.Hashtable;
+
+class MiParser;
+
+action code {:
+    Hashtable table = new Hashtable();
+:};
+
+/* TODO: revisar si es útil para nuestro caso. Es el ejemplo del profe.*/
+
+parser code
+{:
+    public void syntax_error(Symbol s){
+        System.out.println("Error en la linea "+ (s.left+1)+ " Columna "+ s.right+ ". Valor simbolo '"
+        +s.value+"' . Simbolo n° "+s.sym+ " no reconocido." );
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+        System.out.println("Error en la linea "+ (s.left+1)+ " Columna "+ s.right+ ". Valor simbolo '"
+        +s.value+"' . Simbolo n° "+s.sym+ " no reconocido." );
+    }
+
+:};
+
+    /* Definición de Simbolos */
+
+terminal ArrayList FLOAT_ARRAY;
+
+terminal String BOOLEAN, FALSE, TRUE, CADENA, ENTERO_LITERAL, FLOTANTE_LITERAL, CADENA_LITERAL, DUPLA_LITERAL, IDENTIFICADOR;
+
+//Objects
+terminal ENTERO, FLOTANTE;
+
+terminal AND, OR, NOT;
+
+terminal LOOP, WHEN, BACKWARD_LOOP, END_LOOP, CONTINUE, BREAK;
+
+terminal CONDITION, BACKWARD_CONDITION, THEN, END, ELSE, ELSE_BACKWARD, DISPLAY;
+
+terminal ANY, ALL;
+
+terminal INPUT_INT, INPUT_FLOAT, INPUT_BOOL, INPUT_ARRAY;
+
+terminal DECLARE_SECTION, ENDDECLARE_SECTION, VALOR_MAS_CERCANO;
+
+//Operaciones
+
+terminal IGUAL, EQUIVALE, MAS, MENOR_IGUAL_QUE, MULT, DIV;
+terminal MENOR_QUE, MAS, MAYOR_IGUAL_QUE, MENOR_IGUAL_QUE, DIFERENTE;
+terminal ABRE_PARENTESIS, CIERRA_PARENTESIS, ABRE_CORCHETE, CIERRA_CORCHETE, PUNTO, PUNTO_COMA, COMA, DOS_PUNTOS;
+
+nonterminal 

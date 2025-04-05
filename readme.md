@@ -1,6 +1,6 @@
 # Compiladores Trabajo Practico
 
-Grupo 4 Alejo Fidalgo y Matias Aguero.
+Grupo 5: Martin Barbero Luis, Facundo Benavidez, Agus Campagna, Alejo Fidalgo, Tiago Roldan
 
 ## Descripción
 
