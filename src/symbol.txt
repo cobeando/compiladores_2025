@@ -1,0 +1,11 @@
+Tabla de simbolos: 
+Name: float_chico, Type: FLOAT, Token: ID
+Name: mensaje_error_menor, Type: STRING, Token: ID
+Name: menor_edad, Type: INTEGER, Token: ID
+Name: dupla_1, Type: DUPLE, Token: ID
+Name:  float_grande, Type: FLOAT, Token: ID
+Name: lista_familia, Type: LIST, Token: ID
+Name:  mayor_edad, Type: INTEGER, Token: ID
+Name:  edad_ingresada, Type: INTEGER, Token: ID
+Name:  mensaje_error_mayor, Type: STRING, Token: ID
+Name:  dupla_2, Type: DUPLE, Token: ID

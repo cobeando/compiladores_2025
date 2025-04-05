@@ -1,0 +1,53 @@
+DECLARE.SECTION
+    INT: menor_edad, mayor_edad, edad_ingresada
+    FLOAT: float_chico, float_grande
+    STRING: mensaje_error_menor, mensaje_error_mayor
+    DUPLE: dupla_1, dupla_2
+ENDDECLARE.SECTION
+
+PROGRAM.SECTION
+    menor_edad := 18
+    mayor_edad := 65
+
+    menor_edad := 45 + 43
+    float_grande := 2003/34*23+3.5
+    dupla_1 := (3.,4.)
+
+
+
+    SHOW( "Ingrese las edades de su familia (-1 para terminar)" )
+    REPEAT
+        edad_ingresada := INPUT_INT()
+        UNLESS( edad_ingresada < menor_edad)
+            THEN
+                UNLESS (edad_ingresada > mayor_edad)
+                    THEN
+                        SHOW("test")
+                    ELSE
+                        SHOW(mensaje_error_mayor)
+                END
+            ELSE
+                SHOW(mensaje_error_menor)
+        END
+    UNTIL ( edad_ingresada == -1 )
+
+    REPEAT
+            float_chico := INPUT_FLOAT()
+            UNLESS( float_chico < float_grande)
+                THEN
+                    CONTINUE
+                ELSE
+                    BREAK
+            END
+            SHOW("Codigo Inalcanzable")
+    UNTIL ( FALSE )
+
+    UNLESS ( (34 > 45) AND (89 == 89) OR TRUE)
+        THEN
+            edad_ingresada := 1 * 5 / 10 + 3 - 5 * 10.0
+        ELSE
+            edad_ingresada := 1 + 6 * 15 / 6 + (3-2) * 4
+        END
+
+    SHOW(PROMR(mayor_edad;<=;[80,62,30]))
+ENDPROGRAM.SECTION

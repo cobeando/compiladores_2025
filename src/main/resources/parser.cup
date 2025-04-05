@@ -1,0 +1,490 @@
+package ar.edu.unnoba.comp.compilertp;
+
+import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.io.FileReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.Hashtable;
+import java.lang.StringBuilder;
+import ar.edu.unnoba.comp.compilertp.utils.SymbolTable;
+import ar.edu.unnoba.comp.compilertp.ast.*;
+import ar.edu.unnoba.comp.compilertp.ast.condition.*;
+import ar.edu.unnoba.comp.compilertp.ast.expression.*;
+import ar.edu.unnoba.comp.compilertp.ast.operation.*;
+import ar.edu.unnoba.comp.compilertp.ast.statement.*;
+import ar.edu.unnoba.comp.compilertp.ast.factor.*;
+
+class MiParser;
+
+action code {:
+    SymbolTable symbolTable = new SymbolTable();
+    StringBuilder stringBuilder = new StringBuilder();
+
+    public String getParseInfo(){
+        return stringBuilder.toString();
+    }
+
+    public void addInfo(String str){
+        stringBuilder.append(str).append("\n");
+    }
+
+    public void addInfo(String str, Object a){
+        String formatted= String.format(str,a);
+        stringBuilder.append(formatted).append("\n");
+    }
+
+    public void addInfo(String str, Object a, Object b){
+        String formatted= String.format(str,a,b);
+        stringBuilder.append(formatted).append("\n");
+    }
+
+    public void addInfo(String str, Object a, Object b, Object c){
+            String formatted= String.format(str,a,b,c);
+            stringBuilder.append(formatted).append("\n");
+    }
+
+    public void registerSymbol(String token, String nombre, String tipo) throws RuntimeException{
+        symbolTable.addSymbol(nombre.trim(),tipo,token);
+    }
+
+    public void checkSymbol(String nombre) throws RuntimeException{
+        symbolTable.isRegistered(nombre);
+    }
+
+:};
+
+parser code
+{:
+    public void syntax_error(Symbol s){
+        throw new RuntimeException("Error en la linea "+ (s.left+1)+ " Columna "+ s.right+ ". Valor simbolo '"
+        +s.value+"' . Simbolo n° "+s.sym+ " no reconocido." );
+    }
+
+    public void unrecovered_syntax_error(Symbol s) throws java.lang.Exception{
+        throw new RuntimeException("Error en la linea "+ (s.left+1)+ " Columna "+ s.right+ ". Valor simbolo '"
+        +s.value+"' . Simbolo n° "+s.sym+ " no reconocido." );
+    }
+
+
+
+:};
+
+
+terminal PLUS, EQ, EQEQ, MULT, DIV, MINUS, MENOS_UNARIO;
+terminal String ID, DUPLA_LITERAL, INTEGER_LITERAL, FLOAT_LITERAL, STRING_LITERAL;
+terminal boolean FALSE, TRUE;
+terminal AND, OR, NOT, REPEAT, UNTIL, CONTINUE;
+terminal BOOLEAN, INTEGER, DUPLE, FLOAT, STRING;
+terminal BREAK, THEN, UNLESS, END, ELSE, SHOW;
+terminal INPUT_INT, INPUT_FLOAT, INPUT_BOOL, INPUT_DUPLE;
+terminal DECLARE_SECTION, ENDDECLARE_SECTION, PROGRAM_SECTION, ENDPROGRAM_SECTION;
+terminal PROMR;
+terminal GREATER, LESS, GEQ, LEQ, DIFFERENT;
+terminal OPPARENT, CLPARENT, OPBRACKETS, CLBRACKETS, PUNTO_COMA, COMA, DOS_PUNTOS;
+
+
+nonterminal Promr promedio;
+nonterminal CompareCondition  comparacion;
+nonterminal Factor termino, factor;
+nonterminal BooleanCondition constante_bool;
+nonterminal Expression expresion_logica;
+nonterminal Expression expresion_simple, expresion;
+nonterminal Input inputs;
+nonterminal String numberList, ID_list,  literalNumber, data_type;
+nonterminal Program program;
+nonterminal StatementList program_lines, declarations, declaration_section, program_section;
+nonterminal DeclareStatement declaration;
+nonterminal RepeatStatement sentenciaRepeat;
+nonterminal Statement program_line, sentencia_de_seleccion, asignacion, sentenciaShow;
+
+precedence left AND;
+precedence right NOT;
+
+start with program;
+
+program ::= declaration_section:e1 program_section:e2 {:
+            addInfo("REGLA 0.1: program -> declaration_section program_section");
+            addInfo("REGLA 0.1: program -> %s\n%s", e1, e2);
+            RESULT=new Program(e1,e2);
+            :}
+            | program_section:e {:
+            addInfo("REGLA 0.2: program -> program_section");
+            RESULT = new Program(e);
+:};
+
+declaration_section ::= DECLARE_SECTION declarations:f ENDDECLARE_SECTION{:
+    addInfo("REGLA 1.1: declaration_section -> DECLARE_SECTION declarations ENDDECLARE_SECTION");
+    addInfo("REGLA 1.1: declaration_section -> DECLARE_SECTION\n\t %s\n ENDDECLARE_SECTION", f);
+
+    RESULT = f;
+:};
+
+declarations ::= declaration:e{:
+    addInfo("REGLA 3.1: declarations -> \n\tdeclaration");
+    addInfo("REGLA 3.1: declarations -> \n\t%s",e);
+    RESULT = new StatementList(e);
+:}
+|  declarations:d declaration:e{:
+    addInfo("REGLA 3.2: declarations -> declaration declarations");
+    addInfo("REGLA 3.2: declarations -> %s\n\t%s", d, e);
+    RESULT = d.addStatementToList(e);
+:};
+
+declaration ::= data_type:type DOS_PUNTOS ID_list:list {:
+    for (String name : list.split(",")) {
+        registerSymbol("ID", name, type);
+    }
+    addInfo("REGLA 10.1: declaration -> data_type DOS_PUNTOS ID_list ");
+    addInfo("REGLA 10.1: declaration -> %s: %s", type, list);
+    RESULT = new DeclareStatement(type, list);
+:};
+
+data_type ::= INTEGER:e{:
+    addInfo("REGLA 11.1: data_type -> INTEGER");
+    RESULT = "INTEGER";
+:}
+| FLOAT:e{:
+    addInfo("REGLA 11.2: data_type -> FLOAT");
+    RESULT = "FLOAT";
+:}
+| BOOLEAN:e{:
+    addInfo("REGLA 11.3: data_type -> BOOLEAN");
+    RESULT = "BOOLEAN";
+:}
+| STRING:e{:
+    addInfo("REGLA 11.4: data_type -> STRING");
+    RESULT = "STRING";
+:}
+| DUPLE:e{:
+    addInfo("REGLA 11.5: data_type -> DUPLE");
+    RESULT = "DUPLE";
+:};
+
+ID_list ::= ID:id {:
+    addInfo("REGLA 12.1: ID_list -> ID");
+    addInfo("REGLA 12.1: ID_list -> %s",id);
+    RESULT = id;
+:}
+| ID:id COMA ID_list:list {:
+    addInfo("REGLA 12.2: ID_list -> ID COMA ID_list");
+    addInfo("REGLA 12.2: ID_list -> %s, %s", id, list);
+    RESULT = id + ", " + list;
+:};
+
+promedio ::= PROMR OPPARENT ID:id PUNTO_COMA EQEQ PUNTO_COMA OPBRACKETS numberList:l CLBRACKETS CLPARENT{:
+            addInfo("REGLA 6.1: promedio -> PROMR OPPARENT ID PUNTO_COMA EQEQ PUNTO_COMA OPBRACKETS list CLBRACKETS CLPARENT ");
+            addInfo("REGLA 6.1: promedio -> promr( %s ; == ; [ %s ])", id, l);
+            RESULT = new Promr(id,"==",l);
+            :}
+            |PROMR OPPARENT ID:id PUNTO_COMA DIFFERENT PUNTO_COMA OPBRACKETS numberList:l CLBRACKETS CLPARENT{:
+            addInfo("REGLA 6.2: promedio -> PROMR OPPARENT ID PUNTO_COMA DIFFERENT PUNTO_COMA OPBRACKETS list CLBRACKETS CLPARENT ");
+            addInfo("REGLA 6.2: promedio -> promr( %s ; != ; [ %s ])", id, l);
+            RESULT = new Promr(id,"!=",l);
+            :}
+            |PROMR OPPARENT ID:id PUNTO_COMA LESS PUNTO_COMA OPBRACKETS numberList:l CLBRACKETS CLPARENT{:
+            addInfo("REGLA 6.3: promedio -> PROMR OPPARENT ID PUNTO_COMA LESS PUNTO_COMA OPBRACKETS list CLBRACKETS CLPARENT ");
+            addInfo("REGLA 6.3: promedio -> promr( %s ; < ; [ %s ])", id, l);
+            RESULT = new Promr(id,"<",l);
+            :}
+            |PROMR OPPARENT ID:id PUNTO_COMA GREATER PUNTO_COMA OPBRACKETS numberList:l CLBRACKETS CLPARENT{:
+            addInfo("REGLA 6.4: promedio -> PROMR OPPARENT ID PUNTO_COMA GREATER PUNTO_COMA OPBRACKETS list CLBRACKETS CLPARENT ");
+            addInfo("REGLA 6.4: promedio -> promr( %s ; > ; [ %s ])", id, l);
+            RESULT = new Promr(id,">",l);
+            :}
+            |PROMR OPPARENT ID:id PUNTO_COMA LEQ PUNTO_COMA OPBRACKETS numberList:l CLBRACKETS CLPARENT{:
+            addInfo("REGLA 6.5: promedio -> PROMR OPPARENT ID PUNTO_COMA LEQ PUNTO_COMA OPBRACKETS list CLBRACKETS CLPARENT ");
+            addInfo("REGLA 6.5: promedio -> promr( %s ; <= ; [ %s ])", id, l);
+            RESULT = new Promr(id,"<=",l);
+            :}
+            |PROMR OPPARENT ID:id PUNTO_COMA GEQ PUNTO_COMA OPBRACKETS numberList:l CLBRACKETS CLPARENT{:
+            addInfo("REGLA 6.6: promedio -> PROMR OPPARENT ID PUNTO_COMA GEQ PUNTO_COMA OPBRACKETS list CLBRACKETS CLPARENT ");
+            addInfo("REGLA 6.6: promedio -> promr( %s ; >= ; [ %s ])", id, l);
+        RESULT = new Promr(id,">=",l);
+            :};
+
+numberList  ::= numberList:l COMA literalNumber:intg {:
+            addInfo("REGLA 13.1: numberList -> list COMA INTEGER_LITERAL ");
+            addInfo("REGLA 13.1: numberList -> %s , %s" ,l ,intg);
+            RESULT = l + "," + intg;
+            :}
+           | literalNumber:intg{:
+             addInfo("REGLA 13.2: numberList -> INTEGER_LITERAL");
+             addInfo("REGLA 13.2: numberList -> %s",intg);
+             RESULT = intg;
+             :};
+
+
+
+asignacion ::= ID:id EQ expresion_logica:explog {:
+            checkSymbol(id);
+            addInfo("REGLA 14.1: asignacion -> ID EQ expresion_logica ");
+            addInfo("REGLA 14.1: asignacion -> %s := %s", id, explog);
+            RESULT = new AssignStatement(id, explog);
+            :};
+
+
+expresion_logica ::= NOT expresion_logica:explog {:
+            addInfo("REGLA 15.1: expresion_logica -> NOT expresion_logica");
+            addInfo("REGLA 15.1: expresion_logica -> not %s", explog);
+            RESULT = new NotExpression(explog);
+            :}
+            |expresion_logica:explog OR expresion_simple:expand  {:
+            addInfo("REGLA 15.2: expresion_logica -> expresion_logica OR expresion_simple ");
+            addInfo("REGLA 15.2: expresion_logica -> %s or %s", explog, expand);
+            RESULT = new LogicExpression(explog, expand, "OR");
+            :}
+            |expresion_logica:expand AND expresion_simple:expsin {:
+            addInfo("REGLA 15.3: expresion_logica -> expresion_logica AND expresion_simple ");
+            addInfo("REGLA 15.3: expresion_logica -> %s and %s", expand, expsin);
+            RESULT = new LogicExpression(expand, expsin, "AND");
+            :}
+            |expresion_simple:expsin {:
+            addInfo("REGLA 15.4: expresion_logica -> expresion_simple ");
+            addInfo("REGLA 15.4: expresion_logica -> %s", expsin);
+            RESULT = expsin ;
+            :};
+
+
+expresion_simple ::= comparacion:cond {:
+            addInfo("REGLA 16.1: expresion_simple -> condition ");
+            RESULT = cond;
+            :}
+            |expresion:e {:
+            addInfo("REGLA 16.2: expresion_simple -> expresion ");
+            addInfo("REGLA 16.2: expresion_simple -> %s", e);
+            RESULT = e;
+            :};
+
+
+comparacion ::= expresion:e1 EQEQ expresion:e2 {:
+            addInfo("REGLA 17.1: comparacion -> expresion EQEQ expresion");
+            addInfo("REGLA 17.1: comparacion -> %s == %s", e1, e2);
+            RESULT = new CompareCondition(e1,"==",e2);
+            :}
+            |expresion:e1 DIFFERENT expresion:e2 {:
+            addInfo("REGLA 17.2: comparacion -> expresion DIFFERENT expresion");
+            addInfo("REGLA 17.2: comparacion -> %s != %s", e1, e2);
+            RESULT = new CompareCondition(e1,"!=",e2);
+            :}
+            |expresion:e1 LESS expresion:e2 {:
+            addInfo("REGLA 17.3: comparacion -> expresion LESS expresion");
+            addInfo("REGLA 17.3: comparacion -> %s < %s", e1, e2);
+            RESULT = new CompareCondition(e1,"<",e2);
+            :}
+            |expresion:e1 GREATER expresion:e2 {:
+            addInfo("REGLA 17.4: comparacion -> expresion GREATER expresion");
+            addInfo("REGLA 17.4: comparacion -> %s > %s", e1, e2);
+            RESULT = new CompareCondition(e1,">",e2);
+            :}
+            |expresion:e1 LEQ expresion:e2 {:
+            addInfo("REGLA 17.5: comparacion -> expresion LEQ expresion");
+            addInfo("REGLA 17.5: comparacion -> %s <= %s", e1, e2);
+            RESULT = new CompareCondition(e1,"<=",e2);
+            :}
+            |expresion:e1 GEQ expresion:e2 {:
+            addInfo("REGLA 17.6: comparacion -> expresion GEQ expresion");
+            addInfo("REGLA 17.6: comparacion -> %s >= %s", e1, e2);
+            RESULT = new CompareCondition(e1,">=",e2);
+            :};
+
+
+expresion ::= expresion:e PLUS termino:t {:
+            addInfo("REGLA 18.1: expresion -> expresion PLUS termino");
+            addInfo("REGLA 18.1: expresion -> %s + %s", e, t);
+            RESULT = new PlusOperation(e,t);
+            :}
+            |expresion:e MINUS termino:t {:
+            addInfo("REGLA 18.2: expresion -> expresion MINUS termino");
+            addInfo("REGLA 18.2: expresion -> %s - %s", e, t);
+            RESULT = new MinusOperation(e,t);
+            :}
+            |termino:t {:
+            addInfo("REGLA 18.3: expresion -> termino");
+            addInfo("REGLA 18.3: expresion -> %s",t );
+            RESULT = t;
+            :};
+
+
+termino ::= termino:t MULT factor:f {:
+            addInfo("REGLA 19.1: termino -> termino MULT factor ");
+            addInfo("REGLA 19.1: termino -> %s * %s", t, f);
+            RESULT = new MultiplyOperation(t,f);
+            :}
+            |termino:t DIV factor:f {:
+            addInfo("REGLA 19.2: termino -> termino DIV factor ");
+            addInfo("REGLA 19.2: termino -> %s / %s", t, f);
+            RESULT = new DivideOperation(t,f);
+            :}
+            |factor:f {:
+            addInfo("REGLA 19.3: termino -> factor ");
+            addInfo("REGLA 19.3: termino -> %s", f);
+            RESULT = f;
+            :};
+
+
+factor ::= MINUS factor:f {:
+            addInfo("REGLA 20.1: factor -> MENOS factor");
+            addInfo("REGLA 20.1: factor -> - %s", f);
+            RESULT = new MinusFactor(f);
+            :} %prec MENOS_UNARIO
+            |OPPARENT expresion_logica:expsin CLPARENT {:
+            addInfo("REGLA 20.2: factor -> OPPARENT expresion_logica CLPARENT");
+            addInfo("REGLA 20.2: factor -> - %s", expsin);
+            RESULT = new LogicExpressionFactor(expsin);
+            :}
+            |ID:id {:
+            checkSymbol(id);
+            addInfo("REGLA 20.3: factor -> ID");
+            addInfo("REGLA 20.3: factor -> %s", id);
+            RESULT = new Constant(id);
+            :}
+            |promedio:p {:
+            addInfo("REGLA 20.4: factor -> promedio");
+            addInfo("REGLA 20.4: factor -> %s",p );
+            RESULT = p;
+            :}
+            |inputs:ip {:
+            addInfo("REGLA 20.5: factor -> inputs ");
+            addInfo("REGLA 20.5: factor -> %s ",ip );
+            RESULT = ip;
+            :}
+            |literalNumber:t {:
+             addInfo("REGLA 20.6: factor -> literalNumber");
+             addInfo("REGLA 20.6: factor -> %s ",t );
+             RESULT = new Constant(t);
+             :}
+             |constante_bool:cb {:
+              addInfo("REGLA 20.7: factor -> constante_bool ");
+              addInfo("REGLA 20.7: factor -> %s", cb);
+              RESULT = cb;
+              :};
+
+
+
+constante_bool ::= TRUE {:
+            addInfo("REGLA 21.1: constante_bool -> TRUE");
+            RESULT = new BooleanCondition(true);
+            :}
+            |FALSE {:
+            addInfo("REGLA 21.2: constante_bool -> FALSE");
+            RESULT = new BooleanCondition(false);
+            :};
+
+sentenciaShow ::= SHOW OPPARENT expresion_logica:e CLPARENT {:
+            addInfo("REGLA 8.1: sentenciaShow -> SHOW OPPARENT expresion_logica CLPARENT ");
+            addInfo("REGLA 8.1: sentenciaShow -> SHOW ( %s )" ,e);
+            RESULT = new ShowStatement(e);
+            :}
+            | SHOW OPPARENT STRING_LITERAL:il CLPARENT {:
+             registerSymbol("CTE_STR", il, "STRING");
+             addInfo("REGLA 8.2: sentenciaShow -> STRING_LITERAL");
+             addInfo("REGLA 8.2: sentenciaShow -> %s", il );
+             RESULT = new ShowStatement(il);
+             :};
+inputs ::=  INPUT_BOOL:ib OPPARENT CLPARENT {:
+            addInfo("REGLA 9.1: inputs -> INPUT_BOOL OPPARENT CLPARENT");
+            addInfo("REGLA 9.1: inputs -> ( %s )", ib );
+            RESULT = new Input("BOOL");
+            :}
+            |INPUT_INT:in OPPARENT CLPARENT {:
+            addInfo("REGLA 9.2: inputs -> INPUT_INT OPPARENT CLPARENT");
+            addInfo("REGLA 9.2: inputs -> ( %s )", in );
+            RESULT = new Input("INT");
+            :}
+            |INPUT_FLOAT:ifl OPPARENT CLPARENT {:
+            addInfo("REGLA 9.3: inputs -> INPUT_FLOAT OPPARENT CLPARENT");
+            addInfo("REGLA 9.3: inputs -> ( %s )", ifl );
+            RESULT = new Input("FLOAT");
+            :}
+            |INPUT_DUPLE:id OPPARENT CLPARENT {:
+            addInfo("REGLA 9.4: inputs -> INPUT_DUPLE OPPARENT CLPARENT");
+            addInfo("REGLA 9.4: inputs -> ( %s )", id );
+            RESULT = new Input("DUPLE");
+            :};
+
+sentencia_de_seleccion ::= UNLESS expresion_logica:explog THEN program_lines:p END {:
+            addInfo("REGLA 5.1: sentencia_de_seleccion -> UNLESS expresion_logica THEN program_lines END ");
+            addInfo("REGLA 5.1: sentencia_de_seleccion -> UNLESS %s THEN %s END", explog, p);
+            RESULT = new UnlessStatement(explog,p);
+            :}
+            |UNLESS expresion_logica:explog THEN program_lines:p1 ELSE program_lines:p2 END {:
+            addInfo("REGLA 5.2: sentencia_de_seleccion -> UNLESS expresion_logica THEN program_lines ELSE program_lines END ");
+            addInfo("REGLA 5.2: sentencia_de_seleccion -> UNLESS %s THEN %s ELSE %s END", explog, p1, p2);
+            RESULT = new UnlessStatement(explog,p1,p2);
+            :};
+
+
+program_section ::= PROGRAM_SECTION program_lines:p ENDPROGRAM_SECTION{:
+    addInfo("REGLA 2.1: program_section -> PROGRAM_SECTION program_lines ENDPROGRAM_SECTION");
+    addInfo("REGLA 2.1: program_section -> PROGRAM_SECTION\n\t %s\n ENDPROGRAM_SECTION", p);
+
+    RESULT = p ;
+:};
+program_lines ::= program_line:e{:
+    addInfo("REGLA 4.1: program_lines -> \n\tprogram");
+    addInfo("REGLA 4.1: program_lines -> \n\t%s",e);
+    RESULT = new StatementList(e);
+:}
+|  program_lines:d program_line:e{:
+    addInfo("REGLA 4.2: program_lines -> program_line program_lines");
+    addInfo("REGLA 4.2: program_lines -> %s\n\t%s", d, e);
+    RESULT = d.addStatementToList(e);
+:};
+
+//TODO
+sentenciaRepeat::= REPEAT program_lines:e UNTIL expresion_logica:explog {:
+    addInfo("REGLA 7.1: sentenciaRepeat -> REPEAT program_lines  UNTIL expresion_logica:explog");
+    addInfo("REGLA 7.1: sentenciaRepeat -> REPEAT %s  UNTIL %s", e, explog);
+    RESULT = new RepeatStatement(explog, e);
+
+:};
+
+
+
+//TODO AGREGAR TODAS LOS CASOS BASE ACA
+program_line ::=  sentenciaShow:s {:
+    addInfo("REGLA 22.1: program_line -> sentenciaSHOW ");
+    addInfo("REGLA 22.1: program_line -> %s ",s );
+    RESULT = s;
+:}
+    |asignacion:a {:
+    addInfo("REGLA 22.2: program_line -> asignacion ");
+    addInfo("REGLA 22.2: program_line -> %s ",a );
+    RESULT = a;
+:}
+    |sentencia_de_seleccion:ss {:
+     addInfo("REGLA 22.3: program_line -> sentencia_de_seleccion ");
+     addInfo("REGLA 22.3: program_line -> %s ",ss );
+     RESULT = ss;
+     :}
+     |sentenciaRepeat:ssr {:
+        addInfo("REGLA 22.4: program_line -> sentenciaRepeat ");
+        addInfo("REGLA 22.4: program_line -> %s ",ssr );
+        RESULT = ssr;
+    :}
+    | BREAK {:
+        addInfo("REGLA 22.5: program_line -> BREAK ");
+        RESULT = new BreakStatement();
+    :}
+    | CONTINUE {:
+        addInfo("REGLA 22.6: program_line -> CONTINUE ");
+        RESULT = new ContinueStatement();
+    :};
+
+literalNumber ::= DUPLA_LITERAL:dl {:
+            addInfo("REGLA 23.1: literalNumber -> DUPLA_LITERAL");
+            addInfo("REGLA 23.1: literalNumber -> %s", dl );
+            RESULT = dl;
+            :}
+            |FLOAT_LITERAL:fl {:
+            addInfo("REGLA 23.2: literalNumber -> FLOAT_LITERAL");
+            addInfo("REGLA 23.2: literalNumber -> %s", fl );
+            RESULT = fl;
+            :}
+            |INTEGER_LITERAL:il {:
+            addInfo("REGLA 23.3: literalNumber -> INTEGER_LITERAL");
+            addInfo("REGLA 23.3: literalNumber -> %s", il );
+            RESULT = il;
+            :};
