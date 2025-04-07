@@ -58,6 +58,8 @@ Identifier = \p{L}[\p{L}\p{N}_]*
 
 %state CADENA
 %state COMENTARIO
+%state COMENTARIOBRACKETS
+%state COMENTARIOCURLYBRACKET
 
 %%
 
@@ -126,7 +128,7 @@ Identifier = \p{L}[\p{L}\p{N}_]*
   {Identifier}         { return token("ID", yytext()); }
 
   /* operadores */
-    ":="                 { return token("IGUAL",   yytext()); }
+    "="                 { return token("IGUAL",   yytext()); }
     "=="                 { return token("EQUIVALE", yytext()); }
     "+"                  { return token("MAS", yytext()); }
     "-"                  { return token("MENOS", yytext()); }
@@ -189,9 +191,9 @@ Identifier = \p{L}[\p{L}\p{N}_]*
 
 <COMENTARIO> {
 
-    {CloseComment}                  { comment_count = comment_count - 1
+    {CloseComment}                  { comment_count = comment_count - 1;
                                       if (comment_count == 0){
-                                        yybegin(YYINITIAL)
+                                        yybegin(YYINITIAL);
                                       } yybegin(COMENTARIOCURLYBRACKET)
                                     ;}
 
@@ -219,7 +221,7 @@ Identifier = \p{L}[\p{L}\p{N}_]*
 
     {CloseCommentCurlyBracket}       {yybegin(COMENTARIOBRACKETS);}
 
-    {OpenComment}                    {comment_count = comment_count + 1   
+    {OpenComment}                    {comment_count = comment_count + 1;   
                                       yybegin(COMENTARIO);}
 
   /* Fin de archivo */
