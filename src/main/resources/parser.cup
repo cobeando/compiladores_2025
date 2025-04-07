@@ -73,3 +73,77 @@ precedence left AND;
 precedence right NOT;
 
 start with program;
+
+expresion_simple ::= comparacion:cond {:
+    addInfo("REGLA 16.1: expresion_simple -> comparacion");
+    addInfo("REGLA 16.1: expresion_simple -> %s", cond);
+    RESULT = cond;
+    :}
+    | expresion:e {:
+    addInfo("REGLA 16.2: expresion_simple -> expresion");
+    addInfo("REGLA 16.2: expresion_simple -> %s",e);
+    RESULT = e;
+    :};
+
+comparacion ::= expresion:e1 EQUIVALE expresion:e2 {:
+    addInfo("REGLA 17.1: comparacion -> expresion EQUIVALE expresion");
+    addInfo("REGLA 17.1: comparacion -> %s == %s", e1, e2);
+    RESULT = new CompareCondition(e1, "==", e2);
+    :}
+    | expresion:e1 DIFERENTE expresion:e2 {:
+    addInfo("REGLA 17.2: comparacion -> expresion DIFERENTE expresion");
+    addInfo("REGLA 17.2: comparacion -> %s != %s", e1, e2);
+    RESULT = new CompareCondition(e1, "!=", e2);
+    :}
+    | expresion:e1 MENOR_QUE expresion:e2 {:
+    addInfo("REGLA 17.3: comparacion -> expresion MENOR_QUE expresion");
+    addInfo("REGLA 17.3: comparacion -> %s < %s", e1, e2);
+    RESULT = new CompareCondition(e1, "<", e2);
+    :}
+    | expresion:e1 MAYOR_QUE expresion:e2 {:
+    addInfo("REGLA 17.4: comparacion -> expresion MAYOR_QUE expresion");
+    addInfo("REGLA 17.4: comparacion -> %s > %s", e1, e2);
+    RESULT = new CompareCondition(e1, ">", e2);
+    :}
+    | expresion:e1 MENOR_IGUAL_QUE expresion:e2 {:
+    addInfo("REGLA 17.5: comparacion -> expresion MENOR_IGUAL_QUE expresion");
+    addInfo("REGLA 17.5: comparacion -> %s <= %s", e1, e2);
+    RESULT = new CompareCondition(e1, "<=", e2);
+    :}
+    | expresion:e1 MAYOR_IGUAL_QUE expresion:e2 {:
+    addInfo("REGLA 17.6: comparacion -> expresion MAYOR_IGUAL_QUE expresion");
+    addInfo("REGLA 17.6: comparacion -> %s >= %s", e1, e2);
+    RESULT = new CompareCondition(e1, ">=", e2);
+    :};
+
+expresion ::= expresion:e MAS termino:t {:
+    addInfo("REGLA 18.1: expresion -> expresion MAS termino");
+    addInfo("REGLA 18.1: expresion -> %s + %s", e, t);
+    RESULT = new PlusOperation(e,t);
+    :}
+    | expresion:e MENOS termino:t {:
+    addInfo("REGLA 18.2: expresion -> expresion MENOS termino");
+    addInfo("REGLA 18.2: expresion -> %s - %s", e, t);
+    RESULT = new MinusOperation(e,t);
+    :}
+    | termino:t {:
+    addInfo("REGLA 18.3: expresion -> termino");
+    addInfo("REGLA 18.3: expresion -> %s", t);
+    RESULT = t;
+    :};
+
+termino ::= termino:t MULT factor:f {:
+    addInfo("REGLA 19.1: termino -> termino MULT factor");
+    addInfo("REGLA 19.1: termino -> %s * %s", t, f);
+    RESULT = new MultiplyOperation(t,f);
+    :}
+    | termino:t DIV factor:f {:
+    addInfo("REGLA 19.2: termino -> termino DIV factor");
+    addInfo("REGLA 19.2: termino -> %s / %s", t, f);
+    RESULT = new DivideOperation(t,f);
+    :}
+    | factor:f {:
+    addInfo("REGLA 19.3: termino -> factor");
+    addInfo("REGLA 19.3: termino -> %s", f);
+    RESULT = f;
+    :};
