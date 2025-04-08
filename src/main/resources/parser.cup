@@ -59,7 +59,7 @@ nonterminal BooleanCondition constante_bool;
 nonterminal Expression expresion_logica;
 nonterminal Expression expresion_simple, expresion;
 nonterminal Input inputs;
-nonterminal String numberList, ID_list,  literalNumber, data_type;
+nonterminal String numberList, ID_list,  numero_literal, data_type;
 nonterminal Program program;
 nonterminal StatementList program_lines, declarations, declaration_section, program_section;
 nonterminal DeclareStatement declaration;
@@ -73,6 +73,99 @@ precedence left AND;
 precedence right NOT;
 
 start with program;
+
+program ::= declaration_section:ds program_section:ps{
+        addInfo("REGLA 0.1: program -> declaractio_section program_section");
+        addInfo("REGLA 0.1: program ->, ds, ps");
+        RESULT = new Program(ds, ps)
+    :}
+    | program_section:ps{
+        addInfo("REGLA 0.2: program -> program_section");
+        addInfo("REGLA 0.2: program ->", ps);
+        RESULT = new Program(ps);
+    :};
+
+declaration_section ::= DECLARE_SECTION declarations:dec ENDDECLARE_SECTION{
+        addInfo("REGLA 1.1: declaration_section -> DECLARE_SECTION declarations ENDDECLARE_SECTION");
+        addInfo("REGLA 1.1: declaration_section -> DECLARE_SECTION \n\t %s\n ENDDECLARE_SECTION", dec);
+        RESULT = dec;
+    :};
+
+declarations ::= declaration:e{:
+        addInfo("REGLA 3.1: declarations -> \n\tdeclaration");
+        addInfo("REGLA 3.1: declarations -> \n\t%s",e);
+        RESULT = new StatementList(e);
+    :}
+    |declarations:d declaration:e{:
+        addInfo("REGLA 3.2: declarations -> declaration declarations");
+        addInfo("REGLA 3.2: declarations -> %s\n\t%s", d, e);
+        RESULT = d.addStatementToList(e);
+    :};
+
+    declaration ::= data_type:dt DOS_PUNTOS ID_list:idlist{
+        addInfo("REGLA 4.1: declaration -> data_type DOS_PUNTOS ID_list");
+        addInfo("REGLA 4.1: declaration ->" dt, ": ", idlist);
+    }
+
+data_type ::= ENTERO{
+        addInfo("REGLA 5.1: data_type -> ENTERO");
+        RESULT = "ENTERO";
+    :}
+    | FLOAT{
+        addInfo("REGLA 5.2: data_type -> FLOAT");
+        RESULT = "FLOAT";
+    :}
+    | BOOLEAN{
+        addInfo("REGLA 5.3: data_type -> BOOLEAN");
+        RESULT = "BOOLEAN";
+    :}
+    | STRING{
+        addInfo("REGLA 5.4: data_type -> STRING");
+        RESULT = "STRING";
+    :}
+    | DUPLA{
+        addInfo("REGLA 5.5: data_type -> DUPLA");
+        RESULT = "DUPLA";
+    :};
+
+ID_list ::= ID:id{
+        addInfo("REGLA 6.1: ID_list -> ID");
+        addInfo("REGLA 6.1: ID_list -> %s", id);
+        RESULT = id;
+    :};
+
+number_list ::= number_list:nlist COMA numero_literal:nliteral{
+        addInfo("REGLA 7.1: number_list -> number_list COMA numero_literal");
+        addInfo("REGLA 7.1: number_list -> %s, %s", nlist, nliteral);
+        RESULT = nlist + "," + nliteral;
+    :};
+
+asignacion ::= ID:id IGUAL expresion_logica:exp_log{
+        addInfo("REGLA 8.1: asignacion -> ID IGUAL expresion_logica");
+        addInfo("REGLA 8.1: asignacion -> %s = %s", id, exp_log);
+        RESULT = new AssignStatement(id, exp_log);
+    }
+
+expresion_logica ::= NOT expresion_logica:exp_log{
+        addInfo("REGLA 9.1: expresion_logica -> NOT expresion_logica");
+        addInfo("REGLA 9.1: expresion_logica -> NOT %s", expresion_logica);
+        RESULT = new NotExpression(exp_log);
+    :}
+    | expresion_logica:exp_log OR expresion_simple:exp_simp{
+        addInfo("REGLA 9.2: expresion_logica -> exp_log OR expresion_simple");
+        addInfo("REGLA 9.2: expresion_logica -> %s OR %s", exp_log, exp_simp);
+        RESULT = new LogicExpression(exp_log, exp_simp, "OR");
+    }
+    | expresion_logica:exp_log AND expresion_simple:exp_simp{
+        addInfo("REGLA 9.3: expresion_logica -> exp_log AND expresion_simple");
+        addInfo("REGLA 9.3: expresion_logica -> %s AND %s", exp_log, exp_simp);
+        RESULT = new LogicExpression(exp_log, exp_simp, "AND");
+    }
+    | expresion_simple:exp_simp{
+        addInfo("REGLA 9.4: expresion_logica -> expresion_simple");
+        addInfo("REGLA 9.4: expresion_logica -> %s", exp_simp);
+        RESULT = exp_simp;
+    }
 
 expresion_simple ::= comparacion:cond {:
     addInfo("REGLA 16.1: expresion_simple -> comparacion");
