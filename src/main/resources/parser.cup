@@ -63,8 +63,7 @@ nonterminal String numberList, ID_list,  numero_literal, data_type;
 nonterminal Program program;
 nonterminal StatementList program_lines, declarations, declaration_section, program_section;
 nonterminal DeclareStatement declaration;
-nonterminal RepeatStatement sentenciaRepeat;
-nonterminal Statement program_line, sentencia_de_seleccion, asignacion, sentenciaDisplay;
+nonterminal Statement program_line, sentencia_de_seleccion, asignacion, sentenciaDisplay, sentencia_de_iteracion;
 
 precedence left OR;
 precedence left AND;
@@ -423,4 +422,42 @@ numero_literal ::= IDENTIFICADOR ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
     RESULT = il;
 :};
 
-sentencia_de_iteracion :== LOOP WHEN expresion_logica:exp_log THEN program_lines:p END_LOOP
+sentencia_de_iteracion :== LOOP WHEN expresion_logica:exp_log THEN program_lines:p END_LOOP{:
+        addInfo("REGLA 24.1: sentencia_de_iteracion -> LOOP WHEN expresion_logica THEN program_lines END_LOOP");
+        addInfo("REGLA 24.1: sentencia_de_iteracion -> LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
+        RESULT = new LoopStatement(exp_log, p);
+    :}
+    | BACKWARD_LOOP WHEN expresion_logica:exp_log THEN program_lines:p END_LOOP{:
+        addInfo("REGLA 24.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN expresion_logica THEN program_lines END_LOOP");
+        addInfo("REGLA 24.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
+        RESULT = new BackwardLoopStatement(exp_log, p);
+    :};
+
+program_lines_loop ::= program_line:e {:
+        addInfo("REGLA 28.1: program_lines -> program_line");
+        addInfo("REGLA 28.1: program_lines -> \n\t%s%n%n", e);
+        RESULT = new StatementList(e);
+    :}
+    | program_lines:d program_line:e {:
+        addInfo("REGLA 28.2: program_lines -> program_line program_lines");
+        addInfo("REGLA 28.2: program_lines -> %s\n\t%s%n%n", d, e);
+        RESULT = d.addStatementToList(e);
+    :}
+    | program_line_loop:p {
+        addInfo("REGLA 28.3: program_lines -> program_line_loop");
+        addInfo("REGLA 28.3: program_lines -> %s", p);
+    :};
+
+program_line_loop ::= program_line:p {:
+        addInfo("REGLA 29.1: program_line_loop -> program_line");
+        addInfo("REGLA 29.1: program_line -> %s%n%n", p);
+        RESULT = s;
+    :}
+    | BREAK {:
+        addInfo("REGLA 29.2: program_line -> BREAK%n%n");
+        RESULT = new BreakStatement();
+    :}
+    | CONTINUE {:
+        addInfo("REGLA 29.3: program_line -> CONTINUE%n%n");
+        RESULT = new ContinueStatement();
+:};
