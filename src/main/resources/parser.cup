@@ -124,10 +124,6 @@ data_type ::= ENTERO {:
         addInfo("REGLA 5.3: data_type -> BOOLEAN%n%n");
         RESULT = "BOOLEAN";
     :}
-    | STRING {:
-        addInfo("REGLA 5.4: data_type -> STRING%n%n");
-        RESULT = "STRING";
-    :}
     | FLOAT_ARRAY {:
         addInfo("REGLA 5.5: data_type -> FLOAT_ARRAY");
         addInfo("REGLA 5.5: data_type -> FLOAT_ARRAY%n%n");
