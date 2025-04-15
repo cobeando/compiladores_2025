@@ -55,7 +55,7 @@ terminal ABRE_PARENTESIS, CIERRA_PARENTESIS, ABRE_CORCHETE, CIERRA_CORCHETE, PUN
 
 nonterminal CompareCondition  comparacion;
 nonterminal Factor termino, factor;
-nonterminal BooleanCondition constante_bool;
+nonterminal BooleanCondition constante_bool; 
 nonterminal Expression expresion_logica;
 nonterminal Expression expresion_simple, expresion;
 nonterminal Input inputs;
@@ -398,13 +398,6 @@ program_line ::= sentenciaDisplay:s {:
     addInfo("REGLA 27.4: program_line -> %s%n%n",si);
     RESULT = si;
     :}
-    | BREAK {:
-    addInfo("REGLA 27.5: program_line -> BREAK%n%n");
-    RESULT = new BreakStatement();
-    :}
-    | CONTINUE {:
-    addInfo("REGLA 27.6: program_line -> CONTINUE%n%n");
-    RESULT = new ContinueStatement();
 :};
 
 numero_literal ::= IDENTIFICADOR ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
