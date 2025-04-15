@@ -422,14 +422,9 @@ sentencia_de_iteracion :== LOOP WHEN expresion_logica:exp_log THEN program_lines
         RESULT = new BackwardLoopStatement(exp_log, p);
     :};
 
-program_lines_loop ::= program_line:e {:
-        addInfo("REGLA 28.1: program_lines -> program_line");
-        addInfo("REGLA 28.1: program_lines -> \n\t%s%n%n", e);
-        RESULT = new StatementList(e);
-    :}
-    | program_lines:d program_line:e {:
-        addInfo("REGLA 28.2: program_lines -> program_line program_lines");
-        addInfo("REGLA 28.2: program_lines -> %s\n\t%s%n%n", d, e);
+program_lines_loop ::= program_lines_loop:d program_line_loop:e {:
+        addInfo("REGLA 28.2: program_lines -> program_line_loop program_line_loop");
+        addInfo("REGLA 28.2: program_lines_loop -> %s\n\t%s%n%n", d, e);
         RESULT = d.addStatementToList(e);
     :}
     | program_line_loop:p {
