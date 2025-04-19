@@ -7,7 +7,22 @@ import java.util.Hashtable;
 class MiParser;
 
 action code {:
-    Hashtable table = new Hashtable();
+
+    SymbolTable symbolTable = new SymbolTable();
+    StringBuilder stringBuilder = new StringBuilder();
+
+    public String getParseInfo(){
+        return stringBuilder.toString();
+    }
+
+
+    public void registerSymbol(String token, String nombre, String tipo) throws RuntimeException{
+        symbolTable.addSymbol(nombre.trim(),tipo,token);
+    }
+
+    public void checkSymbol(String nombre) throws RuntimeException{
+        symbolTable.isRegistered(nombre);
+    }
 :};
 
 /* TODO: revisar si es útil para nuestro caso. Es el ejemplo del profe.*/
@@ -64,6 +79,7 @@ nonterminal Program program;
 nonterminal StatementList program_lines, declarations, declaration_section, program_section;
 nonterminal DeclareStatement declaration;
 nonterminal Statement program_line, sentencia_de_seleccion, asignacion, sentenciaDisplay, sentencia_de_iteracion;
+nonterminal valor_mas_cercano, any, all;
 
 precedence left OR;
 precedence left AND;
@@ -105,7 +121,7 @@ declarations ::= declaration:e {:
 
 declaration ::= data_type:dt DOS_PUNTOS ID_list:idlist {:
         for (String name : idlist.split(",")) {
-            registerSymbol("ID", name, type);
+            registerSymbol("ID", name, dt);
         }
         addInfo("REGLA 4.1: declaration -> data_type DOS_PUNTOS ID_list");
         addInfo("REGLA 4.1: declaration ->%s: %s%n%n", dt, idlist);
@@ -142,22 +158,97 @@ ID_list ::= IDENTIFICADOR:id {:
     :}
     | IDENTIFICADOR:id ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
     addInfo("REGLA 6.3: ID_list -> IDENTIFICADOR ABRE_CORCHETE expresion CIERRA_CORCHETE");
-    addInfo("REGLA 6.3: ID_list -> %s []");
+    addInfo("REGLA 6.3: ID_list -> %s [ %s ]", id, e );
     RESULT = ;
 :};
 
-number_list ::= number_list:nlist COMA numero_literal:nliteral {:
-        addInfo("REGLA 7.1: number_list -> number_list COMA numero_literal");
-        addInfo("REGLA 7.1: number_list -> %s, %s%n%n", nlist, nliteral);
-        RESULT = nlist + "," + nliteral;
+valor_mas_cercano ::= VALOR_MAS_CERCANO ABRE_PARENTESIS INTEGER_LITERAL:il COMA ABRE_CORCHETE number_list:nl CIERRA_CORCHETE CIERRA_PARENTESIS {:
+        addInfo("REGLA 7.1: valor_mas_cercano -> VALOR_MAS_CERCANO ABRE_PARENTESIS INTEGER_LITERAL COMA ABRE_CORCHETE number_list CIERRA_CORCHETE CIERRA_PARENTESIS");
+        addInfo("REGLA 7.1: valor_mas_cercano -> valor_mas_cercano( %s , [ %s ] )%n%n ", il, nl);
+        RESULT = "valor_mas_cercano" + "(" + il + "," + "[" + nl + "]" + ")";
+    :};
+
+
+all ::= ALL ABRE_PARENTESIS expresion:e COMA EQUIVALE COMA ID:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.1: all -> ALL ABRE_PARENTESIS expresion COMA EQUIVALE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.1: all -> all( %s , == , %s )%n%n", e, id);
+        RESULT = "all" + "(" + e + "," + "==" + "," + id + ")";
     :}
-    | numero_literal:nliteral {:
-         addInfo("REGLA 7.2: number_list -> numero_literal");
+    |ALL ABRE_PARENTESIS expresion:e COMA DIFERENTE COMA ID:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.1: all -> ALL ABRE_PARENTESIS expresion COMA DIFERENTE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.1: all -> all( %s , != , %s )%n%n", e, id);
+        RESULT = "all" + "(" + e + "," + "!=" + "," + id + ")";
+    :}
+    |ALL ABRE_PARENTESIS expresion:e COMA MENOR_QUE COMA ID:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.1: all -> ALL ABRE_PARENTESIS expresion COMA MENOR_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.1: all -> all( %s , < , %s )%n%n", e, id);
+        RESULT = "all" + "(" + e + "," + "<" + "," + id + ")";
+    :}
+    |ALL ABRE_PARENTESIS expresion:e COMA MAYOR_QUE COMA ID:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.1: all -> ALL ABRE_PARENTESIS expresion COMA MAYOR_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.1: all -> all( %s , > , %s )%n%n", e, id);
+        RESULT = "all" + "(" + e + "," + ">" + "," + id + ")";
+    :}
+    |ALL ABRE_PARENTESIS expresion:e COMA MENOR_IGUAL_QUE COMA ID:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.1: all -> ALL ABRE_PARENTESIS expresion COMA MENOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.1: all -> all( %s , <= , %s )%n%n", e, id);
+        RESULT = "all" + "(" + e + "," + "<=" + "," + id + ")";
+    :}
+    |ALL ABRE_PARENTESIS expresion:e COMA MAYOR_IGUAL_QUE COMA ID:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.1: all -> ALL ABRE_PARENTESIS expresion COMA MAYOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.1: all -> all( %s , >= , %s )%n%n", e, id);
+        RESULT = "all" + "(" + e + "," + ">=" + "," + id + ")";
+:};
+
+
+any ::= ANY ABRE_PARENTESIS expresion:e COMA EQUIVALE COMA ID:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.1: any -> ANY ABRE_PARENTESIS expresion COMA EQUIVALE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.1: any -> any( %s , == , %s )%n%n", e, id);
+        RESULT = "any" + "(" + e + "," + "==" + "," + id + ")";
+    :}
+    |ANY ABRE_PARENTESIS expresion:e COMA DIFERENTE COMA ID:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.1: any -> ANY ABRE_PARENTESIS expresion COMA DIFERENTE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.1: any -> any( %s , != , %s )%n%n", e, id);
+        RESULT = "any" + "(" + e + "," + "!=" + "," + id + ")";
+    :}
+    |ANY ABRE_PARENTESIS expresion:e COMA MENOR_QUE COMA ID:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.1: any -> ANY ABRE_PARENTESIS expresion COMA MENOR_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.1: any -> any( %s , < , %s )%n%n", e, id);
+        RESULT = "any" + "(" + e + "," + "<" + "," + id + ")";
+    :}
+    |ANY ABRE_PARENTESIS expresion:e COMA MAYOR_QUE COMA ID:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.1: any -> ANY ABRE_PARENTESIS expresion COMA MAYOR_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.1: any -> any( %s , > , %s )%n%n", e, id);
+        RESULT = "any" + "(" + e + "," + ">" + "," + id + ")";
+    :}
+    |ANY ABRE_PARENTESIS expresion:e COMA MENOR_IGUAL_QUE COMA ID:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.1: any -> ANY ABRE_PARENTESIS expresion COMA MENOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.1: any -> any( %s , <= , %s )%n%n", e, id);
+        RESULT = "any" + "(" + e + "," + "<=" + "," + id + ")";
+    :}
+    |ANY ABRE_PARENTESIS expresion:e COMA MAYOR_IGUAL_QUE COMA ID:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.1: any -> ANY ABRE_PARENTESIS expresion COMA MAYOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.1: any -> any( %s , >= , %s )%n%n", e, id);
+        RESULT = "any" + "(" + e + "," + ">=" + "," + id + ")";
+:};
+
+
+
+
+
+number_list ::= number_list:nlist COMA INTEGER_LITERAL:il {:
+        addInfo("REGLA 7.1: number_list -> number_list COMA INTEGER_LITERAL");
+        addInfo("REGLA 7.1: number_list -> %s, %s%n%n", nlist, il);
+        RESULT = nlist + "," + il;
+    :}
+    | INTEGER_LITERAL:il {:
+         addInfo("REGLA 7.2: number_list -> il");
         addInfo("REGLA 7.2: number_list -> %s%n%n", nliteral);
-        RESULT = nliteral;
+        RESULT = il;
 :};
 
 asignacion ::= ID:id IGUAL expresion_logica:exp_log {:
+        checkSymbol(id);
         addInfo("REGLA 8.1: asignacion -> ID IGUAL expresion_logica");
         addInfo("REGLA 8.1: asignacion -> %s = %s%n%n", id, exp_log);
         RESULT = new AssignStatement(id, exp_log);
@@ -270,6 +361,7 @@ factor ::= MENOS factor:f {:
     RESULT = new LogicExpressionFactor(exp_log);
     :}
     | IDENTIFICADOR:id {:
+    checkSymbol(id);
     addInfo("REGLA 20.3: factor -> IDENTIFICADOR");
     addInfo("REGLA 20.3: factor -> %s%n%n", id);
     RESULT = new Constant(id);
@@ -293,7 +385,22 @@ factor ::= MENOS factor:f {:
     addInfo("REGLA 18.5: factor -> constante_bool");
     addInfo("REGLA 18.5: factor -> %s%n%n", cb);
     RESULT = cb;
-};
+    :}
+    |valor_mas_cercano:vc {:
+    addInfo("REGLA 18.6: factor -> valor_mas_cercano");
+    addInfo("REGLA 18.6: factor -> %s%n%n", vc);
+    RESULT = vc;
+    :}
+    |all:al {:
+    addInfo("REGLA 18.6: factor -> all");
+    addInfo("REGLA 18.6: factor -> %s%n%n", al);
+    RESULT = al;
+    :}
+    |any:an {:
+    addInfo("REGLA 18.6: factor -> any");
+    addInfo("REGLA 18.6: factor -> %s%n%n ", an );
+    RESULT = an;
+:};
 
 constante_bool ::= TRUE {:
     addInfo("REGLA 21.1: constante_bool -> TRUE%n%n");
@@ -310,6 +417,7 @@ sentenciaDisplay ::= DISPLAY ABRE_PARENTESIS expresion_logica:exp_log CIERRA_PAR
     RESULT = new DisplayStatement(e);
     :}
     | DISPLAY ABRE_PARENTESIS STRING_LITERAL:str_lit CIERRA_PARENTESIS {:
+    registerSymbol("CTE_STR", str_lit , "STRING");
     addInfo("REGLA 22.2: sentenciaDisplay -> DISPLAY ABRE_PARENTESIS STRING_LITERAL CIERRA_PARENTESIS");
     addInfo("REGLA 22.2: sentenciaDisplay -> DISPLAY(%s)%n%n" ,str_lit);
     RESULT = new DisplayStatement(str_lit);
@@ -393,7 +501,6 @@ program_line ::= sentenciaDisplay:s {:
     addInfo("REGLA 27.4: program_line -> sentencia_de_iteracion");
     addInfo("REGLA 27.4: program_line -> %s%n%n",si);
     RESULT = si;
-    :}
 :};
 
 numero_literal ::= IDENTIFICADOR ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
@@ -405,7 +512,7 @@ numero_literal ::= IDENTIFICADOR ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
     addInfo("REGLA 23.2: literalNumber -> %s%n%n", fl);
     RESULT = fl;
     :}
-    INTEGER_LITERAL:il {:
+     :il {:
     addInfo("REGLA 23.3: literalNumber -> INTEGER_LITERAL");
     addInfo("REGLA 23.3: literalNumber -> %s%n%n", il);
     RESULT = il;
