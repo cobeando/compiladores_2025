@@ -93,29 +93,29 @@ start with program;
 
 program ::= declaration_section:ds program_section:ps {:
         addInfo("REGLA 0.1: program -> declaractio_section program_section");
-        addInfo("REGLA 0.1: program -> %s\n%s%n%n", ds, ps);
+        addInfo("REGLA 0.1: program -> %s\n%s", ds, ps);
         RESULT = new Program(ds, ps)
     :}
     | program_section:ps {:
         addInfo("REGLA 0.2: program -> program_section");
-        addInfo("REGLA 0.2: program ->%s%n%n", ps);
+        addInfo("REGLA 0.2: program ->%s", ps);
         RESULT = new Program(ps);
 :};
 
 declaration_section ::= DECLARE_SECTION declarations:dec ENDDECLARE_SECTION {:
         addInfo("REGLA 1.1: declaration_section -> DECLARE_SECTION declarations ENDDECLARE_SECTION");
-        addInfo("REGLA 1.1: declaration_section -> DECLARE_SECTION \n\t %s\n ENDDECLARE_SECTION%n%n", dec);
+        addInfo("REGLA 1.1: declaration_section -> DECLARE_SECTION \n\t %s\n ENDDECLARE_SECTION", dec);
         RESULT = dec;
 :};
 
 declarations ::= declaration:e {:
-        addInfo("REGLA 3.1: declarations -> \n\tdeclaration");
-        addInfo("REGLA 3.1: declarations -> \n\t%s%n%n",e);
+        addInfo("REGLA 2.1: declarations -> \n\tdeclaration");
+        addInfo("REGLA 2.1: declarations -> \n\t%s",e);
         RESULT = new StatementList(e);
     :}
     |declarations:d declaration:e {:
-        addInfo("REGLA 3.2: declarations -> declaration declarations");
-        addInfo("REGLA 3.2: declarations -> %s\n\t%s%n%n", d, e);
+        addInfo("REGLA 2.2: declarations -> declaration declarations");
+        addInfo("REGLA 2.2: declarations -> %s\n\t%s", d, e);
         RESULT = d.addStatementToList(e);
 :};
 
@@ -123,432 +123,428 @@ declaration ::= data_type:dt DOS_PUNTOS ID_list:idlist {:
         for (String name : idlist.split(",")) {
             registerSymbol("ID", name, dt);
         }
-        addInfo("REGLA 4.1: declaration -> data_type DOS_PUNTOS ID_list");
-        addInfo("REGLA 4.1: declaration ->%s: %s%n%n", dt, idlist);
+        addInfo("REGLA 3.1: declaration -> data_type DOS_PUNTOS ID_list");
+        addInfo("REGLA 3.1: declaration ->%s: %s", dt, idlist);
         RESULT = new DeclareStatement(dt, idlist);
 :};
 
 data_type ::= ENTERO {:
-        addInfo("REGLA 5.1: data_type -> ENTERO%n%n");
+        addInfo("REGLA 4.1: data_type -> ENTERO");
         RESULT = "ENTERO";
     :}
     | FLOTANTE {:
-        addInfo("REGLA 5.2: data_type -> FLOAT%n%n");
+        addInfo("REGLA 4.2: data_type -> FLOAT");
         RESULT = "FLOTANTE";
     :}
     | BOOLEAN {:
-        addInfo("REGLA 5.3: data_type -> BOOLEAN%n%n");
+        addInfo("REGLA 4.3: data_type -> BOOLEAN");
         RESULT = "BOOLEAN";
     :}
     | FLOAT_ARRAY {:
-        addInfo("REGLA 5.5: data_type -> FLOAT_ARRAY");
-        addInfo("REGLA 5.5: data_type -> FLOAT_ARRAY%n%n");
+        addInfo("REGLA 4.4: data_type -> FLOAT_ARRAY");
+        addInfo("REGLA 4.4: data_type -> FLOAT_ARRAY");
         RESULT = "FLOAR_ARRAY";
 :};
 
 ID_list ::= IDENTIFICADOR:id {:
-        addInfo("REGLA 6.1: ID_list -> IDENTIFICADOR");
-        addInfo("REGLA 6.1: ID_list -> %s%n%n", id);
+        addInfo("REGLA 5.1: ID_list -> IDENTIFICADOR");
+        addInfo("REGLA 5.1: ID_list -> %s", id);
         RESULT = id;
     :}
     | IDENTIFICADOR:id COMA ID_list:list {:
-        addInfo("REGLA 6.2: ID_list -> IDENTIFICADOR COMA ID_list");
-        addInfo("REGLA 6.2: ID_list -> %s, %s%n%n", id, list);
+        addInfo("REGLA 5.2: ID_list -> IDENTIFICADOR COMA ID_list");
+        addInfo("REGLA 5.2: ID_list -> %s, %s", id, list);
         RESULT = id + ", " + list;
     :}
     | IDENTIFICADOR:id ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
-    addInfo("REGLA 6.3: ID_list -> IDENTIFICADOR ABRE_CORCHETE expresion CIERRA_CORCHETE");
-    addInfo("REGLA 6.3: ID_list -> %s [ %s ]", id, e );
+    addInfo("REGLA 5.3: ID_list -> IDENTIFICADOR ABRE_CORCHETE expresion CIERRA_CORCHETE");
+    addInfo("REGLA 5.3: ID_list -> %s [ %s ]", id, e );
     RESULT = ;
 :};
 
 valor_mas_cercano ::= VALOR_MAS_CERCANO ABRE_PARENTESIS INTEGER_LITERAL:il COMA ABRE_CORCHETE number_list:nl CIERRA_CORCHETE CIERRA_PARENTESIS {:
-        addInfo("REGLA 7.1: valor_mas_cercano -> VALOR_MAS_CERCANO ABRE_PARENTESIS INTEGER_LITERAL COMA ABRE_CORCHETE number_list CIERRA_CORCHETE CIERRA_PARENTESIS");
-        addInfo("REGLA 7.1: valor_mas_cercano -> valor_mas_cercano( %s , [ %s ] )%n%n ", il, nl);
+        addInfo("REGLA 6.1: valor_mas_cercano -> VALOR_MAS_CERCANO ABRE_PARENTESIS INTEGER_LITERAL COMA ABRE_CORCHETE number_list CIERRA_CORCHETE CIERRA_PARENTESIS");
+        addInfo("REGLA 6.1: valor_mas_cercano -> valor_mas_cercano( %s , [ %s ] )", il, nl);
         RESULT = "valor_mas_cercano" + "(" + il + "," + "[" + nl + "]" + ")";
     :};
 
 
 all ::= ALL ABRE_PARENTESIS expresion:e COMA EQUIVALE COMA ID:id CIERRA_PARENTESIS{:
         addInfo("REGLA 7.1: all -> ALL ABRE_PARENTESIS expresion COMA EQUIVALE COMA ID CIERRA_PARENTESIS");
-        addInfo("REGLA 7.1: all -> all( %s , == , %s )%n%n", e, id);
+        addInfo("REGLA 7.1: all -> all( %s , == , %s )", e, id);
         RESULT = "all" + "(" + e + "," + "==" + "," + id + ")";
     :}
     |ALL ABRE_PARENTESIS expresion:e COMA DIFERENTE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.1: all -> ALL ABRE_PARENTESIS expresion COMA DIFERENTE COMA ID CIERRA_PARENTESIS");
-        addInfo("REGLA 7.1: all -> all( %s , != , %s )%n%n", e, id);
+        addInfo("REGLA 7.2: all -> ALL ABRE_PARENTESIS expresion COMA DIFERENTE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.2: all -> all( %s , != , %s )", e, id);
         RESULT = "all" + "(" + e + "," + "!=" + "," + id + ")";
     :}
     |ALL ABRE_PARENTESIS expresion:e COMA MENOR_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.1: all -> ALL ABRE_PARENTESIS expresion COMA MENOR_QUE COMA ID CIERRA_PARENTESIS");
-        addInfo("REGLA 7.1: all -> all( %s , < , %s )%n%n", e, id);
+        addInfo("REGLA 7.3: all -> ALL ABRE_PARENTESIS expresion COMA MENOR_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.3: all -> all( %s , < , %s )", e, id);
         RESULT = "all" + "(" + e + "," + "<" + "," + id + ")";
     :}
     |ALL ABRE_PARENTESIS expresion:e COMA MAYOR_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.1: all -> ALL ABRE_PARENTESIS expresion COMA MAYOR_QUE COMA ID CIERRA_PARENTESIS");
-        addInfo("REGLA 7.1: all -> all( %s , > , %s )%n%n", e, id);
+        addInfo("REGLA 7.4: all -> ALL ABRE_PARENTESIS expresion COMA MAYOR_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.4: all -> all( %s , > , %s )", e, id);
         RESULT = "all" + "(" + e + "," + ">" + "," + id + ")";
     :}
     |ALL ABRE_PARENTESIS expresion:e COMA MENOR_IGUAL_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.1: all -> ALL ABRE_PARENTESIS expresion COMA MENOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
-        addInfo("REGLA 7.1: all -> all( %s , <= , %s )%n%n", e, id);
+        addInfo("REGLA 7.5: all -> ALL ABRE_PARENTESIS expresion COMA MENOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.5: all -> all( %s , <= , %s )", e, id);
         RESULT = "all" + "(" + e + "," + "<=" + "," + id + ")";
     :}
     |ALL ABRE_PARENTESIS expresion:e COMA MAYOR_IGUAL_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.1: all -> ALL ABRE_PARENTESIS expresion COMA MAYOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
-        addInfo("REGLA 7.1: all -> all( %s , >= , %s )%n%n", e, id);
+        addInfo("REGLA 7.6: all -> ALL ABRE_PARENTESIS expresion COMA MAYOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 7.6: all -> all( %s , >= , %s )", e, id);
         RESULT = "all" + "(" + e + "," + ">=" + "," + id + ")";
 :};
 
 
 any ::= ANY ABRE_PARENTESIS expresion:e COMA EQUIVALE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.1: any -> ANY ABRE_PARENTESIS expresion COMA EQUIVALE COMA ID CIERRA_PARENTESIS");
-        addInfo("REGLA 7.1: any -> any( %s , == , %s )%n%n", e, id);
+        addInfo("REGLA 8.1: any -> ANY ABRE_PARENTESIS expresion COMA EQUIVALE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 8.1: any -> any( %s , == , %s )", e, id);
         RESULT = "any" + "(" + e + "," + "==" + "," + id + ")";
     :}
     |ANY ABRE_PARENTESIS expresion:e COMA DIFERENTE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.1: any -> ANY ABRE_PARENTESIS expresion COMA DIFERENTE COMA ID CIERRA_PARENTESIS");
-        addInfo("REGLA 7.1: any -> any( %s , != , %s )%n%n", e, id);
+        addInfo("REGLA 8.2: any -> ANY ABRE_PARENTESIS expresion COMA DIFERENTE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 8.2: any -> any( %s , != , %s )", e, id);
         RESULT = "any" + "(" + e + "," + "!=" + "," + id + ")";
     :}
     |ANY ABRE_PARENTESIS expresion:e COMA MENOR_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.1: any -> ANY ABRE_PARENTESIS expresion COMA MENOR_QUE COMA ID CIERRA_PARENTESIS");
-        addInfo("REGLA 7.1: any -> any( %s , < , %s )%n%n", e, id);
+        addInfo("REGLA 8.3: any -> ANY ABRE_PARENTESIS expresion COMA MENOR_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 8.3: any -> any( %s , < , %s )", e, id);
         RESULT = "any" + "(" + e + "," + "<" + "," + id + ")";
     :}
     |ANY ABRE_PARENTESIS expresion:e COMA MAYOR_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.1: any -> ANY ABRE_PARENTESIS expresion COMA MAYOR_QUE COMA ID CIERRA_PARENTESIS");
-        addInfo("REGLA 7.1: any -> any( %s , > , %s )%n%n", e, id);
+        addInfo("REGLA 8.4: any -> ANY ABRE_PARENTESIS expresion COMA MAYOR_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 8.4: any -> any( %s , > , %s )", e, id);
         RESULT = "any" + "(" + e + "," + ">" + "," + id + ")";
     :}
     |ANY ABRE_PARENTESIS expresion:e COMA MENOR_IGUAL_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.1: any -> ANY ABRE_PARENTESIS expresion COMA MENOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
-        addInfo("REGLA 7.1: any -> any( %s , <= , %s )%n%n", e, id);
+        addInfo("REGLA 8.5: any -> ANY ABRE_PARENTESIS expresion COMA MENOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 8.5: any -> any( %s , <= , %s )", e, id);
         RESULT = "any" + "(" + e + "," + "<=" + "," + id + ")";
     :}
     |ANY ABRE_PARENTESIS expresion:e COMA MAYOR_IGUAL_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.1: any -> ANY ABRE_PARENTESIS expresion COMA MAYOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
-        addInfo("REGLA 7.1: any -> any( %s , >= , %s )%n%n", e, id);
+        addInfo("REGLA 8.5: any -> ANY ABRE_PARENTESIS expresion COMA MAYOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
+        addInfo("REGLA 8.6: any -> any( %s , >= , %s )", e, id);
         RESULT = "any" + "(" + e + "," + ">=" + "," + id + ")";
 :};
 
-
-
-
-
 number_list ::= number_list:nlist COMA INTEGER_LITERAL:il {:
-        addInfo("REGLA 7.1: number_list -> number_list COMA INTEGER_LITERAL");
-        addInfo("REGLA 7.1: number_list -> %s, %s%n%n", nlist, il);
+        addInfo("REGLA 9.1: number_list -> number_list COMA INTEGER_LITERAL");
+        addInfo("REGLA 9.1: number_list -> %s, %s", nlist, il);
         RESULT = nlist + "," + il;
     :}
     | INTEGER_LITERAL:il {:
-         addInfo("REGLA 7.2: number_list -> il");
-        addInfo("REGLA 7.2: number_list -> %s%n%n", nliteral);
+         addInfo("REGLA 9.2: number_list -> il");
+        addInfo("REGLA 9.2: number_list -> %s", nliteral);
         RESULT = il;
 :};
 
 asignacion ::= ID:id IGUAL expresion_logica:exp_log {:
         checkSymbol(id);
-        addInfo("REGLA 8.1: asignacion -> ID IGUAL expresion_logica");
-        addInfo("REGLA 8.1: asignacion -> %s = %s%n%n", id, exp_log);
+        addInfo("REGLA 10.1: asignacion -> ID IGUAL expresion_logica");
+        addInfo("REGLA 10.1: asignacion -> %s = %s", id, exp_log);
         RESULT = new AssignStatement(id, exp_log);
 :};
 
 expresion_logica ::= NOT expresion_logica:exp_log {:
-        addInfo("REGLA 9.1: expresion_logica -> NOT expresion_logica");
-        addInfo("REGLA 9.1: expresion_logica -> NOT %s%n%n", expresion_logica);
+        addInfo("REGLA 11.1: expresion_logica -> NOT expresion_logica");
+        addInfo("REGLA 11.1: expresion_logica -> NOT %s", expresion_logica);
         RESULT = new NotExpression(exp_log);
     :}
     | expresion_logica:exp_log OR expresion_simple:exp_simp {:
-        addInfo("REGLA 9.2: expresion_logica -> exp_log OR expresion_simple");
-        addInfo("REGLA 9.2: expresion_logica -> %s OR %s%n%n", exp_log, exp_simp);
+        addInfo("REGLA 11.2: expresion_logica -> exp_log OR expresion_simple");
+        addInfo("REGLA 11.2: expresion_logica -> %s OR %s", exp_log, exp_simp);
         RESULT = new LogicExpression(exp_log, exp_simp, "OR");
     :}
     | expresion_logica:exp_log AND expresion_simple:exp_simp {:
-        addInfo("REGLA 9.3: expresion_logica -> exp_log AND expresion_simple");
-        addInfo("REGLA 9.3: expresion_logica -> %s AND %s%n%n", exp_log, exp_simp);
+        addInfo("REGLA 11.3: expresion_logica -> exp_log AND expresion_simple");
+        addInfo("REGLA 11.3: expresion_logica -> %s AND %s", exp_log, exp_simp);
         RESULT = new LogicExpression(exp_log, exp_simp, "AND");
     :}
     | expresion_simple:exp_simp {:
-        addInfo("REGLA 9.4: expresion_logica -> expresion_simple");
-        addInfo("REGLA 9.4: expresion_logica -> %s%n%n", exp_simp);
+        addInfo("REGLA 11.4: expresion_logica -> expresion_simple");
+        addInfo("REGLA 11.4: expresion_logica -> %s", exp_simp);
         RESULT = exp_simp;
 :};
 
 expresion_simple ::= comparacion:cond {:
-    addInfo("REGLA 16.1: expresion_simple -> comparacion");
-    addInfo("REGLA 16.1: expresion_simple -> %s%n%n", cond);
+    addInfo("REGLA 12.1: expresion_simple -> comparacion");
+    addInfo("REGLA 12.1: expresion_simple -> %s", cond);
     RESULT = cond;
     :}
     | expresion:e {:
-    addInfo("REGLA 16.2: expresion_simple -> expresion");
-    addInfo("REGLA 16.2: expresion_simple -> %s%n%n",e);
+    addInfo("REGLA 12.2: expresion_simple -> expresion");
+    addInfo("REGLA 12.2: expresion_simple -> %s",e);
     RESULT = e;
 :};
 
 comparacion ::= expresion:e1 EQUIVALE expresion:e2 {:
-    addInfo("REGLA 17.1: comparacion -> expresion EQUIVALE expresion");
-    addInfo("REGLA 17.1: comparacion -> %s == %s%n%n", e1, e2);
+    addInfo("REGLA 13.1: comparacion -> expresion EQUIVALE expresion");
+    addInfo("REGLA 13.1: comparacion -> %s == %s", e1, e2);
     RESULT = new CompareCondition(e1, "==", e2);
     :}
     | expresion:e1 DIFERENTE expresion:e2 {:
-    addInfo("REGLA 17.2: comparacion -> expresion DIFERENTE expresion");
-    addInfo("REGLA 17.2: comparacion -> %s != %s%n%n", e1, e2);
+    addInfo("REGLA 13.2: comparacion -> expresion DIFERENTE expresion");
+    addInfo("REGLA 13.2: comparacion -> %s != %s", e1, e2);
     RESULT = new CompareCondition(e1, "!=", e2);
     :}
     | expresion:e1 MENOR_QUE expresion:e2 {:
-    addInfo("REGLA 17.3: comparacion -> expresion MENOR_QUE expresion");
-    addInfo("REGLA 17.3: comparacion -> %s < %s%n%n", e1, e2);
+    addInfo("REGLA 13.3: comparacion -> expresion MENOR_QUE expresion");
+    addInfo("REGLA 13.3: comparacion -> %s < %s", e1, e2);
     RESULT = new CompareCondition(e1, "<", e2);
     :}
     | expresion:e1 MAYOR_QUE expresion:e2 {:
-    addInfo("REGLA 17.4: comparacion -> expresion MAYOR_QUE expresion");
-    addInfo("REGLA 17.4: comparacion -> %s > %s%n%n", e1, e2);
+    addInfo("REGLA 13.4: comparacion -> expresion MAYOR_QUE expresion");
+    addInfo("REGLA 13.4: comparacion -> %s > %s", e1, e2);
     RESULT = new CompareCondition(e1, ">", e2);
     :}
     | expresion:e1 MENOR_IGUAL_QUE expresion:e2 {:
-    addInfo("REGLA 17.5: comparacion -> expresion MENOR_IGUAL_QUE expresion");
-    addInfo("REGLA 17.5: comparacion -> %s <= %s%n%n", e1, e2);
+    addInfo("REGLA 13.5: comparacion -> expresion MENOR_IGUAL_QUE expresion");
+    addInfo("REGLA 13.5: comparacion -> %s <= %s", e1, e2);
     RESULT = new CompareCondition(e1, "<=", e2);
     :}
     | expresion:e1 MAYOR_IGUAL_QUE expresion:e2 {:
-    addInfo("REGLA 17.6: comparacion -> expresion MAYOR_IGUAL_QUE expresion");
-    addInfo("REGLA 17.6: comparacion -> %s >= %s%n%n", e1, e2);
+    addInfo("REGLA 13.6: comparacion -> expresion MAYOR_IGUAL_QUE expresion");
+    addInfo("REGLA 13.6: comparacion -> %s >= %s", e1, e2);
     RESULT = new CompareCondition(e1, ">=", e2);
 :};
 
 expresion ::= expresion:e MAS termino:t {:
-    addInfo("REGLA 18.1: expresion -> expresion MAS termino");
-    addInfo("REGLA 18.1: expresion -> %s + %s%n%n", e, t);
+    addInfo("REGLA 14.1: expresion -> expresion MAS termino");
+    addInfo("REGLA 14.1: expresion -> %s + %s", e, t);
     RESULT = new PlusOperation(e, t);
     :}
     | expresion:e MENOS termino:t {:
-    addInfo("REGLA 18.2: expresion -> expresion MENOS termino");
-    addInfo("REGLA 18.2: expresion -> %s - %s%n%n", e, t);
+    addInfo("REGLA 14.2: expresion -> expresion MENOS termino");
+    addInfo("REGLA 14.2: expresion -> %s - %s", e, t);
     RESULT = new MinusOperation(e, t);
     :}
     | termino:t {:
-    addInfo("REGLA 18.3: expresion -> termino");
-    addInfo("REGLA 18.3: expresion -> %s%n%n", t);
+    addInfo("REGLA 14.3: expresion -> termino");
+    addInfo("REGLA 14.3: expresion -> %s", t);
     RESULT = t;
     :};
 
 
 termino ::= termino:t MULT factor:f {:
-    addInfo("REGLA 19.1: termino -> termino MULT factor");
-    addInfo("REGLA 19.1: termino -> %s * %s%n%n", t, f);
+    addInfo("REGLA 15.1: termino -> termino MULT factor");
+    addInfo("REGLA 15.1: termino -> %s * %s", t, f);
     RESULT = new MultiplyOperation(t, f);
     :}
     | termino:t DIV factor:f {:
-    addInfo("REGLA 19.2: termino -> termino DIV factor");
-    addInfo("REGLA 19.2: termino -> %s / %s%n%n", t, f);
+    addInfo("REGLA 15.2: termino -> termino DIV factor");
+    addInfo("REGLA 15.2: termino -> %s / %s", t, f);
     RESULT = new DivideOperation(t, f);
     :}
     | factor:f {:
-    addInfo("REGLA 19.3: termino -> factor");
-    addInfo("REGLA 19.3: termino -> %s%n%n", f);
+    addInfo("REGLA 15.3: termino -> factor");
+    addInfo("REGLA 15.3: termino -> %s", f);
     RESULT = f;
 :};
 
 factor ::= MENOS factor:f {:
-    addInfo("REGLA 20.1: factor -> MENOS factor");
-    addInfo("REGLA 20.1: factor -> -%s%n%n", f);
+    addInfo("REGLA 16.1: factor -> MENOS factor");
+    addInfo("REGLA 16.1: factor -> -%s", f);
     RESULT = "-"+f;
     :} %prec MENOS_UNARIO
     | ABRE_PARENTESIS expresion_logica:exp_log CIERRA_PARENTESIS {:
-    addInfo("REGLA 20.2: factor -> ABRE_PARENTESIS expresion_logica CIERRA_PARENTESIS");
-    addInfo("REGLA 20.2: factor -> (%s)%n%n", exp_log);
+    addInfo("REGLA 16.2: factor -> ABRE_PARENTESIS expresion_logica CIERRA_PARENTESIS");
+    addInfo("REGLA 16.2: factor -> (%s)", exp_log);
     RESULT = new LogicExpressionFactor(exp_log);
     :}
     | IDENTIFICADOR:id {:
     checkSymbol(id);
-    addInfo("REGLA 20.3: factor -> IDENTIFICADOR");
-    addInfo("REGLA 20.3: factor -> %s%n%n", id);
+    addInfo("REGLA 16.3: factor -> IDENTIFICADOR");
+    addInfo("REGLA 16.3: factor -> %s", id);
     RESULT = new Constant(id);
     :}
     | inputs:ip {:
-    addInfo("REGLA 20.4: factor -> inputs");
-    addInfo("REGLA 20.4: factor -> %s%n%n", ip);
+    addInfo("REGLA 16.4: factor -> inputs");
+    addInfo("REGLA 16.4: factor -> %s", ip);
     RESULT = ip;
     :}
     | numero_literal:nliteral {:
-    addInfo("REGLA 20.5: factor -> numero_literal");
-    addInfo("REGLA 20.5: factor -> %s%n%n", nliteral);
+    addInfo("REGLA 16.5: factor -> numero_literal");
+    addInfo("REGLA 16.5: factor -> %s", nliteral);
     RESULT = new Constant(nliteral);
     :}
     FLOAT_ARRAY_LITERAL:fal {:
-    addInfo("REGLA 18.4: expresion -> FLOAT_ARRAY_LITERAL");
-    addInfo("REGLA 18.4: expresion -> %s%n%n", fal);
+    addInfo("REGLA 16.6: expresion -> FLOAT_ARRAY_LITERAL");
+    addInfo("REGLA 16.6: expresion -> %s", fal);
     RESULT = fal;
     :}
     | constante_bool:cb {:
-    addInfo("REGLA 18.5: factor -> constante_bool");
-    addInfo("REGLA 18.5: factor -> %s%n%n", cb);
+    addInfo("REGLA 16.7: factor -> constante_bool");
+    addInfo("REGLA 16.7: factor -> %s", cb);
     RESULT = cb;
     :}
     |valor_mas_cercano:vc {:
-    addInfo("REGLA 18.6: factor -> valor_mas_cercano");
-    addInfo("REGLA 18.6: factor -> %s%n%n", vc);
+    addInfo("REGLA 16.8: factor -> valor_mas_cercano");
+    addInfo("REGLA 16.8: factor -> %s", vc);
     RESULT = vc;
     :}
     |all:al {:
-    addInfo("REGLA 18.6: factor -> all");
-    addInfo("REGLA 18.6: factor -> %s%n%n", al);
+    addInfo("REGLA 16.9: factor -> all");
+    addInfo("REGLA 16.9: factor -> %s", al);
     RESULT = al;
     :}
     |any:an {:
-    addInfo("REGLA 18.6: factor -> any");
-    addInfo("REGLA 18.6: factor -> %s%n%n ", an );
+    addInfo("REGLA 16.10: factor -> any");
+    addInfo("REGLA 16.10: factor -> %s ", an );
     RESULT = an;
 :};
 
 constante_bool ::= TRUE {:
-    addInfo("REGLA 21.1: constante_bool -> TRUE%n%n");
+    addInfo("REGLA 17.1: constante_bool -> TRUE");
     RESULT = new BooleanCondition(true);
     :}
     |FALSE {:
-    addInfo("REGLA 21.2: constante_bool -> FALSE%n%n");
+    addInfo("REGLA 17.2: constante_bool -> FALSE");
     RESULT = new BooleanCondition(false);
 :};
 
 sentenciaDisplay ::= DISPLAY ABRE_PARENTESIS expresion_logica:exp_log CIERRA_PARENTESIS {:
-    addInfo("REGLA 22.1: sentenciaDisplay -> DISPLAY ABRE_PARENTESIS expresion_logica CIERRA_PARENTESIS");
-    addInfo("REGLA 22.1: sentenciaDisplay -> DISPLAY(%s)%n%n" ,exp_log);
+    addInfo("REGLA 18.1: sentenciaDisplay -> DISPLAY ABRE_PARENTESIS expresion_logica CIERRA_PARENTESIS");
+    addInfo("REGLA 18.1: sentenciaDisplay -> DISPLAY(%s)" ,exp_log);
     RESULT = new DisplayStatement(e);
     :}
     | DISPLAY ABRE_PARENTESIS STRING_LITERAL:str_lit CIERRA_PARENTESIS {:
     registerSymbol("CTE_STR", str_lit , "STRING");
-    addInfo("REGLA 22.2: sentenciaDisplay -> DISPLAY ABRE_PARENTESIS STRING_LITERAL CIERRA_PARENTESIS");
-    addInfo("REGLA 22.2: sentenciaDisplay -> DISPLAY(%s)%n%n" ,str_lit);
+    addInfo("REGLA 18.2: sentenciaDisplay -> DISPLAY ABRE_PARENTESIS STRING_LITERAL CIERRA_PARENTESIS");
+    addInfo("REGLA 18.2: sentenciaDisplay -> DISPLAY(%s)" ,str_lit);
     RESULT = new DisplayStatement(str_lit);
 :};
 
 inputs ::= INPUT_BOOL:ib ABRE_PARENTESIS CIERRA_PARENTESIS {:
-    addInfo("REGLA 23.1: inputs -> INPUT_BOOL ABRE_PARENTESIS CIERRA_PARENTESIS");
-    addInfo("REGLA 23.1: inputs -> ( %s )%n%n", ib );
+    addInfo("REGLA 19.1: inputs -> INPUT_BOOL ABRE_PARENTESIS CIERRA_PARENTESIS");
+    addInfo("REGLA 19.1: inputs -> ( %s )", ib );
     RESULT = new Input("BOOL");
     :}
     |INPUT_INT:ii ABRE_PARENTESIS CIERRA_PARENTESIS {:
-    addInfo("REGLA 23.2: inputs -> INPUT_INT ABRE_PARENTESIS CIERRA_PARENTESIS");
-    addInfo("REGLA 23.2: inputs -> ( %s )%n%n", ii );
+    addInfo("REGLA 19.2: inputs -> INPUT_INT ABRE_PARENTESIS CIERRA_PARENTESIS");
+    addInfo("REGLA 19.2: inputs -> ( %s )", ii );
     RESULT = new Input("INT");
     :}
     |INPUT_FLOAT:ifl ABRE_PARENTESIS CIERRA_PARENTESIS {:
-    addInfo("REGLA 23.3: inputs -> INPUT_FLOAT ABRE_PARENTESIS CIERRA_PARENTESIS");
-    addInfo("REGLA 23.3: inputs -> ( %s )%n%n", ifl );
+    addInfo("REGLA 19.3: inputs -> INPUT_FLOAT ABRE_PARENTESIS CIERRA_PARENTESIS");
+    addInfo("REGLA 19.3: inputs -> ( %s )", ifl );
     RESULT = new Input("FLOAT");
     :}
     |INPUT_ARRAY:ia ABRE_PARENTESIS CIERRA_PARENTESIS {:
-    addInfo("REGLA 23.4: inputs -> INPUT_ARRAY ABRE_PARENTESIS CIERRA_PARENTESIS");
-    addInfo("REGLA 23.4: inputs -> ( %s )%n%n", ia );
+    addInfo("REGLA 19.4: inputs -> INPUT_ARRAY ABRE_PARENTESIS CIERRA_PARENTESIS");
+    addInfo("REGLA 19.4: inputs -> ( %s )", ia );
     RESULT = new Input("ARRAY");
 :};
 
 sentencia_de_seleccion ::= CONDITION expresion_logica:exp_log THEN program_lines:p END {:
-    addInfo("REGLA 24.1: sentencia_de_seleccion -> CONDITION expresion_logica THEN program_lines END");
-    addInfo("REGLA 24.1: sentencia_de_seleccion -> CONDITION %s THEN %s END%n%n", exp_log, p);
+    addInfo("REGLA 20.1: sentencia_de_seleccion -> CONDITION expresion_logica THEN program_lines END");
+    addInfo("REGLA 20.1: sentencia_de_seleccion -> CONDITION %s THEN %s END", exp_log, p);
     RESULT = new ConditionStatement(exp_log, p);
     :}
     | CONDITION expresion_logica:exp_log THEN program_lines:p1 ELSE program_lines:p2 END {:
-    addInfo("REGLA 24.2: sentencia_de_seleccion -> CONDITION expresion_logica THEN program_lines ELSE program_lines END");
-    addInfo("REGLA 24.2: sentencia_de_seleccion -> CONDITION %s THEN %s ELSE %s END%n%n", exp_log, p1, p2);
+    addInfo("REGLA 20.2: sentencia_de_seleccion -> CONDITION expresion_logica THEN program_lines ELSE program_lines END");
+    addInfo("REGLA 20.2: sentencia_de_seleccion -> CONDITION %s THEN %s ELSE %s END", exp_log, p1, p2);
     RESULT = new ConditionStatement(exp_log, p1, p2);
     :}
     | BACKWARD_CONDITION expresion_logica:exp_log THEN program_lines:p END {:
-    addInfo("REGLA 24.3: sentencia_de_seleccion -> BACKWARD_CONDITION expresion_logica THEN program_lines END");
-    addInfo("REGLA 24.3: sentencia_de_seleccion -> BACKWARD_CONDITION %s THEN %s END%n%n", exp_log, p);
+    addInfo("REGLA 20.3: sentencia_de_seleccion -> BACKWARD_CONDITION expresion_logica THEN program_lines END");
+    addInfo("REGLA 20.3: sentencia_de_seleccion -> BACKWARD_CONDITION %s THEN %s END", exp_log, p);
     RESULT = new BackwardConditionStatement(exp_log, p);
     :}
     | BACKWARD_CONDITION expresion_logica:exp_log THEN program_lines:p1 ELSE_BACKWARD program_lines:p2 END {:
-    addInfo("REGLA 24.4: sentencia_de_seleccion -> CONDITION expresion_logica THEN program_lines ELSE_BACKWARD program_lines END");
-    addInfo("REGLA 24.4: sentencia_de_seleccion -> CONDITION %s THEN %s ELSE_BACKWARD %s END%n%n", exp_log, p1, p2);
+    addInfo("REGLA 20.4: sentencia_de_seleccion -> CONDITION expresion_logica THEN program_lines ELSE_BACKWARD program_lines END");
+    addInfo("REGLA 20.4: sentencia_de_seleccion -> CONDITION %s THEN %s ELSE_BACKWARD %s END", exp_log, p1, p2);
     RESULT = new ConditionStatement(exp_log, p1, p2);
 :};
 
 program_section ::= PROGRAM_SECTION program_lines:p ENDPROGRAM_SECTION {:
-    addInfo("REGLA 25.1: program_section -> PROGRAM_SECTION program_lines ENDPROGRAM_SECTION");
-    addInfo("REGLA 25.1: program_section -> PROGRAM_SECTION\n\t %s\n ENDPROGRAM_SECTION%n%n", p);
+    addInfo("REGLA 21.1: program_section -> PROGRAM_SECTION program_lines ENDPROGRAM_SECTION");
+    addInfo("REGLA 21.1: program_section -> PROGRAM_SECTION\n\t %s\n ENDPROGRAM_SECTION", p);
     RESULT = p ;
 :};
 
 program_lines ::= program_line:e {:
-    addInfo("REGLA 26.1: program_lines -> program_line");
-    addInfo("REGLA 26.1: program_lines -> \n\t%s%n%n", e);
+    addInfo("REGLA 22.1: program_lines -> program_line");
+    addInfo("REGLA 22.1: program_lines -> \n\t%s", e);
     RESULT = new StatementList(e);
     :}
     | program_lines:d program_line:e {:
-    addInfo("REGLA 26.2: program_lines -> program_line program_lines");
-    addInfo("REGLA 26.2: program_lines -> %s\n\t%s%n%n", d, e);
+    addInfo("REGLA 22.2: program_lines -> program_line program_lines");
+    addInfo("REGLA 22.2: program_lines -> %s\n\t%s", d, e);
     RESULT = d.addStatementToList(e);
 :};
 
 program_line ::= sentenciaDisplay:s {:
-    addInfo("REGLA 27.1: program_line -> sentenciaDisplay");
-    addInfo("REGLA 27.1: program_line -> %s%n%n",s);
+    addInfo("REGLA 23.1: program_line -> sentenciaDisplay");
+    addInfo("REGLA 23.1: program_line -> %s",s);
     RESULT = s;
     :}
     | asignacion:a {:
-    addInfo("REGLA 27.2: program_line -> asignacion");
-    addInfo("REGLA 27.2: program_line -> %s%n%n",a);
+    addInfo("REGLA 23.2: program_line -> asignacion");
+    addInfo("REGLA 23.2: program_line -> %s",a);
     RESULT = a;
     :}
     | sentencia_de_seleccion:ss {:
-    addInfo("REGLA 27.3: program_line -> sentencia_de_seleccion");
-    addInfo("REGLA 27.3: program_line -> %s%n%n",ss);
+    addInfo("REGLA 23.3: program_line -> sentencia_de_seleccion");
+    addInfo("REGLA 23.3: program_line -> %s",ss);
     RESULT = ss;
     :}
     | sentencia_de_iteracion:si {:
-    addInfo("REGLA 27.4: program_line -> sentencia_de_iteracion");
-    addInfo("REGLA 27.4: program_line -> %s%n%n",si);
+    addInfo("REGLA 24.4: program_line -> sentencia_de_iteracion");
+    addInfo("REGLA 24.4: program_line -> %s",si);
     RESULT = si;
 :};
 
 numero_literal ::= IDENTIFICADOR ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
-    addInfo("REGLA 23.1: literalNumber -> IDENTIFICADOR ABRE_CORCHETE expresion CIERRA_CORCHETE");
+    addInfo("REGLA 25.1: literalNumber -> IDENTIFICADOR ABRE_CORCHETE expresion CIERRA_CORCHETE");
     RESULT = ;
     :}
     |FLOAT_LITERAL:fl {:
-    addInfo("REGLA 23.2: literalNumber -> FLOAT_LITERAL");
-    addInfo("REGLA 23.2: literalNumber -> %s%n%n", fl);
+    addInfo("REGLA 25.2: literalNumber -> FLOAT_LITERAL");
+    addInfo("REGLA 25.2: literalNumber -> %s", fl);
     RESULT = fl;
     :}
      :il {:
-    addInfo("REGLA 23.3: literalNumber -> INTEGER_LITERAL");
-    addInfo("REGLA 23.3: literalNumber -> %s%n%n", il);
+    addInfo("REGLA 25.3: literalNumber -> INTEGER_LITERAL");
+    addInfo("REGLA 25.3: literalNumber -> %s", il);
     RESULT = il;
 :};
 
 sentencia_de_iteracion :== LOOP WHEN expresion_logica:exp_log THEN program_lines:p END_LOOP{:
-        addInfo("REGLA 24.1: sentencia_de_iteracion -> LOOP WHEN expresion_logica THEN program_lines END_LOOP");
-        addInfo("REGLA 24.1: sentencia_de_iteracion -> LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
+        addInfo("REGLA 26.1: sentencia_de_iteracion -> LOOP WHEN expresion_logica THEN program_lines END_LOOP");
+        addInfo("REGLA 26.1: sentencia_de_iteracion -> LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
         RESULT = new LoopStatement(exp_log, p);
     :}
     | BACKWARD_LOOP WHEN expresion_logica:exp_log THEN program_lines:p END_LOOP{:
-        addInfo("REGLA 24.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN expresion_logica THEN program_lines END_LOOP");
-        addInfo("REGLA 24.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
+        addInfo("REGLA 26.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN expresion_logica THEN program_lines END_LOOP");
+        addInfo("REGLA 26.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
         RESULT = new BackwardLoopStatement(exp_log, p);
     :};
 
 program_lines_loop ::= program_lines_loop:d program_line_loop:e {:
-        addInfo("REGLA 28.2: program_lines -> program_line_loop program_line_loop");
-        addInfo("REGLA 28.2: program_lines_loop -> %s\n\t%s%n%n", d, e);
+        addInfo("REGLA 27.2: program_lines -> program_line_loop program_line_loop");
+        addInfo("REGLA 27.2: program_lines_loop -> %s\n\t%s", d, e);
         RESULT = d.addStatementToList(e);
     :}
     | program_line_loop:p {
-        addInfo("REGLA 28.3: program_lines -> program_line_loop");
-        addInfo("REGLA 28.3: program_lines -> %s", p);
+        addInfo("REGLA 27.3: program_lines -> program_line_loop");
+        addInfo("REGLA 27.3: program_lines -> %s", p);
     :};
 
 program_line_loop ::= program_line:p {:
-        addInfo("REGLA 29.1: program_line_loop -> program_line");
-        addInfo("REGLA 29.1: program_line -> %s%n%n", p);
+        addInfo("REGLA 28.1: program_line_loop -> program_line");
+        addInfo("REGLA 28.1: program_line -> %s", p);
         RESULT = s;
     :}
     | BREAK {:
-        addInfo("REGLA 29.2: program_line -> BREAK%n%n");
+        addInfo("REGLA 28.2: program_line -> BREAK");
         RESULT = new BreakStatement();
     :}
     | CONTINUE {:
-        addInfo("REGLA 29.3: program_line -> CONTINUE%n%n");
+        addInfo("REGLA 28.3: program_line -> CONTINUE");
         RESULT = new ContinueStatement();
 :};
