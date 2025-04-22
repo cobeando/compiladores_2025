@@ -45,7 +45,7 @@ parser code
 
 terminal ArrayList FLOAT_ARRAY;
 
-terminal String BOOLEAN, FALSE, TRUE, CADENA, ENTERO_LITERAL, FLOTANTE_LITERAL, FLOAT_ARRAY_LITERAL, STRING_LITERAL, IDENTIFICADOR;
+terminal String BOOLEAN, FALSE, TRUE, ENTERO_LITERAL, FLOTANTE_LITERAL, FLOAT_ARRAY_LITERAL, STRING_LITERAL, IDENTIFICADOR;
 
 //Objects
 terminal ENTERO, FLOTANTE;
@@ -66,7 +66,7 @@ terminal PROGRAM_SECTION, ENDPROGRAM_SECTION, DECLARE_SECTION, ENDDECLARE_SECTIO
 
 terminal IGUAL, EQUIVALE, MAS, MENOS, MULT, DIV, MENOS_UNARIO;
 terminal MAYOR_QUE, MENOR_QUE, MAYOR_IGUAL_QUE, MENOR_IGUAL_QUE, DIFERENTE;
-terminal ABRE_PARENTESIS, CIERRA_PARENTESIS, ABRE_CORCHETE, CIERRA_CORCHETE, PUNTO, PUNTO_COMA, COMA, DOS_PUNTOS;
+terminal ABRE_PARENTESIS, CIERRA_PARENTESIS, ABRE_CORCHETE, CIERRA_CORCHETE, COMA, DOS_PUNTOS;
 
 nonterminal CompareCondition  comparacion;
 nonterminal Factor termino, factor;
@@ -514,13 +514,13 @@ numero_literal ::= IDENTIFICADOR ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
     RESULT = il;
 :};
 
-sentencia_de_iteracion ::= LOOP WHEN expresion_logica:exp_log THEN program_lines:p END_LOOP{:
-        addInfo("REGLA 26.1: sentencia_de_iteracion -> LOOP WHEN expresion_logica THEN program_lines END_LOOP");
+sentencia_de_iteracion ::= LOOP WHEN expresion_logica:exp_log THEN program_lines_loop:p END_LOOP{:
+        addInfo("REGLA 26.1: sentencia_de_iteracion -> LOOP WHEN expresion_logica THEN program_lines_loop END_LOOP");
         addInfo("REGLA 26.1: sentencia_de_iteracion -> LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
         RESULT = new LoopStatement(exp_log, p);
     :}
-    | BACKWARD_LOOP WHEN expresion_logica:exp_log THEN program_lines:p END_LOOP{:
-        addInfo("REGLA 26.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN expresion_logica THEN program_lines END_LOOP");
+    | BACKWARD_LOOP WHEN expresion_logica:exp_log THEN program_lines_loop:p END_LOOP{:
+        addInfo("REGLA 26.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN expresion_logica THEN program_lines_loop END_LOOP");
         addInfo("REGLA 26.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
         RESULT = new BackwardLoopStatement(exp_log, p);
     :};
@@ -540,11 +540,11 @@ program_line_loop ::= program_line:p {:
         addInfo("REGLA 28.1: program_line -> %s", p);
         RESULT = s;
     :}
-    | BREAK {:
+    |BREAK {:
         addInfo("REGLA 28.2: program_line -> BREAK");
         RESULT = new BreakStatement();
     :}
-    | CONTINUE {:
+    |CONTINUE {:
         addInfo("REGLA 28.3: program_line -> CONTINUE");
         RESULT = new ContinueStatement();
 :};
