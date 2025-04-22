@@ -40,11 +40,6 @@ action code {:
         stringBuilder.append(formatted).append("\n");
     }
 
-    public String getParseInfo(){
-        return stringBuilder.toString();
-    }
-
-
     public void registerSymbol(String token, String nombre, String tipo) throws RuntimeException{
         symbolTable.addSymbol(nombre.trim(),tipo,token);
     }
@@ -72,12 +67,11 @@ parser code
 
     /* Definición de Simbolos */
 
-terminal ArrayList FLOAT_ARRAY;
 
 terminal String BOOLEAN, FALSE, TRUE, ENTERO_LITERAL, FLOTANTE_LITERAL, FLOAT_ARRAY_LITERAL, STRING_LITERAL, IDENTIFICADOR;
 
 //Objects
-terminal ENTERO, FLOTANTE;
+terminal ENTERO, FLOTANTE, FLOAT_ARRAY;
 
 terminal AND, OR, NOT;
 
@@ -97,18 +91,18 @@ terminal IGUAL, EQUIVALE, MAS, MENOS, MULT, DIV, MENOS_UNARIO;
 terminal MAYOR_QUE, MENOR_QUE, MAYOR_IGUAL_QUE, MENOR_IGUAL_QUE, DIFERENTE;
 terminal ABRE_PARENTESIS, CIERRA_PARENTESIS, ABRE_CORCHETE, CIERRA_CORCHETE, COMA, DOS_PUNTOS;
 
-nonterminal CompareCondition  comparacion;
-nonterminal Factor termino, factor;
-nonterminal BooleanCondition constante_bool; 
-nonterminal Expression expresion_logica;
-nonterminal Expression expresion_simple, expresion;
-nonterminal Input inputs;
-nonterminal String number_list, ID_list,  numero_literal, data_type;
-nonterminal Program program;
-nonterminal StatementList program_lines, declarations, declaration_section, program_section;
-nonterminal DeclareStatement declaration;
-nonterminal Statement program_line, sentencia_de_seleccion, asignacion, sentenciaDisplay, sentencia_de_iteracion, program_line_loop, program_lines_loop;
-nonterminal valor_mas_cercano, any, all;
+nonterminal String declaration_section, declarations, declaration, data_type, ID_list, number_list, valor_mas_cercano;
+nonterminal comparacion;
+nonterminal termino, factor;
+nonterminal constante_bool; 
+nonterminal expresion_logica;
+nonterminal expresion_simple, expresion;
+nonterminal inputs;
+nonterminal numero_literal;
+nonterminal program;
+nonterminal program_lines, program_section;
+nonterminal program_line, sentencia_de_seleccion, asignacion, sentenciaDisplay, sentencia_de_iteracion, program_line_loop, program_lines_loop;
+nonterminal any, all;
 
 precedence left OR;
 precedence left AND;
@@ -123,29 +117,29 @@ start with program;
 program ::= declaration_section:ds program_section:ps {:
         addInfo("REGLA 0.1: program -> declaractio_section program_section");
         addInfo("REGLA 0.1: program -> %s\n%s", ds, ps);
-        RESULT = new Program(ds, ps)
+        RESULT = ds + "\n" + ps;
     :}
     | program_section:ps {:
         addInfo("REGLA 0.2: program -> program_section");
         addInfo("REGLA 0.2: program ->%s", ps);
-        RESULT = new Program(ps);
+        RESULT = ps;
 :};
 
 declaration_section ::= DECLARE_SECTION declarations:dec ENDDECLARE_SECTION {:
         addInfo("REGLA 1.1: declaration_section -> DECLARE_SECTION declarations ENDDECLARE_SECTION");
         addInfo("REGLA 1.1: declaration_section -> DECLARE_SECTION \n\t %s\n ENDDECLARE_SECTION", dec);
-        RESULT = dec;
+        RESULT =  "DECLARE_SECTION\n\t" + dec + "\nENDDECLARE_SECTION";
 :};
 
 declarations ::= declaration:e {:
         addInfo("REGLA 2.1: declarations -> \n\tdeclaration");
         addInfo("REGLA 2.1: declarations -> \n\t%s",e);
-        RESULT = new StatementList(e);
+        RESULT = e;
     :}
     |declarations:d declaration:e {:
         addInfo("REGLA 2.2: declarations -> declaration declarations");
         addInfo("REGLA 2.2: declarations -> %s\n\t%s", d, e);
-        RESULT = d.addStatementToList(e);
+        RESULT = d + "\n\t" + e;
 :};
 
 declaration ::= data_type:dt DOS_PUNTOS ID_list:idlist {:
@@ -154,7 +148,7 @@ declaration ::= data_type:dt DOS_PUNTOS ID_list:idlist {:
         }
         addInfo("REGLA 3.1: declaration -> data_type DOS_PUNTOS ID_list");
         addInfo("REGLA 3.1: declaration ->%s: %s", dt, idlist);
-        RESULT = new DeclareStatement(dt, idlist);
+        RESULT = dt + ": " + idlist ;
 :};
 
 data_type ::= ENTERO {:
@@ -268,7 +262,7 @@ number_list ::= number_list:nlist COMA ENTERO_LITERAL:il {:
     :}
     | ENTERO_LITERAL:il {:
          addInfo("REGLA 9.2: number_list -> il");
-        addInfo("REGLA 9.2: number_list -> %s", nliteral);
+        addInfo("REGLA 9.2: number_list -> %s", il);
         RESULT = il;
 :};
 
@@ -276,23 +270,23 @@ asignacion ::= IDENTIFICADOR:id IGUAL expresion_logica:exp_log {:
         checkSymbol(id);
         addInfo("REGLA 10.1: asignacion -> IDENTIFICADOR IGUAL expresion_logica");
         addInfo("REGLA 10.1: asignacion -> %s = %s", id, exp_log);
-        RESULT = new AssignStatement(id, exp_log);
+        RESULT = id + "=" + exp_log ;
 :};
 
 expresion_logica ::= NOT expresion_logica:exp_log {:
         addInfo("REGLA 11.1: expresion_logica -> NOT expresion_logica");
-        addInfo("REGLA 11.1: expresion_logica -> NOT %s", expresion_logica);
-        RESULT = new NotExpression(exp_log);
+        addInfo("REGLA 11.1: expresion_logica -> NOT %s", exp_log);
+        RESULT = "NOT" + exp_log;
     :}
     | expresion_logica:exp_log OR expresion_simple:exp_simp {:
         addInfo("REGLA 11.2: expresion_logica -> exp_log OR expresion_simple");
         addInfo("REGLA 11.2: expresion_logica -> %s OR %s", exp_log, exp_simp);
-        RESULT = new LogicExpression(exp_log, exp_simp, "OR");
+        RESULT = exp_log + "OR" + "exp_simp";
     :}
     | expresion_logica:exp_log AND expresion_simple:exp_simp {:
         addInfo("REGLA 11.3: expresion_logica -> exp_log AND expresion_simple");
         addInfo("REGLA 11.3: expresion_logica -> %s AND %s", exp_log, exp_simp);
-        RESULT = new LogicExpression(exp_log, exp_simp, "AND");
+        RESULT =  exp_log + "AND" + "exp_simp";
     :}
     | expresion_simple:exp_simp {:
         addInfo("REGLA 11.4: expresion_logica -> expresion_simple");
@@ -314,43 +308,43 @@ expresion_simple ::= comparacion:cond {:
 comparacion ::= expresion:e1 EQUIVALE expresion:e2 {:
     addInfo("REGLA 13.1: comparacion -> expresion EQUIVALE expresion");
     addInfo("REGLA 13.1: comparacion -> %s == %s", e1, e2);
-    RESULT = new CompareCondition(e1, "==", e2);
+    RESULT = e1 + "==" + e2 ;
     :}
     | expresion:e1 DIFERENTE expresion:e2 {:
     addInfo("REGLA 13.2: comparacion -> expresion DIFERENTE expresion");
     addInfo("REGLA 13.2: comparacion -> %s != %s", e1, e2);
-    RESULT = new CompareCondition(e1, "!=", e2);
+    RESULT = e1 + "!=" + e2 ;
     :}
     | expresion:e1 MENOR_QUE expresion:e2 {:
     addInfo("REGLA 13.3: comparacion -> expresion MENOR_QUE expresion");
     addInfo("REGLA 13.3: comparacion -> %s < %s", e1, e2);
-    RESULT = new CompareCondition(e1, "<", e2);
+    RESULT = e1 + "<" + e2 ;
     :}
     | expresion:e1 MAYOR_QUE expresion:e2 {:
     addInfo("REGLA 13.4: comparacion -> expresion MAYOR_QUE expresion");
     addInfo("REGLA 13.4: comparacion -> %s > %s", e1, e2);
-    RESULT = new CompareCondition(e1, ">", e2);
+    RESULT = e1 + ">" + e2 ;
     :}
     | expresion:e1 MENOR_IGUAL_QUE expresion:e2 {:
     addInfo("REGLA 13.5: comparacion -> expresion MENOR_IGUAL_QUE expresion");
     addInfo("REGLA 13.5: comparacion -> %s <= %s", e1, e2);
-    RESULT = new CompareCondition(e1, "<=", e2);
+    RESULT = e1 + "<=" + e2 ;
     :}
     | expresion:e1 MAYOR_IGUAL_QUE expresion:e2 {:
     addInfo("REGLA 13.6: comparacion -> expresion MAYOR_IGUAL_QUE expresion");
     addInfo("REGLA 13.6: comparacion -> %s >= %s", e1, e2);
-    RESULT = new CompareCondition(e1, ">=", e2);
+    RESULT = e1 + ">=" + e2 ;
 :};
 
 expresion ::= expresion:e MAS termino:t {:
     addInfo("REGLA 14.1: expresion -> expresion MAS termino");
     addInfo("REGLA 14.1: expresion -> %s + %s", e, t);
-    RESULT = new PlusOperation(e, t);
+    RESULT = e + "+" + t;
     :}
     | expresion:e MENOS termino:t {:
     addInfo("REGLA 14.2: expresion -> expresion MENOS termino");
     addInfo("REGLA 14.2: expresion -> %s - %s", e, t);
-    RESULT = new MinusOperation(e, t);
+    RESULT = e + "-" + t;
     :}
     | termino:t {:
     addInfo("REGLA 14.3: expresion -> termino");
@@ -362,12 +356,12 @@ expresion ::= expresion:e MAS termino:t {:
 termino ::= termino:t MULT factor:f {:
     addInfo("REGLA 15.1: termino -> termino MULT factor");
     addInfo("REGLA 15.1: termino -> %s * %s", t, f);
-    RESULT = new MultiplyOperation(t, f);
+    RESULT = t + "*" + f;
     :}
     | termino:t DIV factor:f {:
     addInfo("REGLA 15.2: termino -> termino DIV factor");
     addInfo("REGLA 15.2: termino -> %s / %s", t, f);
-    RESULT = new DivideOperation(t, f);
+    RESULT = t + "/" + f;
     :}
     | factor:f {:
     addInfo("REGLA 15.3: termino -> factor");
@@ -383,13 +377,13 @@ factor ::= MENOS factor:f {:
     | ABRE_PARENTESIS expresion_logica:exp_log CIERRA_PARENTESIS {:
     addInfo("REGLA 16.2: factor -> ABRE_PARENTESIS expresion_logica CIERRA_PARENTESIS");
     addInfo("REGLA 16.2: factor -> (%s)", exp_log);
-    RESULT = new LogicExpressionFactor(exp_log);
+    RESULT = "(" + exp_log + ")";
     :}
     | IDENTIFICADOR:id {:
     checkSymbol(id);
     addInfo("REGLA 16.3: factor -> IDENTIFICADOR");
     addInfo("REGLA 16.3: factor -> %s", id);
-    RESULT = new Constant(id);
+    RESULT = id;
     :}
     | inputs:ip {:
     addInfo("REGLA 16.4: factor -> inputs");
@@ -399,7 +393,7 @@ factor ::= MENOS factor:f {:
     | numero_literal:nliteral {:
     addInfo("REGLA 16.5: factor -> numero_literal");
     addInfo("REGLA 16.5: factor -> %s", nliteral);
-    RESULT = new Constant(nliteral);
+    RESULT = nliteral;
     :}
     FLOAT_ARRAY_LITERAL:fal {:
     addInfo("REGLA 16.6: expresion -> FLOAT_ARRAY_LITERAL");
@@ -429,65 +423,65 @@ factor ::= MENOS factor:f {:
 
 constante_bool ::= TRUE {:
     addInfo("REGLA 17.1: constante_bool -> TRUE");
-    RESULT = new BooleanCondition(true);
+    RESULT = "TRUE";
     :}
     |FALSE {:
     addInfo("REGLA 17.2: constante_bool -> FALSE");
-    RESULT = new BooleanCondition(false);
+    RESULT = "FALSE";
 :};
 
 sentenciaDisplay ::= DISPLAY ABRE_PARENTESIS expresion_logica:exp_log CIERRA_PARENTESIS {:
     addInfo("REGLA 18.1: sentenciaDisplay -> DISPLAY ABRE_PARENTESIS expresion_logica CIERRA_PARENTESIS");
     addInfo("REGLA 18.1: sentenciaDisplay -> DISPLAY(%s)" ,exp_log);
-    RESULT = new DisplayStatement(e);
+    RESULT = "DISPLAY" + "(" + exp_log + ")";
     :}
     | DISPLAY ABRE_PARENTESIS STRING_LITERAL:str_lit CIERRA_PARENTESIS {:
     registerSymbol("CTE_STR", str_lit , "STRING");
     addInfo("REGLA 18.2: sentenciaDisplay -> DISPLAY ABRE_PARENTESIS STRING_LITERAL CIERRA_PARENTESIS");
     addInfo("REGLA 18.2: sentenciaDisplay -> DISPLAY(%s)" ,str_lit);
-    RESULT = new DisplayStatement(str_lit);
+    RESULT = "DISPLAY" + "(" + str_lit + ")";
 :};
 
 inputs ::= INPUT_BOOL:ib ABRE_PARENTESIS CIERRA_PARENTESIS {:
     addInfo("REGLA 19.1: inputs -> INPUT_BOOL ABRE_PARENTESIS CIERRA_PARENTESIS");
     addInfo("REGLA 19.1: inputs -> ( %s )", ib );
-    RESULT = new Input("BOOL");
+    RESULT = ib + "(" + ")";
     :}
     |INPUT_INT:ii ABRE_PARENTESIS CIERRA_PARENTESIS {:
     addInfo("REGLA 19.2: inputs -> INPUT_INT ABRE_PARENTESIS CIERRA_PARENTESIS");
     addInfo("REGLA 19.2: inputs -> ( %s )", ii );
-    RESULT = new Input("INT");
+    RESULT = ii + "(" + ")";
     :}
     |INPUT_FLOAT:ifl ABRE_PARENTESIS CIERRA_PARENTESIS {:
     addInfo("REGLA 19.3: inputs -> INPUT_FLOAT ABRE_PARENTESIS CIERRA_PARENTESIS");
     addInfo("REGLA 19.3: inputs -> ( %s )", ifl );
-    RESULT = new Input("FLOAT");
+    RESULT = ifl + "(" + ")";
     :}
     |INPUT_ARRAY:ia ABRE_PARENTESIS CIERRA_PARENTESIS {:
     addInfo("REGLA 19.4: inputs -> INPUT_ARRAY ABRE_PARENTESIS CIERRA_PARENTESIS");
     addInfo("REGLA 19.4: inputs -> ( %s )", ia );
-    RESULT = new Input("ARRAY");
+    RESULT = ia +  "(" + ")" ;
 :};
 
 sentencia_de_seleccion ::= CONDITION expresion_logica:exp_log THEN program_lines:p END {:
     addInfo("REGLA 20.1: sentencia_de_seleccion -> CONDITION expresion_logica THEN program_lines END");
     addInfo("REGLA 20.1: sentencia_de_seleccion -> CONDITION %s THEN %s END", exp_log, p);
-    RESULT = new ConditionStatement(exp_log, p);
+    RESULT = "CONDITION" + exp_log + "THEN" + p + "END";
     :}
     | CONDITION expresion_logica:exp_log THEN program_lines:p1 ELSE program_lines:p2 END {:
     addInfo("REGLA 20.2: sentencia_de_seleccion -> CONDITION expresion_logica THEN program_lines ELSE program_lines END");
     addInfo("REGLA 20.2: sentencia_de_seleccion -> CONDITION %s THEN %s ELSE %s END", exp_log, p1, p2);
-    RESULT = new ConditionStatement(exp_log, p1, p2);
+    RESULT = "CONDITION" + exp_log + "THEN" + p1 + "ELSE" + p2 + "END";
     :}
     | BACKWARD_CONDITION expresion_logica:exp_log THEN program_lines:p END {:
     addInfo("REGLA 20.3: sentencia_de_seleccion -> BACKWARD_CONDITION expresion_logica THEN program_lines END");
     addInfo("REGLA 20.3: sentencia_de_seleccion -> BACKWARD_CONDITION %s THEN %s END", exp_log, p);
-    RESULT = new BackwardConditionStatement(exp_log, p);
+    RESULT = "BACKWARD_CONDITION" + exp_log + "THEN" + p + "END";
     :}
     | BACKWARD_CONDITION expresion_logica:exp_log THEN program_lines:p1 ELSE_BACKWARD program_lines:p2 END {:
     addInfo("REGLA 20.4: sentencia_de_seleccion -> CONDITION expresion_logica THEN program_lines ELSE_BACKWARD program_lines END");
     addInfo("REGLA 20.4: sentencia_de_seleccion -> CONDITION %s THEN %s ELSE_BACKWARD %s END", exp_log, p1, p2);
-    RESULT = new ConditionStatement(exp_log, p1, p2);
+    RESULT = "BACKWARD_CONDITION" + exp_log + "THEN" + p1 + "ELSE_BACKWARD" + p2 + "END";
 :};
 
 program_section ::= PROGRAM_SECTION program_lines:p ENDPROGRAM_SECTION {:
@@ -496,15 +490,15 @@ program_section ::= PROGRAM_SECTION program_lines:p ENDPROGRAM_SECTION {:
     RESULT = p ;
 :};
 
-program_lines ::= program_line:e {:
-    addInfo("REGLA 22.1: program_lines -> program_line");
-    addInfo("REGLA 22.1: program_lines -> \n\t%s", e);
-    RESULT = new StatementList(e);
-    :}
-    | program_lines:d program_line:e {:
+program_lines ::= program_lines:d program_line:e {:
     addInfo("REGLA 22.2: program_lines -> program_line program_lines");
     addInfo("REGLA 22.2: program_lines -> %s\n\t%s", d, e);
-    RESULT = d.addStatementToList(e);
+    RESULT = d + "\n\t" + e;
+     :}
+    | program_line:e {:
+    addInfo("REGLA 22.1: program_lines -> program_line");
+    addInfo("REGLA 22.1: program_lines -> \n\t%s", e);
+    RESULT = e;
 :};
 
 program_line ::= sentenciaDisplay:s {:
@@ -546,34 +540,35 @@ numero_literal ::= IDENTIFICADOR ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
 sentencia_de_iteracion ::= LOOP WHEN expresion_logica:exp_log THEN program_lines_loop:p END_LOOP{:
         addInfo("REGLA 26.1: sentencia_de_iteracion -> LOOP WHEN expresion_logica THEN program_lines_loop END_LOOP");
         addInfo("REGLA 26.1: sentencia_de_iteracion -> LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
-        RESULT = new LoopStatement(exp_log, p);
+        RESULT = "LOOP" + "WHEN" + exp_log + "THEN" + p + "END_LOOP";
     :}
     | BACKWARD_LOOP WHEN expresion_logica:exp_log THEN program_lines_loop:p END_LOOP{:
         addInfo("REGLA 26.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN expresion_logica THEN program_lines_loop END_LOOP");
         addInfo("REGLA 26.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
-        RESULT = new BackwardLoopStatement(exp_log, p);
+        RESULT = "BACKWARD_LOOP" + "WHEN" + exp_log + "THEN" + p + "END_LOOP";
     :};
 
 program_lines_loop ::= program_lines_loop:d program_line_loop:e {:
         addInfo("REGLA 27.2: program_lines -> program_line_loop program_line_loop");
         addInfo("REGLA 27.2: program_lines_loop -> %s\n\t%s", d, e);
-        RESULT = d.addStatementToList(e);
+        RESULT = d + "\n\t" + "e";
     :}
     | program_line_loop:p {:
         addInfo("REGLA 27.3: program_lines -> program_line_loop");
         addInfo("REGLA 27.3: program_lines -> %s", p);
+         RESULT = p ;
     :};
 
 program_line_loop ::= program_line:p {:
         addInfo("REGLA 28.1: program_line_loop -> program_line");
         addInfo("REGLA 28.1: program_line -> %s", p);
-        RESULT = s;
+        RESULT = p;
     :}
     |BREAK {:
         addInfo("REGLA 28.2: program_line -> BREAK");
-        RESULT = new BreakStatement();
+        RESULT = "BREAK" ;
     :}
     |CONTINUE {:
         addInfo("REGLA 28.3: program_line -> CONTINUE");
-        RESULT = new ContinueStatement();
+        RESULT = "CONTINUE";
 :};

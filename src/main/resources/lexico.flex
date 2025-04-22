@@ -1,5 +1,5 @@
-package ar.edu.unnoba.comp.compilertp;
 
+package ar.edu.unnoba.comp.jflextp;
 
 import java_cup.runtime.*;
 import java_cup.sym;
@@ -70,7 +70,7 @@ Identifier = \p{L}[\p{L}\p{N}_]*
   {ComentarioTerminallinea} { /* ignore */ }
 
 
-  {CloseComment}       { throw new ar.edu.unnoba.comp.compilertp.exceptions.CloseCommentException("Cierre de comentario inválido \n");}
+  {CloseComment}       { throw new ar.edu.unnoba.comp.jflextp.exceptions.CloseCommentException("Cierre de comentario inválido \n");}
 
 
   /* palabras reservadas */
@@ -183,7 +183,7 @@ Identifier = \p{L}[\p{L}\p{N}_]*
   "\r"                  { string.append("\r");}
 
   /* Fin de archivo */
-  <<EOF>>              { throw new ar.edu.unnoba.comp.compilertp.jflextp.EOFLexerException("Fin de archivo dentro de la cadena: \n" +
+  <<EOF>>              { throw new ar.edu.unnoba.comp.jflextp.exceptions.EOFLexerException("Fin de archivo dentro de la cadena: \n" +
                                                string.toString()); }
 
   /* Cualquier otro carácter */
@@ -203,7 +203,7 @@ Identifier = \p{L}[\p{L}\p{N}_]*
     {OpenCommentBrackets}           {yybegin(COMENTARIOBRACKETS);}
                                   
   /* Fin de archivo */
-  <<EOF>>              { throw new ar.edu.unnoba.comp.compilertp.exceptions.EOFLexerException("Comentario sin balancear: "+ yytext()); }
+  <<EOF>>              { throw new ar.edu.unnoba.comp.jflextp.exceptions.EOFLexerException("Comentario sin balancear: "+ yytext()); }
 
    [^.]|.          { /* ignore */ }
 }
@@ -215,7 +215,7 @@ Identifier = \p{L}[\p{L}\p{N}_]*
     {OpenCommentCurlyBracket}        {yybegin(COMENTARIOCURLYBRACKET);}
 
   /* Fin de archivo */
-  <<EOF>>              { throw new ar.edu.unnoba.comp.compilertp.exceptions.EOFLexerException("Comentario sin balancear: "+ yytext()); }
+  <<EOF>>              { throw new ar.edu.unnoba.comp.jflextp.exceptions.EOFLexerException("Comentario sin balancear: "+ yytext()); }
 
    [^.]|.          { /* ignore */ }
 }
@@ -228,11 +228,11 @@ Identifier = \p{L}[\p{L}\p{N}_]*
                                       yybegin(COMENTARIO);}
 
   /* Fin de archivo */
-  <<EOF>>              { throw new ar.edu.unnoba.comp.compilertp.exceptions.EOFLexerException("Comentario sin balancear: "+ yytext()); }
+  <<EOF>>              { throw new ar.edu.unnoba.comp.jflextp.exceptions.EOFLexerException("Comentario sin balancear: "+ yytext()); }
 
    [^.]|.          { /* ignore */ }
 }
 
 
 /* fallback de errores */
-[^]                    { throw new ar.edu.unnoba.comp.compilertp.exceptions.LexerException("Carácter inválido <"+yytext()+">"); }
+[^]                    { throw new ar.edu.unnoba.comp.jflextp.exceptions.LexerException("Carácter inválido <"+yytext()+">"); }

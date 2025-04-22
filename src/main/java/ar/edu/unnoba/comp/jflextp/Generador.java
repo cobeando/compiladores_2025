@@ -2,6 +2,7 @@ package ar.edu.unnoba.comp.jflextp;
 
 import jflex.generator.LexGenerator;
 
+
 import java.io.File;
 
 public class Generador {

@@ -1,6 +1,6 @@
 package ar.edu.unnoba.comp.jflextp.utils;
 
-import ar.edu.unnoba.comp.jflextp.exceptions.SymbolException;
+import ar.edu.unnoba.comp.jflextp.exceptions.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,9 +26,12 @@ public class SymbolTable {
         symbolTable.put(name, symbol);
     }
 
-    /**
-     * Método para obtener una representación de la tabla como cadena de texto
-     */
+    public void isRegistered(String name) throws SymbolException {
+        if (!symbolTable.containsKey(name)) {
+            throw new SymbolException("El símbolo '" + name + "' no está registrado en la tabla de símbolos.");
+        }
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Tabla de simbolos: \n");
@@ -40,7 +43,6 @@ public class SymbolTable {
         return sb.toString();
     }
 
-    // Clase para representar un símbolo
     private class Symbol {
         private String name;
         private String type;
