@@ -45,7 +45,7 @@ parser code
 
 terminal ArrayList FLOAT_ARRAY;
 
-terminal String BOOLEAN, FALSE, TRUE, CADENA, ENTERO_LITERAL, FLOTANTE_LITERAL, CADENA_LITERAL, IDENTIFICADOR;
+terminal String BOOLEAN, FALSE, TRUE, CADENA, ENTERO_LITERAL, FLOTANTE_LITERAL, FLOAT_ARRAY_LITERAL, STRING_LITERAL, IDENTIFICADOR;
 
 //Objects
 terminal ENTERO, FLOTANTE;
@@ -60,12 +60,12 @@ terminal ANY, ALL;
 
 terminal INPUT_INT, INPUT_FLOAT, INPUT_BOOL, INPUT_ARRAY;
 
-terminal DECLARE_SECTION, ENDDECLARE_SECTION, VALOR_MAS_CERCANO;
+terminal PROGRAM_SECTION, ENDPROGRAM_SECTION, DECLARE_SECTION, ENDDECLARE_SECTION, VALOR_MAS_CERCANO;
 
 //Operaciones
 
-terminal IGUAL, EQUIVALE, MAS, MENOS, MENOR_IGUAL_QUE, MULT, DIV, MENOS_UNARIO;
-terminal MENOR_QUE, MAS, MAYOR_IGUAL_QUE, MENOR_IGUAL_QUE, DIFERENTE;
+terminal IGUAL, EQUIVALE, MAS, MENOS, MULT, DIV, MENOS_UNARIO;
+terminal MAYOR_QUE, MENOR_QUE, MAYOR_IGUAL_QUE, MENOR_IGUAL_QUE, DIFERENTE;
 terminal ABRE_PARENTESIS, CIERRA_PARENTESIS, ABRE_CORCHETE, CIERRA_CORCHETE, PUNTO, PUNTO_COMA, COMA, DOS_PUNTOS;
 
 nonterminal CompareCondition  comparacion;
@@ -74,11 +74,11 @@ nonterminal BooleanCondition constante_bool;
 nonterminal Expression expresion_logica;
 nonterminal Expression expresion_simple, expresion;
 nonterminal Input inputs;
-nonterminal String numberList, ID_list,  numero_literal, data_type;
+nonterminal String number_list, ID_list,  numero_literal, data_type;
 nonterminal Program program;
 nonterminal StatementList program_lines, declarations, declaration_section, program_section;
 nonterminal DeclareStatement declaration;
-nonterminal Statement program_line, sentencia_de_seleccion, asignacion, sentenciaDisplay, sentencia_de_iteracion;
+nonterminal Statement program_line, sentencia_de_seleccion, asignacion, sentenciaDisplay, sentencia_de_iteracion, program_line_loop, program_lines_loop;
 nonterminal valor_mas_cercano, any, all;
 
 precedence left OR;
@@ -121,7 +121,7 @@ declarations ::= declaration:e {:
 
 declaration ::= data_type:dt DOS_PUNTOS ID_list:idlist {:
         for (String name : idlist.split(",")) {
-            registerSymbol("ID", name, dt);
+            registerSymbol("IDENTIFICADOR", name, dt);
         }
         addInfo("REGLA 3.1: declaration -> data_type DOS_PUNTOS ID_list");
         addInfo("REGLA 3.1: declaration ->%s: %s", dt, idlist);
@@ -162,90 +162,90 @@ ID_list ::= IDENTIFICADOR:id {:
     RESULT = ;
 :};
 
-valor_mas_cercano ::= VALOR_MAS_CERCANO ABRE_PARENTESIS INTEGER_LITERAL:il COMA ABRE_CORCHETE number_list:nl CIERRA_CORCHETE CIERRA_PARENTESIS {:
-        addInfo("REGLA 6.1: valor_mas_cercano -> VALOR_MAS_CERCANO ABRE_PARENTESIS INTEGER_LITERAL COMA ABRE_CORCHETE number_list CIERRA_CORCHETE CIERRA_PARENTESIS");
+valor_mas_cercano ::= VALOR_MAS_CERCANO ABRE_PARENTESIS ENTERO_LITERAL:il COMA ABRE_CORCHETE number_list:nl CIERRA_CORCHETE CIERRA_PARENTESIS {:
+        addInfo("REGLA 6.1: valor_mas_cercano -> VALOR_MAS_CERCANO ABRE_PARENTESIS ENTERO_LITERAL COMA ABRE_CORCHETE number_list CIERRA_CORCHETE CIERRA_PARENTESIS");
         addInfo("REGLA 6.1: valor_mas_cercano -> valor_mas_cercano( %s , [ %s ] )", il, nl);
         RESULT = "valor_mas_cercano" + "(" + il + "," + "[" + nl + "]" + ")";
     :};
 
 
-all ::= ALL ABRE_PARENTESIS expresion:e COMA EQUIVALE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.1: all -> ALL ABRE_PARENTESIS expresion COMA EQUIVALE COMA ID CIERRA_PARENTESIS");
+all ::= ALL ABRE_PARENTESIS expresion:e COMA EQUIVALE COMA IDENTIFICADOR:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.1: all -> ALL ABRE_PARENTESIS expresion COMA EQUIVALE COMA IDENTIFICADOR CIERRA_PARENTESIS");
         addInfo("REGLA 7.1: all -> all( %s , == , %s )", e, id);
         RESULT = "all" + "(" + e + "," + "==" + "," + id + ")";
     :}
-    |ALL ABRE_PARENTESIS expresion:e COMA DIFERENTE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.2: all -> ALL ABRE_PARENTESIS expresion COMA DIFERENTE COMA ID CIERRA_PARENTESIS");
+    |ALL ABRE_PARENTESIS expresion:e COMA DIFERENTE COMA IDENTIFICADOR:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.2: all -> ALL ABRE_PARENTESIS expresion COMA DIFERENTE COMA IDENTIFICADOR CIERRA_PARENTESIS");
         addInfo("REGLA 7.2: all -> all( %s , != , %s )", e, id);
         RESULT = "all" + "(" + e + "," + "!=" + "," + id + ")";
     :}
-    |ALL ABRE_PARENTESIS expresion:e COMA MENOR_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.3: all -> ALL ABRE_PARENTESIS expresion COMA MENOR_QUE COMA ID CIERRA_PARENTESIS");
+    |ALL ABRE_PARENTESIS expresion:e COMA MENOR_QUE COMA IDENTIFICADOR:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.3: all -> ALL ABRE_PARENTESIS expresion COMA MENOR_QUE COMA IDENTIFICADOR CIERRA_PARENTESIS");
         addInfo("REGLA 7.3: all -> all( %s , < , %s )", e, id);
         RESULT = "all" + "(" + e + "," + "<" + "," + id + ")";
     :}
-    |ALL ABRE_PARENTESIS expresion:e COMA MAYOR_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.4: all -> ALL ABRE_PARENTESIS expresion COMA MAYOR_QUE COMA ID CIERRA_PARENTESIS");
+    |ALL ABRE_PARENTESIS expresion:e COMA MAYOR_QUE COMA IDENTIFICADOR:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.4: all -> ALL ABRE_PARENTESIS expresion COMA MAYOR_QUE COMA IDENTIFICADOR CIERRA_PARENTESIS");
         addInfo("REGLA 7.4: all -> all( %s , > , %s )", e, id);
         RESULT = "all" + "(" + e + "," + ">" + "," + id + ")";
     :}
-    |ALL ABRE_PARENTESIS expresion:e COMA MENOR_IGUAL_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.5: all -> ALL ABRE_PARENTESIS expresion COMA MENOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
+    |ALL ABRE_PARENTESIS expresion:e COMA MENOR_IGUAL_QUE COMA IDENTIFICADOR:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.5: all -> ALL ABRE_PARENTESIS expresion COMA MENOR_IGUAL_QUE COMA IDENTIFICADOR CIERRA_PARENTESIS");
         addInfo("REGLA 7.5: all -> all( %s , <= , %s )", e, id);
         RESULT = "all" + "(" + e + "," + "<=" + "," + id + ")";
     :}
-    |ALL ABRE_PARENTESIS expresion:e COMA MAYOR_IGUAL_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 7.6: all -> ALL ABRE_PARENTESIS expresion COMA MAYOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
+    |ALL ABRE_PARENTESIS expresion:e COMA MAYOR_IGUAL_QUE COMA IDENTIFICADOR:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 7.6: all -> ALL ABRE_PARENTESIS expresion COMA MAYOR_IGUAL_QUE COMA IDENTIFICADOR CIERRA_PARENTESIS");
         addInfo("REGLA 7.6: all -> all( %s , >= , %s )", e, id);
         RESULT = "all" + "(" + e + "," + ">=" + "," + id + ")";
 :};
 
 
-any ::= ANY ABRE_PARENTESIS expresion:e COMA EQUIVALE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 8.1: any -> ANY ABRE_PARENTESIS expresion COMA EQUIVALE COMA ID CIERRA_PARENTESIS");
+any ::= ANY ABRE_PARENTESIS expresion:e COMA EQUIVALE COMA IDENTIFICADOR:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 8.1: any -> ANY ABRE_PARENTESIS expresion COMA EQUIVALE COMA IDENTIFICADOR CIERRA_PARENTESIS");
         addInfo("REGLA 8.1: any -> any( %s , == , %s )", e, id);
         RESULT = "any" + "(" + e + "," + "==" + "," + id + ")";
     :}
-    |ANY ABRE_PARENTESIS expresion:e COMA DIFERENTE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 8.2: any -> ANY ABRE_PARENTESIS expresion COMA DIFERENTE COMA ID CIERRA_PARENTESIS");
+    |ANY ABRE_PARENTESIS expresion:e COMA DIFERENTE COMA IDENTIFICADOR:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 8.2: any -> ANY ABRE_PARENTESIS expresion COMA DIFERENTE COMA IDENTIFICADOR CIERRA_PARENTESIS");
         addInfo("REGLA 8.2: any -> any( %s , != , %s )", e, id);
         RESULT = "any" + "(" + e + "," + "!=" + "," + id + ")";
     :}
-    |ANY ABRE_PARENTESIS expresion:e COMA MENOR_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 8.3: any -> ANY ABRE_PARENTESIS expresion COMA MENOR_QUE COMA ID CIERRA_PARENTESIS");
+    |ANY ABRE_PARENTESIS expresion:e COMA MENOR_QUE COMA IDENTIFICADOR:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 8.3: any -> ANY ABRE_PARENTESIS expresion COMA MENOR_QUE COMA IDENTIFICADOR CIERRA_PARENTESIS");
         addInfo("REGLA 8.3: any -> any( %s , < , %s )", e, id);
         RESULT = "any" + "(" + e + "," + "<" + "," + id + ")";
     :}
-    |ANY ABRE_PARENTESIS expresion:e COMA MAYOR_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 8.4: any -> ANY ABRE_PARENTESIS expresion COMA MAYOR_QUE COMA ID CIERRA_PARENTESIS");
+    |ANY ABRE_PARENTESIS expresion:e COMA MAYOR_QUE COMA IDENTIFICADOR:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 8.4: any -> ANY ABRE_PARENTESIS expresion COMA MAYOR_QUE COMA IDENTIFICADOR CIERRA_PARENTESIS");
         addInfo("REGLA 8.4: any -> any( %s , > , %s )", e, id);
         RESULT = "any" + "(" + e + "," + ">" + "," + id + ")";
     :}
-    |ANY ABRE_PARENTESIS expresion:e COMA MENOR_IGUAL_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 8.5: any -> ANY ABRE_PARENTESIS expresion COMA MENOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
+    |ANY ABRE_PARENTESIS expresion:e COMA MENOR_IGUAL_QUE COMA IDENTIFICADOR:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 8.5: any -> ANY ABRE_PARENTESIS expresion COMA MENOR_IGUAL_QUE COMA IDENTIFICADOR CIERRA_PARENTESIS");
         addInfo("REGLA 8.5: any -> any( %s , <= , %s )", e, id);
         RESULT = "any" + "(" + e + "," + "<=" + "," + id + ")";
     :}
-    |ANY ABRE_PARENTESIS expresion:e COMA MAYOR_IGUAL_QUE COMA ID:id CIERRA_PARENTESIS{:
-        addInfo("REGLA 8.5: any -> ANY ABRE_PARENTESIS expresion COMA MAYOR_IGUAL_QUE COMA ID CIERRA_PARENTESIS");
+    |ANY ABRE_PARENTESIS expresion:e COMA MAYOR_IGUAL_QUE COMA IDENTIFICADOR:id CIERRA_PARENTESIS{:
+        addInfo("REGLA 8.5: any -> ANY ABRE_PARENTESIS expresion COMA MAYOR_IGUAL_QUE COMA IDENTIFICADOR CIERRA_PARENTESIS");
         addInfo("REGLA 8.6: any -> any( %s , >= , %s )", e, id);
         RESULT = "any" + "(" + e + "," + ">=" + "," + id + ")";
 :};
 
-number_list ::= number_list:nlist COMA INTEGER_LITERAL:il {:
-        addInfo("REGLA 9.1: number_list -> number_list COMA INTEGER_LITERAL");
+number_list ::= number_list:nlist COMA ENTERO_LITERAL:il {:
+        addInfo("REGLA 9.1: number_list -> number_list COMA ENTERO_LITERAL");
         addInfo("REGLA 9.1: number_list -> %s, %s", nlist, il);
         RESULT = nlist + "," + il;
     :}
-    | INTEGER_LITERAL:il {:
+    | ENTERO_LITERAL:il {:
          addInfo("REGLA 9.2: number_list -> il");
         addInfo("REGLA 9.2: number_list -> %s", nliteral);
         RESULT = il;
 :};
 
-asignacion ::= ID:id IGUAL expresion_logica:exp_log {:
+asignacion ::= IDENTIFICADOR:id IGUAL expresion_logica:exp_log {:
         checkSymbol(id);
-        addInfo("REGLA 10.1: asignacion -> ID IGUAL expresion_logica");
+        addInfo("REGLA 10.1: asignacion -> IDENTIFICADOR IGUAL expresion_logica");
         addInfo("REGLA 10.1: asignacion -> %s = %s", id, exp_log);
         RESULT = new AssignStatement(id, exp_log);
 :};
@@ -503,18 +503,18 @@ numero_literal ::= IDENTIFICADOR ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
     addInfo("REGLA 25.1: literalNumber -> IDENTIFICADOR ABRE_CORCHETE expresion CIERRA_CORCHETE");
     RESULT = ;
     :}
-    |FLOAT_LITERAL:fl {:
-    addInfo("REGLA 25.2: literalNumber -> FLOAT_LITERAL");
+    |FLOTANTE_LITERAL:fl {:
+    addInfo("REGLA 25.2: literalNumber -> FLOTANTE_LITERAL");
     addInfo("REGLA 25.2: literalNumber -> %s", fl);
     RESULT = fl;
     :}
-     :il {:
-    addInfo("REGLA 25.3: literalNumber -> INTEGER_LITERAL");
+    | ENTERO_LITERAL:il {:
+    addInfo("REGLA 25.3: literalNumber -> ENTERO_LITERAL");
     addInfo("REGLA 25.3: literalNumber -> %s", il);
     RESULT = il;
 :};
 
-sentencia_de_iteracion :== LOOP WHEN expresion_logica:exp_log THEN program_lines:p END_LOOP{:
+sentencia_de_iteracion ::= LOOP WHEN expresion_logica:exp_log THEN program_lines:p END_LOOP{:
         addInfo("REGLA 26.1: sentencia_de_iteracion -> LOOP WHEN expresion_logica THEN program_lines END_LOOP");
         addInfo("REGLA 26.1: sentencia_de_iteracion -> LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
         RESULT = new LoopStatement(exp_log, p);
@@ -530,7 +530,7 @@ program_lines_loop ::= program_lines_loop:d program_line_loop:e {:
         addInfo("REGLA 27.2: program_lines_loop -> %s\n\t%s", d, e);
         RESULT = d.addStatementToList(e);
     :}
-    | program_line_loop:p {
+    | program_line_loop:p {:
         addInfo("REGLA 27.3: program_lines -> program_line_loop");
         addInfo("REGLA 27.3: program_lines -> %s", p);
     :};
