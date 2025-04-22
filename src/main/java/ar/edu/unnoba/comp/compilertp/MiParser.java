@@ -6,12 +6,9 @@
 package ar.edu.unnoba.comp.compilertp;
 
 import java_cup.runtime.*;
-
-import java.beans.Expression;
 import java.io.FileReader;
 import java.util.Hashtable;
-
-import org.apache.tools.ant.taskdefs.Input;
+import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
   */
