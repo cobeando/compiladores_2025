@@ -25,6 +25,16 @@
       <version>17.0.6</version>
     </dependency>
     <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-swing</artifactId>
+      <version>17.0.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-web</artifactId>
+      <version>17.0.6</version>
+    </dependency>
+    <dependency>
       <groupId>org.controlsfx</groupId>
       <artifactId>controlsfx</artifactId>
       <version>11.1.2</version>
@@ -60,8 +70,27 @@
     <dependency>
       <groupId>de.jflex</groupId>
       <artifactId>jflex</artifactId>
-      <version>1.9.1</version>
+      <version>1.8.2</version>
     </dependency>
+    <dependency>
+      <groupId>com.github.vbmacher</groupId>
+      <artifactId>java-cup-runtime</artifactId>
+      <version>11b-20160615-3</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.vbmacher</groupId>
+      <artifactId>java-cup</artifactId>
+      <version>11b-20160615</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/com.github.vbmacher/java-cup -->
+    <!-- https://mvnrepository.com/artifact/guru.nidi/graphviz-java -->
+    <dependency>
+      <groupId>guru.nidi</groupId>
+      <artifactId>graphviz-java</artifactId>
+      <version>0.18.1</version>
+    </dependency>
+
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
@@ -93,8 +122,26 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
-          <source>11</source>
-          <target>11</target>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.vbmacher</groupId>
+        <artifactId>cup-maven-plugin</artifactId>
+        <version>11b-20160615-3</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
+          <cupDefinition>${project.basedir}/src/main/resources/parser.cup</cupDefinition>
+          <className>MyParserClassName</className>
+          <symbolsName>MySymbolsClassName</symbolsName>
         </configuration>
       </plugin>
       <plugin>
@@ -110,7 +157,7 @@
               <shadedArtifactAttached>true</shadedArtifactAttached>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>ar.edu.unnoba.comp.jflextp.Main</mainClass>
+                  <mainClass>ar.edu.unnoba.comp.compilertp.Main</mainClass>
                 </transformer>
               </transformers>
             </configuration>
@@ -152,7 +199,7 @@
 <!--            <manifest>-->
 <!--              <addClasspath>true</addClasspath>-->
 <!--              <classpathPrefix>lib/</classpathPrefix>-->
-<!--              <mainClass>ar.edu.unnoba.comp.jflextp.JFlexApplication</mainClass>-->
+<!--              <mainClass>ar.edu.unnoba.comp.compilertp.JFlexApplication</mainClass>-->
 <!--            </manifest>-->
 <!--          </archive>-->
 <!--          <includes>-->
@@ -174,7 +221,7 @@
 <!--        <configuration>-->
 <!--          <archive>-->
 <!--            <manifest>-->
-<!--              <mainClass>ar.edu.unnoba.comp.jflextp.JFlexApplication</mainClass>-->
+<!--              <mainClass>ar.edu.unnoba.comp.compilertp.JFlexApplication</mainClass>-->
 <!--            </manifest>-->
 <!--          </archive>-->
 <!--          <descriptorRefs>-->
@@ -192,7 +239,7 @@
             <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>ar.edu.unnoba.comp.jflextp.JFlexApplication</mainClass>
+              <mainClass>ar.edu.unnoba.comp.compilertp.JFlexApplication</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>

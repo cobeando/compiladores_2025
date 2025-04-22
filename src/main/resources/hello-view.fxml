@@ -14,6 +14,8 @@
   <ToolBar prefHeight="40.0" prefWidth="630.0">
     <Button fx:id="selectFileButton" mnemonicParsing="false" text="Seleccionar archivo" />
     <Button fx:id="parseText" mnemonicParsing="false" text="Iniciar Analisis Lexico" />
+    <Button fx:id="parseCupText" mnemonicParsing="false" text="Iniciar Analisis Sintactico" />
+    <Button fx:id="symbolTableDownload" mnemonicParsing="false" text="Descargar Tabla de Simbolos" />
   </ToolBar>
   <HBox spacing="10">
     <TextArea fx:id="inputJFlex" layoutX="39.0" layoutY="59.0" prefHeight="635.0" prefWidth="635.0"
