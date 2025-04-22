@@ -1,4 +1,4 @@
-package ar.edu.unnoba.comp.compilertp;
+package ar.edu.unnoba.comp.jflextp;
 
 import java.util.ArrayList;
 
