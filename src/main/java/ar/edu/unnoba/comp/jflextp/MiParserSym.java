@@ -5,8 +5,8 @@
 
 package ar.edu.unnoba.comp.jflextp;
 
-/** CUP generated class containing symbol constants. */
-public class MiParserSym {
+/** CUP generated interface containing symbol constants. */
+public interface MiParserSym {
   /* terminals */
   public static final int DISPLAY = 28;
   public static final int ENDDECLARE_SECTION = 38;

@@ -1,5 +1,8 @@
 package ar.edu.unnoba.comp.jflextp;
 
+
+import java_cup.runtime.*;
+import java_cup.sym;
 import java.util.ArrayList;
 
 %%
@@ -180,7 +183,7 @@ Identifier = \p{L}[\p{L}\p{N}_]*
   "\r"                  { string.append("\r");}
 
   /* Fin de archivo */
-  <<EOF>>              { throw new ar.edu.unnoba.comp.compilertp.exceptions.EOFLexerException("Fin de archivo dentro de la cadena: \n" +
+  <<EOF>>              { throw new ar.edu.unnoba.comp.compilertp.jflextp.EOFLexerException("Fin de archivo dentro de la cadena: \n" +
                                                string.toString()); }
 
   /* Cualquier otro carácter */
