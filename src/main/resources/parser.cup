@@ -1,8 +1,14 @@
-package ar.edu.unnoba.comp.compilertp;
+package ar.edu.unnoba.comp.jflextp;
 
 import java_cup.runtime.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.FileReader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.Hashtable;
+import java.lang.StringBuilder;
+import ar.edu.unnoba.comp.jflextp.utils.SymbolTable;
 
 class MiParser;
 
@@ -10,6 +16,10 @@ action code {:
 
     SymbolTable symbolTable = new SymbolTable();
     StringBuilder stringBuilder = new StringBuilder();
+
+    public String getParseInfo(){
+        return stringBuilder.toString();
+    }
 
     public void addInfo(String str){
         stringBuilder.append(str).append("\n");
