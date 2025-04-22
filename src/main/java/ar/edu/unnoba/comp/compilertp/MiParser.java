@@ -888,7 +888,7 @@ class CUP$MiParser$actions {
 		
     addInfo("REGLA 5.3: ID_list -> IDENTIFICADOR ABRE_CORCHETE expresion CIERRA_CORCHETE");
     addInfo("REGLA 5.3: ID_list -> %s [ %s ]", id, e );
-    RESULT = id;
+    RESULT = id + "[" + e + "]";
 
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("ID_list",9, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-3)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
