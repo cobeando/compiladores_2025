@@ -121,9 +121,9 @@ Identifier = \p{L}[\p{L}\p{N}_]*
 
   /* literales */
 
-  {DecArrayFloat}      { return token("DUPLA_LITERAL", yytext()); }
-  {DecIntegerLiteral}  { return token("INTEGER_LITERAL", yytext()); }
-  {DecFloatLiteral}    { return token("FLOAT_LITERAL", yytext()); }
+  {DecArrayFloat}      { return token("FLOAT_ARRAY_LITERAL", yytext()); }
+  {DecIntegerLiteral}  { return token("ENTERO_LITERAL", yytext()); }
+  {DecFloatLiteral}    { return token("FLOTANTE_LITERAL", yytext()); }
 
   {Identifier}         { return token("ID", yytext()); }
 
