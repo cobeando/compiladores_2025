@@ -94,7 +94,7 @@ start with program;
 program ::= declaration_section:ds program_section:ps {:
         addInfo("REGLA 0.1: program -> declaractio_section program_section");
         addInfo("REGLA 0.1: program -> %s\n%s", ds, ps);
-        RESULT = new Program(ds, ps)
+        RESULT = new Program(ds, ps);
     :}
     | program_section:ps {:
         addInfo("REGLA 0.2: program -> program_section");
@@ -159,7 +159,7 @@ ID_list ::= IDENTIFICADOR:id {:
     | IDENTIFICADOR:id ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
     addInfo("REGLA 5.3: ID_list -> IDENTIFICADOR ABRE_CORCHETE expresion CIERRA_CORCHETE");
     addInfo("REGLA 5.3: ID_list -> %s [ %s ]", id, e );
-    RESULT = ;
+    RESULT = id + "[" + e + "]";
 :};
 
 valor_mas_cercano ::= VALOR_MAS_CERCANO ABRE_PARENTESIS ENTERO_LITERAL:il COMA ABRE_CORCHETE number_list:nl CIERRA_CORCHETE CIERRA_PARENTESIS {:
@@ -501,7 +501,7 @@ program_line ::= sentenciaDisplay:s {:
 
 numero_literal ::= IDENTIFICADOR ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
     addInfo("REGLA 25.1: literalNumber -> IDENTIFICADOR ABRE_CORCHETE expresion CIERRA_CORCHETE");
-    RESULT = ;
+    RESULT = "[" + e + "]";
     :}
     |FLOTANTE_LITERAL:fl {:
     addInfo("REGLA 25.2: literalNumber -> FLOTANTE_LITERAL");
