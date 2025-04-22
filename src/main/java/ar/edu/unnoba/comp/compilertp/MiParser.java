@@ -693,7 +693,7 @@ class CUP$MiParser$actions {
 		
         addInfo("REGLA 0.1: program -> declaractio_section program_section");
         addInfo("REGLA 0.1: program -> %s\n%s", ds, ps);
-        RESULT = new Program(ds, ps);
+        RESULT = new Program(ds, ps)
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("program",12, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-1)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }

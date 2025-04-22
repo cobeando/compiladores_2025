@@ -11,6 +11,25 @@ action code {:
     SymbolTable symbolTable = new SymbolTable();
     StringBuilder stringBuilder = new StringBuilder();
 
+    public void addInfo(String str){
+        stringBuilder.append(str).append("\n");
+    }
+
+    public void addInfo(String str, Object a){
+        String formatted = String.format(str,a);
+        stringBuilder.append(formatted).append("\n");
+    }
+
+    public void addInfo(String str, Object a, Object b){
+        String formatted = String.format(str, a, b);
+        stringBuilder.append(formatted).append("\n");
+    }
+
+    public void addInfo(String str, Object a, Object b, Object c){
+        String formatted = String.format(str, a, b, c);
+        stringBuilder.append(formatted).append("\n");
+    }
+
     public String getParseInfo(){
         return stringBuilder.toString();
     }
