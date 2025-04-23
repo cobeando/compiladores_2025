@@ -16,11 +16,11 @@ public interface MiParserSym {
   public static final int ANY = 29;
   public static final int END_LOOP = 19;
   public static final int CIERRA_PARENTESIS = 53;
-  public static final int ENTERO = 5;
+  public static final int ENTERO = 7;
   public static final int DIFERENTE = 51;
   public static final int DOS_PUNTOS = 57;
   public static final int ENTERO_LITERAL = 4;
-  public static final int FLOAT_ARRAY_LITERAL = 11;
+  public static final int FLOAT_ARRAY_LITERAL = 5;
   public static final int CONTINUE = 20;
   public static final int ABRE_PARENTESIS = 52;
   public static final int MENOS_UNARIO = 46;
@@ -29,7 +29,7 @@ public interface MiParserSym {
   public static final int NOT = 15;
   public static final int AND = 13;
   public static final int IGUAL = 40;
-  public static final int FLOTANTE_LITERAL = 12;
+  public static final int FLOTANTE_LITERAL = 6;
   public static final int OR = 14;
   public static final int CIERRA_CORCHETE = 55;
   public static final int DIV = 45;
@@ -38,12 +38,12 @@ public interface MiParserSym {
   public static final int CONDITION = 22;
   public static final int BACKWARD_CONDITION = 23;
   public static final int EOF = 0;
-  public static final int BOOLEAN = 8;
+  public static final int BOOLEAN = 10;
   public static final int INPUT_INT = 31;
-  public static final int TRUE = 10;
+  public static final int TRUE = 12;
   public static final int error = 1;
   public static final int COMA = 56;
-  public static final int FLOAT_ARRAY = 7;
+  public static final int FLOAT_ARRAY = 9;
   public static final int MENOS = 43;
   public static final int INPUT_BOOL = 33;
   public static final int ABRE_CORCHETE = 54;
@@ -59,10 +59,10 @@ public interface MiParserSym {
   public static final int ALL = 30;
   public static final int MENOR_QUE = 48;
   public static final int ENDPROGRAM_SECTION = 36;
-  public static final int FALSE = 9;
+  public static final int FALSE = 11;
   public static final int MENOR_IGUAL_QUE = 50;
   public static final int VALOR_MAS_CERCANO = 39;
-  public static final int FLOTANTE = 6;
+  public static final int FLOTANTE = 8;
   public static final int DECLARE_SECTION = 37;
   public static final int MAS = 42;
   public static final int BACKWARD_LOOP = 18;
@@ -72,14 +72,14 @@ public interface MiParserSym {
   "IDENTIFICADOR",
   "STRING_LITERAL",
   "ENTERO_LITERAL",
+  "FLOAT_ARRAY_LITERAL",
+  "FLOTANTE_LITERAL",
   "ENTERO",
   "FLOTANTE",
   "FLOAT_ARRAY",
   "BOOLEAN",
   "FALSE",
   "TRUE",
-  "FLOAT_ARRAY_LITERAL",
-  "FLOTANTE_LITERAL",
   "AND",
   "OR",
   "NOT",

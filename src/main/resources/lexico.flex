@@ -125,8 +125,8 @@ Identifier = \p{L}[\p{L}\p{N}_]*
   /* literales */
 
   {DecArrayFloat}      { return token("FLOAT_ARRAY_LITERAL", yytext()); }
-  {DecIntegerLiteral}  { return token("ENTERO_LITERAL", yytext()); }
   {DecFloatLiteral}    { return token("FLOTANTE_LITERAL", yytext()); }
+  {DecIntegerLiteral}  { return token("ENTERO_LITERAL", yytext()); }
 
   {Identifier}         { return token("IDENTIFICADOR", yytext()); }
 

@@ -68,10 +68,10 @@ parser code
     /* Definición de Simbolos */
 
 
-terminal String IDENTIFICADOR, STRING_LITERAL, ENTERO_LITERAL ;
+terminal String IDENTIFICADOR, STRING_LITERAL, ENTERO_LITERAL, FLOAT_ARRAY_LITERAL, FLOTANTE_LITERAL ;
 
 //Objects
-terminal  ENTERO, FLOTANTE, FLOAT_ARRAY, BOOLEAN, FALSE, TRUE, FLOAT_ARRAY_LITERAL, FLOTANTE_LITERAL;
+terminal  ENTERO, FLOTANTE, FLOAT_ARRAY, BOOLEAN, FALSE, TRUE;
 
 terminal  AND, OR, NOT;
 
@@ -390,7 +390,7 @@ factor ::= MENOS factor:f {:
     addInfo("REGLA 16.5: factor -> %s", nliteral);
     RESULT = nliteral;
     :}
-    FLOAT_ARRAY_LITERAL:fal {:
+    |FLOAT_ARRAY_LITERAL:fal {:
     addInfo("REGLA 16.6: expresion -> FLOAT_ARRAY_LITERAL");
     addInfo("REGLA 16.6: expresion -> %s", fal);
     RESULT = fal;
@@ -526,7 +526,7 @@ numero_literal ::= IDENTIFICADOR ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
     addInfo("REGLA 25.2: literalNumber -> %s", fl);
     RESULT = fl;
     :}
-    | ENTERO_LITERAL:il {:
+    |ENTERO_LITERAL:il {:
     addInfo("REGLA 25.3: literalNumber -> ENTERO_LITERAL");
     addInfo("REGLA 25.3: literalNumber -> %s", il);
     RESULT = il;
