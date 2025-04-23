@@ -68,41 +68,41 @@ parser code
     /* Definición de Simbolos */
 
 
-terminal String BOOLEAN, FALSE, TRUE, ENTERO_LITERAL, FLOTANTE_LITERAL, FLOAT_ARRAY_LITERAL, STRING_LITERAL, IDENTIFICADOR;
+terminal String IDENTIFICADOR, ENTERO_LITERAL, FLOAT_ARRAY_LITERAL, STRING_LITERAL, FLOTANTE_LITERAL ;
 
 //Objects
-terminal ENTERO, FLOTANTE, FLOAT_ARRAY;
+terminal  ENTERO, FLOTANTE, FLOAT_ARRAY, BOOLEAN, FALSE, TRUE;
 
-terminal AND, OR, NOT;
+terminal  AND, OR, NOT;
 
-terminal LOOP, WHEN, BACKWARD_LOOP, END_LOOP, CONTINUE, BREAK;
+terminal  LOOP, WHEN, BACKWARD_LOOP, END_LOOP, CONTINUE, BREAK;
 
-terminal CONDITION, BACKWARD_CONDITION, THEN, END, ELSE, ELSE_BACKWARD, DISPLAY;
+terminal  CONDITION, BACKWARD_CONDITION, THEN, END, ELSE, ELSE_BACKWARD, DISPLAY;
 
-terminal ANY, ALL;
+terminal  ANY, ALL;
 
-terminal INPUT_INT, INPUT_FLOAT, INPUT_BOOL, INPUT_ARRAY;
+terminal  INPUT_INT, INPUT_FLOAT, INPUT_BOOL, INPUT_ARRAY;
 
-terminal PROGRAM_SECTION, ENDPROGRAM_SECTION, DECLARE_SECTION, ENDDECLARE_SECTION, VALOR_MAS_CERCANO;
+terminal  PROGRAM_SECTION, ENDPROGRAM_SECTION, DECLARE_SECTION, ENDDECLARE_SECTION, VALOR_MAS_CERCANO;
 
 //Operaciones
 
-terminal IGUAL, EQUIVALE, MAS, MENOS, MULT, DIV, MENOS_UNARIO;
-terminal MAYOR_QUE, MENOR_QUE, MAYOR_IGUAL_QUE, MENOR_IGUAL_QUE, DIFERENTE;
-terminal ABRE_PARENTESIS, CIERRA_PARENTESIS, ABRE_CORCHETE, CIERRA_CORCHETE, COMA, DOS_PUNTOS;
+terminal  IGUAL, EQUIVALE, MAS, MENOS, MULT, DIV, MENOS_UNARIO;
+terminal  MAYOR_QUE, MENOR_QUE, MAYOR_IGUAL_QUE, MENOR_IGUAL_QUE, DIFERENTE;
+terminal  ABRE_PARENTESIS, CIERRA_PARENTESIS, ABRE_CORCHETE, CIERRA_CORCHETE, COMA, DOS_PUNTOS;
 
 nonterminal String declaration_section, declarations, declaration, data_type, ID_list, number_list, valor_mas_cercano;
-nonterminal comparacion;
-nonterminal termino, factor;
-nonterminal constante_bool; 
-nonterminal expresion_logica;
-nonterminal expresion_simple, expresion;
-nonterminal inputs;
-nonterminal numero_literal;
-nonterminal program;
-nonterminal program_lines, program_section;
-nonterminal program_line, sentencia_de_seleccion, asignacion, sentenciaDisplay, sentencia_de_iteracion, program_line_loop, program_lines_loop;
-nonterminal any, all;
+nonterminal  comparacion;
+nonterminal  termino, factor;
+nonterminal  constante_bool; 
+nonterminal  expresion_logica;
+nonterminal  expresion_simple, expresion;
+nonterminal  inputs;
+nonterminal  numero_literal;
+nonterminal  program;
+nonterminal  program_lines, program_section;
+nonterminal  program_line, sentencia_de_seleccion, asignacion, sentenciaDisplay, sentencia_de_iteracion, program_line_loop, program_lines_loop;
+nonterminal  any, all;
 
 precedence left OR;
 precedence left AND;
@@ -116,12 +116,12 @@ start with program;
 
 program ::= declaration_section:ds program_section:ps {:
         addInfo("REGLA 0.1: program -> declaractio_section program_section");
-        addInfo("REGLA 0.1: program -> %s\n%s", ds, ps);
+        addInfo("REGLA 0.1: program -> %s \n %s", ds, ps);
         RESULT = ds + "\n" + ps;
     :}
     | program_section:ps {:
         addInfo("REGLA 0.2: program -> program_section");
-        addInfo("REGLA 0.2: program ->%s", ps);
+        addInfo("REGLA 0.2: program -> %s ", ps);
         RESULT = ps;
 :};
 
@@ -163,26 +163,21 @@ data_type ::= ENTERO {:
         addInfo("REGLA 4.3: data_type -> BOOLEAN");
         RESULT = "BOOLEAN";
     :}
-    | FLOAT_ARRAY {:
-        addInfo("REGLA 4.4: data_type -> FLOAT_ARRAY");
-        addInfo("REGLA 4.4: data_type -> FLOAT_ARRAY");
-        RESULT = "FLOAR_ARRAY";
+    | FLOAT_ARRAY ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
+        addInfo("REGLA 4.4: data_type ->  FLOAT_ARRAY ABRE_CORCHETE expresion CIERRA_CORCHETE");
+        addInfo("REGLA 4.4: data_type -> FLOAT_ARRAY [ %s ]", e);
+        RESULT = "FLOAR_ARRAY" + "[" + e + "]";
 :};
 
-ID_list ::= IDENTIFICADOR:id {:
-        addInfo("REGLA 5.1: ID_list -> IDENTIFICADOR");
-        addInfo("REGLA 5.1: ID_list -> %s", id);
-        RESULT = id;
-    :}
-    | IDENTIFICADOR:id COMA ID_list:list {:
+ID_list ::= IDENTIFICADOR:id COMA ID_list:list {:
         addInfo("REGLA 5.2: ID_list -> IDENTIFICADOR COMA ID_list");
         addInfo("REGLA 5.2: ID_list -> %s, %s", id, list);
         RESULT = id + ", " + list;
     :}
-    | IDENTIFICADOR:id ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
-    addInfo("REGLA 5.3: ID_list -> IDENTIFICADOR ABRE_CORCHETE expresion CIERRA_CORCHETE");
-    addInfo("REGLA 5.3: ID_list -> %s [ %s ]", id, e );
-    RESULT = id + "[" + e + "]";
+    |IDENTIFICADOR:id {:
+        addInfo("REGLA 5.1: ID_list -> IDENTIFICADOR");
+        addInfo("REGLA 5.1: ID_list -> %s", id);
+        RESULT = id;
 :};
 
 valor_mas_cercano ::= VALOR_MAS_CERCANO ABRE_PARENTESIS ENTERO_LITERAL:il COMA ABRE_CORCHETE number_list:nl CIERRA_CORCHETE CIERRA_PARENTESIS {:
@@ -286,7 +281,7 @@ expresion_logica ::= NOT expresion_logica:exp_log {:
     | expresion_logica:exp_log AND expresion_simple:exp_simp {:
         addInfo("REGLA 11.3: expresion_logica -> exp_log AND expresion_simple");
         addInfo("REGLA 11.3: expresion_logica -> %s AND %s", exp_log, exp_simp);
-        RESULT =  exp_log + "AND" + "exp_simp";
+        RESULT =  exp_log + "AND" + exp_simp;
     :}
     | expresion_simple:exp_simp {:
         addInfo("REGLA 11.4: expresion_logica -> expresion_simple");

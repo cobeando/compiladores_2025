@@ -1305,7 +1305,7 @@ public class MiLexico implements java_cup.runtime.Scanner {
             // fall through
           case 89: break;
           case 16:
-            { return token("IGUAL",   yytext());
+            { return token("IGUAL",  yytext());
             }
             // fall through
           case 90: break;
@@ -1315,7 +1315,7 @@ public class MiLexico implements java_cup.runtime.Scanner {
             // fall through
           case 91: break;
           case 18:
-            { return token("ID", yytext());
+            { return token("IDENTIFICADOR", yytext());
             }
             // fall through
           case 92: break;

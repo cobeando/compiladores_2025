@@ -128,10 +128,10 @@ Identifier = \p{L}[\p{L}\p{N}_]*
   {DecIntegerLiteral}  { return token("INTEGER_LITERAL", yytext()); }
   {DecFloatLiteral}    { return token("FLOAT_LITERAL", yytext()); }
 
-  {Identifier}         { return token("ID", yytext()); }
+  {Identifier}         { return token("IDENTIFICADOR", yytext()); }
 
   /* operadores */
-    "="                 { return token("IGUAL",   yytext()); }
+    "="                 { return token("IGUAL",  yytext()); }
     "=="                 { return token("EQUIVALE", yytext()); }
     "+"                  { return token("MAS", yytext()); }
     "-"                  { return token("MENOS", yytext()); }
