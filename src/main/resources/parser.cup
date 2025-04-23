@@ -104,9 +104,9 @@ nonterminal  program_lines, program_section;
 nonterminal  program_line, sentencia_de_seleccion, asignacion, sentenciaDisplay, sentencia_de_iteracion, program_line_loop, program_lines_loop;
 nonterminal  any, all;
 
+precedence left NOT;
 precedence left OR;
 precedence left AND;
-precedence left NOT;
 precedence nonassoc EQUIVALE, DIFERENTE, MAYOR_QUE, MAYOR_IGUAL_QUE, MENOR_QUE, MENOR_IGUAL_QUE;
 precedence left MAS, MENOS;
 precedence left MULT, DIV;
@@ -261,10 +261,15 @@ number_list ::= number_list:nlist COMA ENTERO_LITERAL:il {:
         RESULT = il;
 :};
 
-asignacion ::= IDENTIFICADOR:id IGUAL expresion_logica:exp_log {:
+asignacion ::=IDENTIFICADOR:id ABRE_CORCHETE expresion:e CIERRA_CORCHETE IGUAL expresion_logica:exp_log {:
+        addInfo("REGLA 10.1: asignacion -> IDENTIFICADOR ABRE_CORCHETE expresion CIERRA_CORCHETE IGUAL expresion_logica");
+        addInfo("REGLA 10.1: asignacion -> %s [ %s ] = %s", id, e, exp_log);
+        RESULT = id + "[" + e + "]" + "=" + exp_log; 
+        :}
+        |IDENTIFICADOR:id IGUAL expresion_logica:exp_log {:
         checkSymbol(id);
-        addInfo("REGLA 10.1: asignacion -> IDENTIFICADOR IGUAL expresion_logica");
-        addInfo("REGLA 10.1: asignacion -> %s = %s", id, exp_log);
+        addInfo("REGLA 10.2: asignacion -> IDENTIFICADOR IGUAL expresion_logica");
+        addInfo("REGLA 10.2: asignacion -> %s = %s", id, exp_log);
         RESULT = id + "=" + exp_log ;
 :};
 
@@ -273,15 +278,15 @@ expresion_logica ::= NOT expresion_logica:exp_log {:
         addInfo("REGLA 11.1: expresion_logica -> NOT %s", exp_log);
         RESULT = "NOT" + exp_log;
     :}
-    | expresion_logica:exp_log OR expresion_simple:exp_simp {:
-        addInfo("REGLA 11.2: expresion_logica -> exp_log OR expresion_simple");
-        addInfo("REGLA 11.2: expresion_logica -> %s OR %s", exp_log, exp_simp);
-        RESULT = exp_log + "OR" + "exp_simp";
+    | expresion_logica:exp_log1 OR expresion_logica:exp_log2 {:
+        addInfo("REGLA 11.2: expresion_logica -> expresion_logica OR expresion_logica");
+        addInfo("REGLA 11.2: expresion_logica -> %s OR %s", exp_log1, exp_log2 );
+        RESULT = exp_log1 + "OR" + exp_log2 ;
     :}
-    | expresion_logica:exp_log AND expresion_simple:exp_simp {:
-        addInfo("REGLA 11.3: expresion_logica -> exp_log AND expresion_simple");
-        addInfo("REGLA 11.3: expresion_logica -> %s AND %s", exp_log, exp_simp);
-        RESULT =  exp_log + "AND" + exp_simp;
+    | expresion_logica:exp_log1 AND expresion_logica:exp_log2 {:
+        addInfo("REGLA 11.3: expresion_logica -> expresion_logica AND expresion_logica");
+        addInfo("REGLA 11.3: expresion_logica -> %s AND %s", exp_log1, exp_log2 );
+        RESULT =  exp_log1 + "AND" + exp_log2 ;
     :}
     | expresion_simple:exp_simp {:
         addInfo("REGLA 11.4: expresion_logica -> expresion_simple");
@@ -517,9 +522,10 @@ program_line ::= sentenciaDisplay:s {:
     RESULT = si;
 :};
 
-numero_literal ::= IDENTIFICADOR ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
+numero_literal ::= IDENTIFICADOR:id ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
     addInfo("REGLA 25.1: literalNumber -> IDENTIFICADOR ABRE_CORCHETE expresion CIERRA_CORCHETE");
-    RESULT = "[" + e + "]";
+    addInfo("REGLA 25.1: literalNumber -> %s [ %s ]", id, e);
+    RESULT = id + "[" + e + "]";
     :}
     |FLOTANTE_LITERAL:fl {:
     addInfo("REGLA 25.2: literalNumber -> FLOTANTE_LITERAL");
@@ -546,7 +552,7 @@ sentencia_de_iteracion ::= LOOP WHEN expresion_logica:exp_log THEN program_lines
 program_lines_loop ::= program_lines_loop:d program_line_loop:e {:
         addInfo("REGLA 27.2: program_lines -> program_line_loop program_line_loop");
         addInfo("REGLA 27.2: program_lines_loop -> %s\n\t%s", d, e);
-        RESULT = d + "\n\t" + "e";
+        RESULT = d + "\n\t" + e;
     :}
     | program_line_loop:p {:
         addInfo("REGLA 27.3: program_lines -> program_line_loop");

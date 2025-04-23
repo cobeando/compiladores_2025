@@ -48,7 +48,7 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 
 DecFloatLiteral   = ([0-9]+\.[0-9]*)|([0-9]*\.[0-9]+)
 DecIntegerLiteral =  [0-9]+ 
-DecArrayFloat     = \[-?(([0-9]+\.[0-9]*)|([0-9]*\.[0-9]+))(,-?(([0-9]+\.[0-9]*)|([0-9]*\.[0-9]+)))*\]
+DecArrayFloat     = \[-?(([0-9]+\.[0-9]* *)|( *[0-9]*\.[0-9]+ *))(, *-?(([0-9]+\.[0-9]* *)|( *[0-9]*\.[0-9]+ *)))*\]
 ComentarioTerminallinea = \$.*{LineTerminator}?
 OpenComment = \(\*
 CloseComment = \*\)
