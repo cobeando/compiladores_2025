@@ -482,7 +482,7 @@ sentencia_de_seleccion ::= CONDITION expresion_logica:exp_log THEN program_lines
 program_section ::= PROGRAM_SECTION program_lines:p ENDPROGRAM_SECTION {:
     addInfo("REGLA 21.1: program_section -> PROGRAM_SECTION program_lines ENDPROGRAM_SECTION");
     addInfo("REGLA 21.1: program_section -> PROGRAM_SECTION\n\t %s\n ENDPROGRAM_SECTION", p);
-    RESULT = p ;
+    RESULT = "PROGRAM_SECTION" + p + "ENDPROGRAM_SECTION" ;
 :};
 
 program_lines ::= program_lines:d program_line:e {:

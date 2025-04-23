@@ -1285,7 +1285,7 @@ public class MiLexico implements java_cup.runtime.Scanner {
             // fall through
           case 85: break;
           case 12:
-            { return token("INTEGER_LITERAL", yytext());
+            { return token("ENTERO_LITERAL", yytext());
             }
             // fall through
           case 86: break;
@@ -1379,7 +1379,7 @@ public class MiLexico implements java_cup.runtime.Scanner {
             // fall through
           case 103: break;
           case 30:
-            { return token("FLOAT_LITERAL", yytext());
+            { return token("FLOTANTE_LITERAL", yytext());
             }
             // fall through
           case 104: break;
@@ -1494,7 +1494,7 @@ public class MiLexico implements java_cup.runtime.Scanner {
             // fall through
           case 125: break;
           case 52:
-            { return token("DUPLA_LITERAL", yytext());
+            { return token("FLOAT_ARRAY_LITERAL", yytext());
             }
             // fall through
           case 126: break;
@@ -1554,7 +1554,7 @@ public class MiLexico implements java_cup.runtime.Scanner {
             // fall through
           case 137: break;
           case 64:
-            { return token("ARREGLO_FLOTANTE", yytext());
+            { return token("FLOAT_ARRAY", yytext());
             }
             // fall through
           case 138: break;

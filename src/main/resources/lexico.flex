@@ -82,7 +82,7 @@ Identifier = \p{L}[\p{L}\p{N}_]*
   "FALSE"              { return token("FALSE", yytext());}
   "TRUE"               { return token("TRUE", yytext());}
   "INT"                { return token("ENTERO", yytext());}
-  "FLOAT_ARRAY"        { return token("ARREGLO_FLOTANTE", yytext());}
+  "FLOAT_ARRAY"        { return token("FLOAT_ARRAY", yytext());}
   "FLOAT"              { return token("FLOTANTE", yytext());}
   "STRING"             { return token("CADENA");}
 
@@ -124,9 +124,9 @@ Identifier = \p{L}[\p{L}\p{N}_]*
 
   /* literales */
 
-  {DecArrayFloat}      { return token("DUPLA_LITERAL", yytext()); }
-  {DecIntegerLiteral}  { return token("INTEGER_LITERAL", yytext()); }
-  {DecFloatLiteral}    { return token("FLOAT_LITERAL", yytext()); }
+  {DecArrayFloat}      { return token("FLOAT_ARRAY_LITERAL", yytext()); }
+  {DecIntegerLiteral}  { return token("ENTERO_LITERAL", yytext()); }
+  {DecFloatLiteral}    { return token("FLOTANTE_LITERAL", yytext()); }
 
   {Identifier}         { return token("IDENTIFICADOR", yytext()); }
 

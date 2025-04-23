@@ -1904,7 +1904,7 @@ class CUP$MiParser$actions {
 		
     addInfo("REGLA 21.1: program_section -> PROGRAM_SECTION program_lines ENDPROGRAM_SECTION");
     addInfo("REGLA 21.1: program_section -> PROGRAM_SECTION\n\t %s\n ENDPROGRAM_SECTION", p);
-    RESULT = p ;
+    RESULT = "PROGRAM_SECTION" + p + "ENDPROGRAM_SECTION" ;
 
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("program_section",18, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
