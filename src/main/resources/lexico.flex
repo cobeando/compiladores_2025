@@ -48,7 +48,7 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 
 DecFloatLiteral   = ([0-9]+\.[0-9]*)|([0-9]*\.[0-9]+)
 DecIntegerLiteral =  [0-9]+ 
-DecArrayFloat     = \[-?(([0-9]+\.[0-9]* *)|( *[0-9]*\.[0-9]+ *))(, *-?(([0-9]+\.[0-9]* *)|( *[0-9]*\.[0-9]+ *)))*\]
+DecArrayFloat     = \[-?(([0-9]+\.[0-9]* *)|(\s*[0-9]*\.[0-9]+ *))(, *-?(([0-9]+\.[0-9]* *)|(\s*[0-9]*\.[0-9]+ *)))*\]
 ComentarioTerminallinea = \$.*{LineTerminator}?
 OpenComment = \(\*
 CloseComment = \*\)
@@ -146,8 +146,6 @@ Identifier = \p{L}[\p{L}\p{N}_]*
     "\)"                 { return token("CIERRA_PARENTESIS", yytext()); }
     "\["                 { return token("ABRE_CORCHETE", yytext()); }
     "\]"                 { return token("CIERRA_CORCHETE", yytext()); }
-    "."                  { return token("PUNTO");}
-    ";"                  { return token("PUNTO_COMA", yytext()); }
     ","                  { return token("COMA", yytext()); }
     ":"                  { return token("DOS_PUNTOS", yytext()); }
 
@@ -194,11 +192,15 @@ Identifier = \p{L}[\p{L}\p{N}_]*
 
 <COMENTARIO> {
 
-    {CloseComment}                  { comment_count = comment_count - 1;
+    {CloseComment}                  { 
                                       if (comment_count == 0){
                                         yybegin(YYINITIAL);
-                                      } yybegin(COMENTARIOCURLYBRACKET)
-                                    ;}
+                                        }
+                                        else{
+                                          comment_count = comment_count - 1;
+                                          yybegin(COMENTARIOCURLYBRACKET);
+                                          }
+                                    }
 
     {OpenCommentBrackets}           {yybegin(COMENTARIOBRACKETS);}
                                   
@@ -209,8 +211,9 @@ Identifier = \p{L}[\p{L}\p{N}_]*
 }
 
 <COMENTARIOBRACKETS> {
-
-    {CloseCommentBrackets}           {yybegin(COMENTARIO);}
+([{  (   )  }])
+    {CloseCommentBrackets}           {yybegin(COMENTARIO);
+                                      ;}
 
     {OpenCommentCurlyBracket}        {yybegin(COMENTARIOCURLYBRACKET);}
 
@@ -222,7 +225,8 @@ Identifier = \p{L}[\p{L}\p{N}_]*
 
 <COMENTARIOCURLYBRACKET> {
 
-    {CloseCommentCurlyBracket}       {yybegin(COMENTARIOBRACKETS);}
+    {CloseCommentCurlyBracket}       {yybegin(COMENTARIOBRACKETS);
+                                      ;}
 
     {OpenComment}                    {comment_count = comment_count + 1;   
                                       yybegin(COMENTARIO);}
