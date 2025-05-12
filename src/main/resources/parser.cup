@@ -104,9 +104,9 @@ nonterminal String program_lines, program_section;
 nonterminal String program_line, sentencia_de_seleccion, asignacion, sentenciaDisplay, sentencia_de_iteracion, program_line_loop, program_lines_loop;
 nonterminal String any, all;
 
-precedence left NOT;
 precedence left OR;
 precedence left AND;
+precedence right NOT;
 
 start with program;
 
@@ -269,20 +269,20 @@ asignacion ::=IDENTIFICADOR:id ABRE_CORCHETE expresion:e CIERRA_CORCHETE IGUAL e
         RESULT = id + "=" + exp_log ;
 :};
 
-expresion_logica ::= NOT expresion_logica:exp_log {:
-        addInfo("REGLA 11.1: expresion_logica -> NOT expresion_logica");
-        addInfo("REGLA 11.1: expresion_logica -> NOT %s", exp_log);
-        RESULT = "NOT" + exp_log;
-    :}
-    | expresion_logica:exp_log1 OR expresion_logica:exp_log2 {:
-        addInfo("REGLA 11.2: expresion_logica -> expresion_logica OR expresion_logica");
-        addInfo("REGLA 11.2: expresion_logica -> %s OR %s", exp_log1, exp_log2 );
+expresion_logica ::= expresion_logica:exp_log1 OR expresion_logica:exp_log2 {:
+        addInfo("REGLA 11.1: expresion_logica -> expresion_logica OR expresion_logica");
+        addInfo("REGLA 11.1: expresion_logica -> %s OR %s", exp_log1, exp_log2 );
         RESULT = exp_log1 + "OR" + exp_log2 ;
     :}
     | expresion_logica:exp_log1 AND expresion_logica:exp_log2 {:
-        addInfo("REGLA 11.3: expresion_logica -> expresion_logica AND expresion_logica");
-        addInfo("REGLA 11.3: expresion_logica -> %s AND %s", exp_log1, exp_log2 );
+        addInfo("REGLA 11.2: expresion_logica -> expresion_logica AND expresion_logica");
+        addInfo("REGLA 11.2: expresion_logica -> %s AND %s", exp_log1, exp_log2 );
         RESULT =  exp_log1 + "AND" + exp_log2 ;
+    :}
+    | NOT expresion_logica:exp_log {:
+        addInfo("REGLA 11.3: expresion_logica -> NOT expresion_logica");
+        addInfo("REGLA 11.3: expresion_logica -> NOT %s", exp_log);
+        RESULT = "NOT" + exp_log;
     :}
     | expresion_simple:exp_simp {:
         addInfo("REGLA 11.4: expresion_logica -> expresion_simple");
