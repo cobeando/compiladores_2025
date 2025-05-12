@@ -92,25 +92,21 @@ terminal  MAYOR_QUE, MENOR_QUE, MAYOR_IGUAL_QUE, MENOR_IGUAL_QUE, DIFERENTE;
 terminal  ABRE_PARENTESIS, CIERRA_PARENTESIS, ABRE_CORCHETE, CIERRA_CORCHETE, COMA, DOS_PUNTOS;
 
 nonterminal String declaration_section, declarations, declaration, data_type, ID_list, number_list, valor_mas_cercano;
-nonterminal  comparacion;
-nonterminal  termino, factor;
-nonterminal  constante_bool; 
-nonterminal  expresion_logica;
-nonterminal  expresion_simple, expresion;
-nonterminal  inputs;
-nonterminal  numero_literal;
-nonterminal  program;
-nonterminal  program_lines, program_section;
-nonterminal  program_line, sentencia_de_seleccion, asignacion, sentenciaDisplay, sentencia_de_iteracion, program_line_loop, program_lines_loop;
-nonterminal  any, all;
+nonterminal String comparacion;
+nonterminal String termino, factor;
+nonterminal String constante_bool; 
+nonterminal String expresion_logica;
+nonterminal String expresion_simple, expresion;
+nonterminal String inputs;
+nonterminal String numero_literal;
+nonterminal String program;
+nonterminal String program_lines, program_section;
+nonterminal String program_line, sentencia_de_seleccion, asignacion, sentenciaDisplay, sentencia_de_iteracion, program_line_loop, program_lines_loop;
+nonterminal String any, all;
 
 precedence left NOT;
 precedence left OR;
 precedence left AND;
-precedence nonassoc EQUIVALE, DIFERENTE, MAYOR_QUE, MAYOR_IGUAL_QUE, MENOR_QUE, MENOR_IGUAL_QUE;
-precedence left MAS, MENOS;
-precedence left MULT, DIV;
-precedence left MENOS_UNARIO;
 
 start with program;
 
@@ -163,10 +159,10 @@ data_type ::= ENTERO {:
         addInfo("REGLA 4.3: data_type -> BOOLEAN");
         RESULT = "BOOLEAN";
     :}
-    | FLOAT_ARRAY ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
-        addInfo("REGLA 4.4: data_type ->  FLOAT_ARRAY ABRE_CORCHETE expresion CIERRA_CORCHETE");
-        addInfo("REGLA 4.4: data_type -> FLOAT_ARRAY [ %s ]", e);
-        RESULT = "FLOAR_ARRAY" + "[" + e + "]";
+    | FLOAT_ARRAY ABRE_CORCHETE ENTERO_LITERAL:int_lit CIERRA_CORCHETE {:
+        addInfo("REGLA 4.4: data_type ->  FLOAT_ARRAY ABRE_CORCHETE ENTERO_LITERAL CIERRA_CORCHETE");
+        addInfo("REGLA 4.4: data_type -> FLOAT_ARRAY [ %s ]", int_lit);
+        RESULT = "FLOAT_ARRAY" + "[" + int_lit + "]";
 :};
 
 ID_list ::= IDENTIFICADOR:id COMA ID_list:list {:
@@ -419,6 +415,12 @@ factor ::= MENOS factor:f {:
     addInfo("REGLA 16.10: factor -> any");
     addInfo("REGLA 16.10: factor -> %s ", an );
     RESULT = an;
+    :}
+    | IDENTIFICADOR:id ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
+    checkSymbol(id);
+    addInfo("REGLA 16.11: factor -> IDENTIFICADOR ABRE_CORCHETE expresion CIERRA_CORCHETE");
+    addInfo("REGLA 16.11: factor -> %s[ %s ]", id, e);
+    RESULT = id + "[" + e + "]";
 :};
 
 constante_bool ::= TRUE {:
@@ -522,19 +524,14 @@ program_line ::= sentenciaDisplay:s {:
     RESULT = si;
 :};
 
-numero_literal ::= IDENTIFICADOR:id ABRE_CORCHETE expresion:e CIERRA_CORCHETE {:
-    addInfo("REGLA 25.1: literalNumber -> IDENTIFICADOR ABRE_CORCHETE expresion CIERRA_CORCHETE");
-    addInfo("REGLA 25.1: literalNumber -> %s [ %s ]", id, e);
-    RESULT = id + "[" + e + "]";
-    :}
-    |FLOTANTE_LITERAL:fl {:
-    addInfo("REGLA 25.2: literalNumber -> FLOTANTE_LITERAL");
-    addInfo("REGLA 25.2: literalNumber -> %s", fl);
+numero_literal ::= FLOTANTE_LITERAL:fl {:
+    addInfo("REGLA 25.1: literalNumber -> FLOTANTE_LITERAL");
+    addInfo("REGLA 25.1: literalNumber -> %s", fl);
     RESULT = fl;
     :}
     |ENTERO_LITERAL:il {:
-    addInfo("REGLA 25.3: literalNumber -> ENTERO_LITERAL");
-    addInfo("REGLA 25.3: literalNumber -> %s", il);
+    addInfo("REGLA 25.2: literalNumber -> ENTERO_LITERAL");
+    addInfo("REGLA 25.2: literalNumber -> %s", il);
     RESULT = il;
 :};
 
