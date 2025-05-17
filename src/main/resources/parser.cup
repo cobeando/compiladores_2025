@@ -111,15 +111,25 @@ precedence right NOT;
 start with program;
 
 program ::= declaration_section:ds program_section:ps {:
-        addInfo("REGLA 0.1: program -> declaractio_section program_section");
+        addInfo("REGLA 0.1: program -> declaraction_section program_section");
         addInfo("REGLA 0.1: program -> %s \n %s", ds, ps);
         RESULT = ds + "\n" + ps;
     :}
+    |
+    declaration_section:ds{:
+        addInfo("REGLA 0.2: program -> declaraction_section");
+        addInfo("REGLA 0.2: program -> %s", ds);
+        RESULT = ds;
+    :}
     | program_section:ps {:
-        addInfo("REGLA 0.2: program -> program_section");
-        addInfo("REGLA 0.2: program -> %s ", ps);
+        addInfo("REGLA 0.3: program -> program_section");
+        addInfo("REGLA 0.3: program -> %s ", ps);
         RESULT = ps;
-:};
+    :}
+    | /* vacío */ {: 
+        addInfo("REGLA 0.3: program -> empty");
+        RESULT = ""; 
+    :};
 
 declaration_section ::= DECLARE_SECTION declarations:dec ENDDECLARE_SECTION {:
         addInfo("REGLA 1.1: declaration_section -> DECLARE_SECTION declarations ENDDECLARE_SECTION");
@@ -176,10 +186,10 @@ ID_list ::= IDENTIFICADOR:id COMA ID_list:list {:
         RESULT = id;
 :};
 
-valor_mas_cercano ::= VALOR_MAS_CERCANO ABRE_PARENTESIS ENTERO_LITERAL:il COMA ABRE_CORCHETE number_list:nl CIERRA_CORCHETE CIERRA_PARENTESIS {:
-        addInfo("REGLA 6.1: valor_mas_cercano -> VALOR_MAS_CERCANO ABRE_PARENTESIS ENTERO_LITERAL COMA ABRE_CORCHETE number_list CIERRA_CORCHETE CIERRA_PARENTESIS");
-        addInfo("REGLA 6.1: valor_mas_cercano -> valor_mas_cercano( %s , [ %s ] )", il, nl);
-        RESULT = "valor_mas_cercano" + "(" + il + "," + "[" + nl + "]" + ")";
+valor_mas_cercano ::= VALOR_MAS_CERCANO ABRE_PARENTESIS expresion:exp COMA ABRE_CORCHETE number_list:nl CIERRA_CORCHETE CIERRA_PARENTESIS {:
+        addInfo("REGLA 6.1: valor_mas_cercano -> VALOR_MAS_CERCANO ABRE_PARENTESIS expresion COMA ABRE_CORCHETE number_list CIERRA_CORCHETE CIERRA_PARENTESIS");
+        addInfo("REGLA 6.1: valor_mas_cercano -> valor_mas_cercano( %s , [ %s ] )", exp, nl);
+        RESULT = "valor_mas_cercano" + "(" + exp + "," + "[" + nl + "]" + ")";
     :};
 
 
@@ -246,15 +256,15 @@ any ::= ANY ABRE_PARENTESIS expresion:e COMA EQUIVALE COMA IDENTIFICADOR:id CIER
         RESULT = "any" + "(" + e + "," + ">=" + "," + id + ")";
 :};
 
-number_list ::= number_list:nlist COMA ENTERO_LITERAL:il {:
-        addInfo("REGLA 9.1: number_list -> number_list COMA ENTERO_LITERAL");
-        addInfo("REGLA 9.1: number_list -> %s, %s", nlist, il);
-        RESULT = nlist + "," + il;
+number_list ::= number_list:nlist COMA expresion:exp {:
+        addInfo("REGLA 9.1: number_list -> number_list COMA exp");
+        addInfo("REGLA 9.1: number_list -> %s, %s", nlist, exp);
+        RESULT = nlist + "," + exp;
     :}
-    | ENTERO_LITERAL:il {:
-         addInfo("REGLA 9.2: number_list -> il");
-        addInfo("REGLA 9.2: number_list -> %s", il);
-        RESULT = il;
+    | expresion:exp {:
+         addInfo("REGLA 9.2: number_list -> exp");
+        addInfo("REGLA 9.2: number_list -> %s", exp);
+        RESULT = exp;
 :};
 
 asignacion ::=IDENTIFICADOR:id ABRE_CORCHETE expresion:e CIERRA_CORCHETE IGUAL expresion_logica:exp_log {:
