@@ -1,5 +1,5 @@
 package ar.edu.unnoba.comp.jflextp.ast.expression;
 
-public class AllExpression {
+public class AllExpression extends Expression{
 
 }
