@@ -1,6 +1,6 @@
 package ar.edu.unnoba.comp.jflextp.ast.expression;
 
-public class NotExpression {
+public class NotExpression extends Expression{
     private final Expression expression;
 
     public NotExpression(Expression expression){
@@ -11,10 +11,8 @@ public class NotExpression {
         return "NOT";
     }
 
-    public String graficar(String idPadre){
-        return
-            super.graficar(idPadre)
-            + expression.graficar(this.getId());
+    public String graficar(String idPadre) {
+        return super.graficar(idPadre)
+                + expression.graficar(this.getId());
     }
-
 }
