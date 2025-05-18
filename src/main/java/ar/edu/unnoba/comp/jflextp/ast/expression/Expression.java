@@ -1,5 +1,7 @@
 package ar.edu.unnoba.comp.jflextp.ast.expression;
 
-public class Expression {
+import ar.edu.unnoba.comp.jflextp.ast.Nodo;
+
+public abstract class Expression extends Nodo{
 
 }
