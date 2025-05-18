@@ -1,6 +1,6 @@
 package ar.edu.unnoba.comp.jflextp.ast.condition;
 
-public class BooleanCondition {
+public class BooleanCondition extends Condition{
     private final boolean value;
 
     public BooleanCondition(boolean value){

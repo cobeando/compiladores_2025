@@ -1,6 +1,6 @@
 package ar.edu.unnoba.comp.jflextp.ast.factor;
 
-public class Constant {
+public class Constant extends Factor{
     private String value;
 
     public Constant(String value){

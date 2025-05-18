@@ -1,5 +1,15 @@
 package ar.edu.unnoba.comp.jflextp.ast.factor;
 
-public class LogicExpressionFactor {
+import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
 
+public class LogicExpressionFactor extends Factor{
+    private Expression logicExpression;
+
+    public LogicExpressionFactor(Expression logicExpression){
+        this.logicExpression = logicExpression;
+    }
+
+    public String graficar(String IdPadre){
+        return logicExpression.graficar(IdPadre);
+    }
 }

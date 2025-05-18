@@ -1,5 +1,7 @@
 package ar.edu.unnoba.comp.jflextp.ast.factor;
 
-public class Factor {
+import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
+
+public abstract class Factor extends Expression{
     
 }

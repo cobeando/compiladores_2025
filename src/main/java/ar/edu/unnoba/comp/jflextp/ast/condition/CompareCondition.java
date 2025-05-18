@@ -2,7 +2,7 @@ package ar.edu.unnoba.comp.jflextp.ast.condition;
 
 import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
 
-public class CompareCondition {
+public class CompareCondition extends Condition{
     private Expression left;
     private Expression right;
     private String operator;
@@ -17,8 +17,10 @@ public class CompareCondition {
         return operator;
     }
 
-    public String graficar(String idPadre){
-        String miId = this.getId();
-        return super.graficar(idPadre) + left.graficar(miId) + right.graficar(miId);
+    public String graficar(String idPadre) {
+        final String miId = this.getId();
+        return super.graficar(idPadre) +
+                left.graficar(miId) +
+                right.graficar(miId);
     }
 }
