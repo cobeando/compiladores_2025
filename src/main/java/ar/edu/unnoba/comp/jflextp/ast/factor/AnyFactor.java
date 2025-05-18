@@ -1,13 +1,14 @@
-package ar.edu.unnoba.comp.jflextp.ast.expression;
+package ar.edu.unnoba.comp.jflextp.ast.factor;
 
 import ar.edu.unnoba.comp.jflextp.ast.Nodo;
+import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
 
-public class AllExpression extends Expression{
+public class AnyFactor extends Factor{
     private Expression expression;
     private String operador;
     private String identificador;
 
-    public AllExpression(Expression expression, String operador, String identificador) {
+    public AnyFactor(Expression expression, String operador, String identificador) {
         this.expression = expression;
         this.operador = operador;
         this.identificador = identificador;
@@ -27,7 +28,7 @@ public class AllExpression extends Expression{
 
     @Override
     public String getEtiqueta() {
-        return "ALL";
+        return "ANY";
     }
 
     @Override

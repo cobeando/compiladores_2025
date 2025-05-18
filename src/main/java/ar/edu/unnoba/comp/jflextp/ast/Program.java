@@ -16,6 +16,10 @@ public class Program extends Nodo{
         this.statement2 = statement2;
     }
 
+    public Program(){
+        
+    }
+
     public Statement getStatement(){
         return statement;
     }

@@ -13,7 +13,7 @@ public class JFlexApplication extends Application {
         ClassLoader classLoader = getClass().getClassLoader();
         FXMLLoader fxmlLoader = new FXMLLoader(classLoader.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
-        stage.setTitle("JFlex Compiladores Grupo 4 TP");
+        stage.setTitle("JFlex Compiladores Grupo 5 TP");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
