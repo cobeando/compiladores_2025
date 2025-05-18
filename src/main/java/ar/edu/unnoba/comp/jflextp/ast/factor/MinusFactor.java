@@ -13,6 +13,8 @@ public class MinusFactor extends Factor{
 
     @Override
     public String graficar(String idPadre){
-        return super.graficar(idPadre) + factor.graficar(this.getId());
+        return
+            super.graficar(idPadre)
+            + factor.graficar(this.getId());
     }
 }
