@@ -60,4 +60,13 @@ public class ConditionStatement extends Statement {
         
         return graphic.toString();
     }
+
+    @Override
+    public String toString(){
+        if (getElseStatements() == null){
+            return String.format("CONDITION\n%s\nTHEN\n%s\nEND", getCondition(), getStatements());
+        } else {
+            return String.format("CONDITION\n%s\nTHEN\n%s\nELSE\n%s\nEND", getCondition(), getStatements(), getElseStatements());
+        }
+    }
 }

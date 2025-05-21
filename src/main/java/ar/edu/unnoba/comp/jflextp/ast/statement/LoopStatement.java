@@ -47,4 +47,9 @@ public class LoopStatement extends Statement{
     public StatementList getStatements() {
         return statements;
     }
+
+    @Override
+    public String toString(){
+        return String.format("LOOP WHEN\n%s\nTHEN\n%s\nEND_LOOP", getCondition(), getStatements());
+    }
 }

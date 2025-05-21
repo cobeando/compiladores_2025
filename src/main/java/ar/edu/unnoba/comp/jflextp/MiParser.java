@@ -845,7 +845,7 @@ class CUP$MiParser$actions {
 		DeclareStatement e = (DeclareStatement)((java_cup.runtime.Symbol) CUP$MiParser$stack.peek()).value;
 		
         addInfo("REGLA 2.2: declarations -> declaration declarations");
-        addInfo("REGLA 2.2: declarations -> %s\n\t%s", d, e);
+        addInfo("REGLA 2.2: declarations -> %s\n\t%s", e, d);
         RESULT = d.addStatementToList(e);
 
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("declarations",4, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-1)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);

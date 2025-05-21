@@ -30,4 +30,9 @@ public class DeclareStatement extends Statement{
         }
         return super.graficar(idPadre) + graficarDeclarations;
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s: %s", type, idDeclarations);
+    }
 }

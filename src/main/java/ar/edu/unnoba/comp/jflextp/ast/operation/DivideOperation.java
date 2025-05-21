@@ -11,4 +11,9 @@ public class DivideOperation extends BinaryOperation{
     protected String getOperationName() {
         return "/";
     }
+
+    @Override
+    public String toString(){
+        return String.format("$s / %s", left, right);
+    }
 }

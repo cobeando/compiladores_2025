@@ -32,4 +32,9 @@ public class BackwardLoopStatement extends LoopStatement{
 
         return graphic.toString();
     }
+
+    @Override
+    public String toString(){
+        return String.format("BACKWARD_LOOP WHEN\n%s\nTHEN\n%s\nEND_LOOP", getCondition(), getStatements());
+    }
 }

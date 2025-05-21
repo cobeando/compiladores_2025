@@ -28,4 +28,13 @@ public class DisplayStatement extends Statement {
         return super.graficar(idPadre)
                 + displayString.graficar(thisId);
     }
+
+    @Override
+    public String toString(){
+        if (expression == null){
+            return String.format("DISPLAY(%s)", displayString);
+        } else {
+            return String.format("DISPLAY(%s)", expression);
+        }
+    }
 }

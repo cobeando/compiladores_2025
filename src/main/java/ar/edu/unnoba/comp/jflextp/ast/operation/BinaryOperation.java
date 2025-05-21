@@ -34,4 +34,5 @@ public abstract class BinaryOperation extends Factor{
                 left.graficar(miId) +
                 right.graficar(miId);
     }
+
 }

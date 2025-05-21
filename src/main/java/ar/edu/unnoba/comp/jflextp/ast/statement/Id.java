@@ -13,4 +13,9 @@ public class Id extends Nodo{
     public String getEtiqueta(){
         return id;
     }
+
+    @Override
+    public String toString(){
+        return id;
+    }
 }
