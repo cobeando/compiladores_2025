@@ -35,4 +35,7 @@ public abstract class BinaryOperation extends Factor{
                 right.graficar(miId);
     }
 
+    @Override
+    public abstract String toString();
+
 }

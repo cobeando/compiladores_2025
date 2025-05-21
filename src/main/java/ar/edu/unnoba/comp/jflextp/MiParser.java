@@ -2001,8 +2001,8 @@ class CUP$MiParser$actions {
 		int p2right = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-1)).right;
 		StatementList p2 = (StatementList)((java_cup.runtime.Symbol) CUP$MiParser$stack.elementAt(CUP$MiParser$top-1)).value;
 		
-    addInfo("REGLA 20.4: sentencia_de_seleccion -> CONDITION expresion_logica THEN program_lines ELSE_BACKWARD program_lines END");
-    addInfo("REGLA 20.4: sentencia_de_seleccion -> CONDITION %s THEN %s ELSE_BACKWARD %s END", exp_log, p1, p2);
+    addInfo("REGLA 20.4: sentencia_de_seleccion -> BACKWARD_CONDITION expresion_logica THEN program_lines ELSE_BACKWARD program_lines END");
+    addInfo("REGLA 20.4: sentencia_de_seleccion -> BACKWARD_CONDITION %s THEN %s ELSE_BACKWARD %s END", exp_log, p1, p2);
     RESULT = new BackwardConditionStatement(exp_log, p1, p2);
 
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("sentencia_de_seleccion",21, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-6)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);

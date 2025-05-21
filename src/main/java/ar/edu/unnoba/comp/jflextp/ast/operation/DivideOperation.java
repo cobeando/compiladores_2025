@@ -14,6 +14,6 @@ public class DivideOperation extends BinaryOperation{
 
     @Override
     public String toString(){
-        return String.format("$s / %s", left, right);
+        return String.format("(%s / %s)", left, right);
     }
 }
