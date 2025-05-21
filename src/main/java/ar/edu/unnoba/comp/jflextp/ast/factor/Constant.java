@@ -10,4 +10,9 @@ public class Constant extends Factor{
     public String getEtiqueta(){
         return value;
     }
+
+    @Override
+    public String toString(){
+        return String.format("%s", this.value);
+    }
 }

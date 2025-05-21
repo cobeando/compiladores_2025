@@ -1,6 +1,7 @@
 package ar.edu.unnoba.comp.jflextp.ast.factor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import ar.edu.unnoba.comp.jflextp.ast.Nodo;
 import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
@@ -45,5 +46,14 @@ public class ValorMasCercano extends Factor{
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public String toString(){
+        String aux = lista.stream()
+            .map(Expression::toString)
+            .collect(Collectors.joining(", "));
+
+        return String.format("( [  ])", this.referencia, aux);
     }
 }

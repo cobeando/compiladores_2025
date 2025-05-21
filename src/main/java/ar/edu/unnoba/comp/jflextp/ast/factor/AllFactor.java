@@ -55,4 +55,10 @@ public class AllFactor extends Factor{
 
         return sb.toString();
     }
+
+
+    @Override
+    public String toString(){
+        return String.format("any(%s %s %s)", this.expression, this.operador, this.identificador);
+    }
 }
