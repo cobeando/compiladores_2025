@@ -122,12 +122,12 @@ start with program;
 
 program ::= declaration_section:ds program_section:ps {:
         addInfo("REGLA 0.1: program -> declaraction_section program_section");
-        addInfo("REGLA 0.1: program -> %s \n %s", ds, ps);
+        addInfo("REGLA 0.1: program -> DECLARE.SECTION\n%s\nENDDECLARE.SECTION\nPROGRAM.SECTION\n%s\nENDPROGRAM.SECTION", ds, ps);
         RESULT = new Program(ds, ps);
     :}
     | program_section:ps {:
         addInfo("REGLA 0.2: program -> program_section");
-        addInfo("REGLA 0.2: program -> %s ", ps);
+        addInfo("REGLA 0.2: program -> PROGRAM.SECTION\n%s\nENDPROGRAM.SECTION", ps);
         RESULT = new Program(ps);
     :}
     | /* vacío */ {: 

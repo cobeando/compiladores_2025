@@ -54,6 +54,6 @@ public class ValorMasCercano extends Factor{
             .map(Expression::toString)
             .collect(Collectors.joining(", "));
 
-        return String.format("( [  ])", this.referencia, aux);
+        return String.format("valor_mas_cercano(%s[%s])", this.referencia, aux);
     }
 }

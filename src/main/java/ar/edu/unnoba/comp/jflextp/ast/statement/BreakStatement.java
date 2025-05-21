@@ -10,4 +10,9 @@ public class BreakStatement extends Statement{
     public String graficar(String idPadre) {
         return super.graficar(idPadre);
     }
+
+    @Override
+    public String toString(){
+        return "BREAK";
+    }
 }

@@ -766,7 +766,7 @@ class CUP$MiParser$actions {
 		StatementList ps = (StatementList)((java_cup.runtime.Symbol) CUP$MiParser$stack.peek()).value;
 		
         addInfo("REGLA 0.1: program -> declaraction_section program_section");
-        addInfo("REGLA 0.1: program -> %s \n %s", ds, ps);
+        addInfo("REGLA 0.1: program -> DECLARE.SECTION\n%s\nENDDECLARE.SECTION\nPROGRAM.SECTION\n%s\nENDPROGRAM.SECTION", ds, ps);
         RESULT = new Program(ds, ps);
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("program",19, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-1)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
@@ -782,7 +782,7 @@ class CUP$MiParser$actions {
 		StatementList ps = (StatementList)((java_cup.runtime.Symbol) CUP$MiParser$stack.peek()).value;
 		
         addInfo("REGLA 0.2: program -> program_section");
-        addInfo("REGLA 0.2: program -> %s ", ps);
+        addInfo("REGLA 0.2: program -> PROGRAM.SECTION\n%s\nENDPROGRAM.SECTION", ps);
         RESULT = new Program(ps);
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("program",19, ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);

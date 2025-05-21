@@ -35,7 +35,7 @@ public class AssignStatement extends Statement {
         if (expression2 == null){
             return String.format("%s = %s", id, expression1);
         } else {
-            return String.format("%s = %s $s", id, expression1, expression2);
+            return String.format("%s[%s] = %s", id, expression1, expression2);
         }
     }
 }
