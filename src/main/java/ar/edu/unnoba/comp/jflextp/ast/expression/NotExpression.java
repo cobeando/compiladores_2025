@@ -15,4 +15,9 @@ public class NotExpression extends Expression{
         return super.graficar(idPadre)
                 + expression.graficar(this.getId());
     }
+
+    @Override
+    public String toString(){
+        return String.format("%s", this.expression);
+    }
 }

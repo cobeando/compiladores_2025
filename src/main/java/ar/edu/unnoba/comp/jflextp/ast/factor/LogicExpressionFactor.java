@@ -12,4 +12,9 @@ public class LogicExpressionFactor extends Factor{
     public String graficar(String idPadre){
         return logicExpression.graficar(idPadre);
     }
+
+    @Override
+    public String toString(){
+        return String.format("%s", this.logicExpression);
+    }
 }

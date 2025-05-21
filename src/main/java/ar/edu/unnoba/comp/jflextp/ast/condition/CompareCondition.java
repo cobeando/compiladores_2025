@@ -23,4 +23,9 @@ public class CompareCondition extends Condition{
                 left.graficar(miId) +
                 right.graficar(miId);
     }
+
+    @Override
+    public String toString(){
+        return String.format("%s %s %s", this.left, this.operator, this.right);
+    }
 }

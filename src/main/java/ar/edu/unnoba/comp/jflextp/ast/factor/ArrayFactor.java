@@ -23,8 +23,9 @@ public class ArrayFactor extends Factor{
 
     @Override
     public String toString() {
-        return arrayId + "[" + index + "]";
+        return String.format("%s [ %s ]", this.arrayId, this.index);
     }
+
 
     @Override
     public String graficar(String idPadre) {
@@ -52,4 +53,6 @@ public class ArrayFactor extends Factor{
     public int hashCode() {
         return Objects.hash(arrayId, index);
     }
+
+    
 }

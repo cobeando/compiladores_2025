@@ -21,4 +21,9 @@ public class LogicExpression extends Expression{
                 + left.graficar(thisId)
                 + right.graficar(thisId);
     }
+
+    @Override
+    public String toString(){
+        return String.format("%s %s %s", this.left, this.operator, this.right);
+    }
 }

@@ -14,4 +14,9 @@ public class BooleanCondition extends Condition{
     public String graficar(String idPadre){
         return super.graficar(idPadre);
     }
+
+    @Override
+    public String toString(){
+        return "BOOLEAN CONDITION";
+    }
 }

@@ -18,4 +18,10 @@ public class NotCondition extends Condition{
             this.condition.graficar(idPadre);
     }
 
+
+    @Override
+    public String toString(){
+        return String.format("%s", this.condition);
+    }
+
 }
