@@ -541,56 +541,56 @@ program_line ::= sentenciaDisplay:s {:
     RESULT = ss;
     :}
     | sentencia_de_iteracion:si {:
-    addInfo("REGLA 24.4: program_line -> sentencia_de_iteracion");
-    addInfo("REGLA 24.4: program_line -> %s",si);
+    addInfo("REGLA 23.4: program_line -> sentencia_de_iteracion");
+    addInfo("REGLA 23.4: program_line -> %s",si);
     RESULT = si;
 :};
 
 numero_literal ::= FLOTANTE_LITERAL:fl {:
-    addInfo("REGLA 25.1: literalNumber -> FLOTANTE_LITERAL");
-    addInfo("REGLA 25.1: literalNumber -> %s", fl);
+    addInfo("REGLA 24.1: literalNumber -> FLOTANTE_LITERAL");
+    addInfo("REGLA 24.1: literalNumber -> %s", fl);
     RESULT = fl;
     :}
     |ENTERO_LITERAL:il {:
-    addInfo("REGLA 25.2: literalNumber -> ENTERO_LITERAL");
-    addInfo("REGLA 25.2: literalNumber -> %s", il);
+    addInfo("REGLA 24.2: literalNumber -> ENTERO_LITERAL");
+    addInfo("REGLA 24.2: literalNumber -> %s", il);
     RESULT = il;
 :};
 
 sentencia_de_iteracion ::= LOOP WHEN expresion_logica:exp_log THEN program_lines_loop:p END_LOOP{:
-        addInfo("REGLA 26.1: sentencia_de_iteracion -> LOOP WHEN expresion_logica THEN program_lines_loop END_LOOP");
-        addInfo("REGLA 26.1: sentencia_de_iteracion -> LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
+        addInfo("REGLA 25.1: sentencia_de_iteracion -> LOOP WHEN expresion_logica THEN program_lines_loop END_LOOP");
+        addInfo("REGLA 25.1: sentencia_de_iteracion -> LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
         RESULT = new LoopStatement(exp_log, p);
     :}
     | BACKWARD_LOOP WHEN expresion_logica:exp_log THEN program_lines_loop:p END_LOOP{:
-        addInfo("REGLA 26.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN expresion_logica THEN program_lines_loop END_LOOP");
-        addInfo("REGLA 26.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
+        addInfo("REGLA 25.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN expresion_logica THEN program_lines_loop END_LOOP");
+        addInfo("REGLA 25.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
         RESULT = new BackwardLoopStatement(exp_log, p);
     :};
 
 program_lines_loop ::= program_lines_loop:d program_line_loop:e {:
-        addInfo("REGLA 27.2: program_lines -> program_line_loop program_line_loop");
-        addInfo("REGLA 27.2: program_lines_loop -> %s\n\t%s", d, e);
+        addInfo("REGLA 26.1: program_lines -> program_line_loop program_line_loop");
+        addInfo("REGLA 26.1: program_lines_loop -> %s\n\t%s", d, e);
         d.addStatement(e);
         RESULT = d;
     :}
     | program_line_loop:p {:
-        addInfo("REGLA 27.3: program_lines -> program_line_loop");
-        addInfo("REGLA 27.3: program_lines -> %s", p);
+        addInfo("REGLA 26.2: program_lines -> program_line_loop");
+        addInfo("REGLA 26.2: program_lines -> %s", p);
         StatementList sl = new StatementList(p);
         RESULT = sl;
     :};
 
 program_line_loop ::= program_line:p {:
-        addInfo("REGLA 28.1: program_line_loop -> program_line");
-        addInfo("REGLA 28.1: program_line -> %s", p);
+        addInfo("REGLA 27.1: program_line_loop -> program_line");
+        addInfo("REGLA 27.1: program_line -> %s", p);
         RESULT = p;
     :}
     |BREAK {:
-        addInfo("REGLA 28.2: program_line -> BREAK");
+        addInfo("REGLA 27.2: program_line -> BREAK");
         RESULT = new BreakStatement();
     :}
     |CONTINUE {:
-        addInfo("REGLA 28.3: program_line -> CONTINUE");
+        addInfo("REGLA 27.3: program_line -> CONTINUE");
         RESULT = new ContinueStatement();
 :};

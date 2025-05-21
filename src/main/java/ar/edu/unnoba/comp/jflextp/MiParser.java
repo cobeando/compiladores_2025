@@ -2116,8 +2116,8 @@ class CUP$MiParser$actions {
 		int siright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()).right;
 		Statement si = (Statement)((java_cup.runtime.Symbol) CUP$MiParser$stack.peek()).value;
 		
-    addInfo("REGLA 24.4: program_line -> sentencia_de_iteracion");
-    addInfo("REGLA 24.4: program_line -> %s",si);
+    addInfo("REGLA 23.4: program_line -> sentencia_de_iteracion");
+    addInfo("REGLA 23.4: program_line -> %s",si);
     RESULT = si;
 
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("program_line",20, ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
@@ -2132,8 +2132,8 @@ class CUP$MiParser$actions {
 		int flright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()).right;
 		String fl = (String)((java_cup.runtime.Symbol) CUP$MiParser$stack.peek()).value;
 		
-    addInfo("REGLA 25.1: literalNumber -> FLOTANTE_LITERAL");
-    addInfo("REGLA 25.1: literalNumber -> %s", fl);
+    addInfo("REGLA 24.1: literalNumber -> FLOTANTE_LITERAL");
+    addInfo("REGLA 24.1: literalNumber -> %s", fl);
     RESULT = fl;
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("numero_literal",15, ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
@@ -2148,8 +2148,8 @@ class CUP$MiParser$actions {
 		int ilright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()).right;
 		String il = (String)((java_cup.runtime.Symbol) CUP$MiParser$stack.peek()).value;
 		
-    addInfo("REGLA 25.2: literalNumber -> ENTERO_LITERAL");
-    addInfo("REGLA 25.2: literalNumber -> %s", il);
+    addInfo("REGLA 24.2: literalNumber -> ENTERO_LITERAL");
+    addInfo("REGLA 24.2: literalNumber -> %s", il);
     RESULT = il;
 
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("numero_literal",15, ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
@@ -2167,8 +2167,8 @@ class CUP$MiParser$actions {
 		int pright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-1)).right;
 		StatementList p = (StatementList)((java_cup.runtime.Symbol) CUP$MiParser$stack.elementAt(CUP$MiParser$top-1)).value;
 		
-        addInfo("REGLA 26.1: sentencia_de_iteracion -> LOOP WHEN expresion_logica THEN program_lines_loop END_LOOP");
-        addInfo("REGLA 26.1: sentencia_de_iteracion -> LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
+        addInfo("REGLA 25.1: sentencia_de_iteracion -> LOOP WHEN expresion_logica THEN program_lines_loop END_LOOP");
+        addInfo("REGLA 25.1: sentencia_de_iteracion -> LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
         RESULT = new LoopStatement(exp_log, p);
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("sentencia_de_iteracion",24, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-5)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
@@ -2186,8 +2186,8 @@ class CUP$MiParser$actions {
 		int pright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-1)).right;
 		StatementList p = (StatementList)((java_cup.runtime.Symbol) CUP$MiParser$stack.elementAt(CUP$MiParser$top-1)).value;
 		
-        addInfo("REGLA 26.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN expresion_logica THEN program_lines_loop END_LOOP");
-        addInfo("REGLA 26.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
+        addInfo("REGLA 25.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN expresion_logica THEN program_lines_loop END_LOOP");
+        addInfo("REGLA 25.2: sentencia_de_iteracion -> BACKWARD_LOOP WHEN %s THEN %s END_LOOP", exp_log, p);
         RESULT = new BackwardLoopStatement(exp_log, p);
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("sentencia_de_iteracion",24, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-5)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
@@ -2205,8 +2205,8 @@ class CUP$MiParser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()).right;
 		Statement e = (Statement)((java_cup.runtime.Symbol) CUP$MiParser$stack.peek()).value;
 		
-        addInfo("REGLA 27.2: program_lines -> program_line_loop program_line_loop");
-        addInfo("REGLA 27.2: program_lines_loop -> %s\n\t%s", d, e);
+        addInfo("REGLA 26.1: program_lines -> program_line_loop program_line_loop");
+        addInfo("REGLA 26.1: program_lines_loop -> %s\n\t%s", d, e);
         d.addStatement(e);
         RESULT = d;
     
@@ -2222,8 +2222,8 @@ class CUP$MiParser$actions {
 		int pright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()).right;
 		Statement p = (Statement)((java_cup.runtime.Symbol) CUP$MiParser$stack.peek()).value;
 		
-        addInfo("REGLA 27.3: program_lines -> program_line_loop");
-        addInfo("REGLA 27.3: program_lines -> %s", p);
+        addInfo("REGLA 26.2: program_lines -> program_line_loop");
+        addInfo("REGLA 26.2: program_lines -> %s", p);
         StatementList sl = new StatementList(p);
         RESULT = sl;
     
@@ -2239,8 +2239,8 @@ class CUP$MiParser$actions {
 		int pright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()).right;
 		Statement p = (Statement)((java_cup.runtime.Symbol) CUP$MiParser$stack.peek()).value;
 		
-        addInfo("REGLA 28.1: program_line_loop -> program_line");
-        addInfo("REGLA 28.1: program_line -> %s", p);
+        addInfo("REGLA 27.1: program_line_loop -> program_line");
+        addInfo("REGLA 27.1: program_line -> %s", p);
         RESULT = p;
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("program_line_loop",25, ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
@@ -2252,7 +2252,7 @@ class CUP$MiParser$actions {
             {
               Statement RESULT =null;
 		
-        addInfo("REGLA 28.2: program_line -> BREAK");
+        addInfo("REGLA 27.2: program_line -> BREAK");
         RESULT = new BreakStatement();
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("program_line_loop",25, ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
@@ -2264,7 +2264,7 @@ class CUP$MiParser$actions {
             {
               Statement RESULT =null;
 		
-        addInfo("REGLA 28.3: program_line -> CONTINUE");
+        addInfo("REGLA 27.3: program_line -> CONTINUE");
         RESULT = new ContinueStatement();
 
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("program_line_loop",25, ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
