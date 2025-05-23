@@ -24,6 +24,13 @@ public class AssignStatement extends Statement {
 
     public String graficar(String idPadre){
         String thisId = this.getId();
+
+
+        if (expression2 == null){
+             return super.graficar(idPadre)
+                + id.graficar(thisId)
+                + expression1.graficar(thisId);
+        }
         return super.graficar(idPadre)
                 + id.graficar(thisId)
                 + expression1.graficar(thisId)

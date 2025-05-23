@@ -3,20 +3,29 @@ package ar.edu.unnoba.comp.jflextp;
 import ar.edu.unnoba.comp.jflextp.exceptions.CloseCommentException;
 import ar.edu.unnoba.comp.jflextp.exceptions.EOFLexerException;
 import ar.edu.unnoba.comp.jflextp.exceptions.LexerException;
+import ar.edu.unnoba.comp.jflextp.ast.Program;
+import ar.edu.unnoba.comp.jflextp.utils.SymbolTable;
 import java_cup.runtime.Symbol;
 import java_cup.sym;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class JFlexController {
+import static java.lang.Thread.sleep;
 
+public class JFlexController {
+    
+    @FXML
+    private Button generateGraphButton;
     @FXML
     private TextArea resultJFlex;
     @FXML
@@ -29,18 +38,162 @@ public class JFlexController {
     private Button symbolTableDownload;
     @FXML
     private TextArea inputJFlex;
+    @FXML
+    private Button generateLLVMButton;
+    @FXML
+    private Button executeLLVMButton;
 
     private final Symbol eofSymbol = new Symbol(sym.EOF);
     private String symbolTable;
 
     @FXML
     private void initialize() {
-        // Agregar un controlador de eventos al botón
-        selectFileButton.setOnAction(this::handleSelectFile);   
+        File file= new File(Generador.class.getClassLoader().getResource("code_compile.txt").getFile());
+        try {
+            FileReader reader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            StringBuilder content = new StringBuilder();
+            for (String line; (line = bufferedReader.readLine()) != null; ) {
+                content.append(line).append("\n");
+            }
+            inputJFlex.setText(content.toString());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        selectFileButton.setOnAction(this::handleSelectFile);
         parseText.setOnAction(this::handleParseText);
         parseCupText.setOnAction(this::handleParseCupText);
         symbolTableDownload.setOnAction(this::descargarArchivo);
+        generateGraphButton.setOnAction(this::generateGraph);
+        // generateLLVMButton.setOnAction(this::generateLLVM);
+        // executeLLVMButton.setOnAction(this::executeLLVM);
     }
+
+    // private void executeLLVM(ActionEvent event) {
+    //     StringReader textToParse = new StringReader(inputJFlex.getText());
+    //     MiLexico lexico = new MiLexico(textToParse);
+    //     MiParser parser = new MiParser(lexico);
+    //     StringBuilder content = new StringBuilder();
+    //     String code = "";
+
+
+    //     try {
+    //         Program program = (Program) parser.parse().value;
+    //         SymbolTable symbolTable = parser.action_obj.symbolTable;
+    //         PrintWriter pw;
+    //         code = program.generarCodigo(symbolTable);
+    //         pw = new PrintWriter(new FileWriter("programa.ll"));
+    //         pw.println(code);
+    //         pw.close();
+    //         content.append("Execution output:\n");
+    //         content.append(ejecutar2("clang", "-c", "-o", "programa.o", "programa.ll") + "\n");
+    //         content.append(ejecutar2("clang", "-o", "programa.exe", "programa.o", "scanf.o") + "\n");
+    //         System.out.println("Ejecutable generado");
+    //         content.append(ejecutar2("./programa.exe"));
+    //         content.append("\n\n"+ code );
+
+    //         resultJFlex.setText(content.toString());
+    //     } catch (Exception e) {
+    //         resultJFlex.setText(e.getMessage() +  "\n" + code);
+    //         e.printStackTrace();
+    //     }
+
+    // }
+
+
+    private void generateGraph(ActionEvent event) {
+        StringReader textToParse = new StringReader(inputJFlex.getText());
+        MiLexico lexico = new MiLexico(textToParse);
+        MiParser parser = new MiParser(lexico);
+
+        try {
+            Program program = (Program) parser.parse().value;
+            String graphic = program.graficar();
+            resultJFlex.setText(graphic);
+            PrintWriter grafico = new PrintWriter(new FileWriter("arbol.dot"));
+            grafico.println(graphic);
+            grafico.close();
+            String cmdDot = "ls; dot -Tpng arbol.dot -o arbol.png";
+            String outputPath = getClass().getResource("/").toExternalForm();
+            outputPath = "src/main/resources/";
+            outputPath = "target/classes/";
+            String[] command = {
+                    "dot", "-Tpng", "arbol.dot", "-o", outputPath + "graph.png"
+            };
+
+            Process process = new ProcessBuilder(command).start();
+            process.waitFor();
+            System.out.println("Imagen generada en " + outputPath + "graph.png");
+
+            String[] command2 = {
+                    "dot", "-Tsvg", "arbol.dot", "-o", outputPath + "graph.svg"
+            };
+
+            Process process2 = new ProcessBuilder(command2).start();
+            process2.waitFor();
+            System.out.println("Imagen generada en " + outputPath + "graph.svg");
+            sleep(2000);
+
+            showGraphInNewWindow();
+        } catch (Exception e ) {
+            e.printStackTrace();
+        }
+    }
+
+//     private void generateLLVM(ActionEvent event) {
+//         StringReader textToParse = new StringReader(inputJFlex.getText());
+//         MiLexico lexico = new MiLexico(textToParse);
+//         MiParser parser = new MiParser(lexico);
+
+//         try {
+//             Program program = (Program) parser.parse().value;
+//             SymbolTable symbolTable = parser.action_obj.symbolTable;
+//             String llvm = program.generarCodigo(symbolTable);
+//             resultJFlex.setText(llvm);
+// //            PrintWriter grafico = new PrintWriter(new FileWriter("arbol.dot"));
+// //            grafico.println(graphic);
+// //            grafico.close();
+// //            String cmdDot = "ls; dot -Tpng arbol.dot -o arbol.png";
+// //            String outputPath = getClass().getResource("/").toExternalForm();
+// //            outputPath = "src/main/resources/";
+// //            outputPath = "target/classes/";
+// //            String[] command = {
+// //                    "dot", "-Tpng", "arbol.dot", "-o", outputPath + "graph.png"
+// //            };
+// //
+// //            Process process = new ProcessBuilder(command).start();
+// //            process.waitFor();
+// //            System.out.println("Imagen generada en " + outputPath + "graph.png");
+// //
+// //            String[] command2 = {
+// //                    "dot", "-Tsvg", "arbol.dot", "-o", outputPath + "graph.svg"
+// //            };
+// //
+// //            Process process2 = new ProcessBuilder(command2).start();
+// //            process2.waitFor();
+// //            System.out.println("Imagen generada en " + outputPath + "graph.svg");
+// //            sleep(2000);
+// //
+// //            showGraphInNewWindow();
+//         } catch (Exception e ) {
+//             resultJFlex.setText("Error: " + e.getMessage());
+//             e.printStackTrace();
+//         }
+//     }
+
+    private void showGraphInNewWindow() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/graphView.fxml"));
+            Stage stage = new Stage();
+            stage.setTitle("Graph Viewer");
+            stage.setScene(new Scene(loader.load()));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+
 
     private void handleSelectFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();

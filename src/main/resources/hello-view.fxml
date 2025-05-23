@@ -16,6 +16,10 @@
     <Button fx:id="parseText" mnemonicParsing="false" text="Iniciar Analisis Lexico" />
     <Button fx:id="parseCupText" mnemonicParsing="false" text="Iniciar Analisis Sintactico" />
     <Button fx:id="symbolTableDownload" mnemonicParsing="false" text="Descargar Tabla de Simbolos" />
+    <Button fx:id="generateGraphButton" mnemonicParsing="false" text="Generar AST" />
+    <Button fx:id="generateLLVMButton" mnemonicParsing="false" text="Generar LLVM" />
+    <Button fx:id="executeLLVMButton" mnemonicParsing="false" text="Ejecutar LLVM" />
+    
   </ToolBar>
   <HBox spacing="10">
     <TextArea fx:id="inputJFlex" layoutX="39.0" layoutY="59.0" prefHeight="635.0" prefWidth="635.0"

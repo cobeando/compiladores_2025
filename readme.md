@@ -1,6 +1,6 @@
 # Compiladores Trabajo Practico
 
-Grupo 5: Martin Barbero Luis, Facundo Benavidez, Agus Campagna, Alejo Fidalgo, Tiago Roldan
+Grupo 5:Facundo Benavidez, Agus Campagna, Alejo Fidalgo, Tiago Roldan
 
 ## Descripción
 
