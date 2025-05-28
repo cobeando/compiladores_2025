@@ -1,10 +1,12 @@
 package ar.edu.unnoba.comp.jflextp.ast.statement;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class StatementList extends Statement{
+    private String tagBreak;
+    private String tagContinue;
     private ArrayList<Statement> statements;
+
     public StatementList(Statement statement){
         statements = new ArrayList<Statement>();
         statements.add(statement);
@@ -13,6 +15,22 @@ public class StatementList extends Statement{
     public StatementList(Statement statement, StatementList statementList){
         statements = new ArrayList<Statement>();
         statements.add(statement);
+    }
+
+    public String getTag_Continue() {
+        return tagContinue;
+    }
+
+    public void setTag_Continue(String tagContinue) {
+        this.tagContinue = tagContinue;
+    }
+
+    public String getTag_Break() {
+        return tagBreak;
+    }
+
+    public void setTag_Break(String tagBreak) {
+        this.tagBreak = tagBreak;
     }
 
     public ArrayList<Statement> getStatements(){
@@ -36,11 +54,14 @@ public class StatementList extends Statement{
         return graphic.toString();
     }
 
-    
     @Override
-    public String toString(){
-        return statements.stream()
-                     .map(Object::toString)
-                     .collect(Collectors.joining("\n\t"));
+    public String generarCodigo(){
+        StringBuilder resultado = new StringBuilder();
+        for (Statement statement : statements) {
+            statement.setTag_Break(this.getTag_Break());
+            statement.setTag_Continue(this.getTag_Continue());
+            resultado.append(statement.generarCodigo());
+        }
+        return resultado.toString();
     }
 }

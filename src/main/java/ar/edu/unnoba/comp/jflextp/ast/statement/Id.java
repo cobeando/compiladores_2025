@@ -18,4 +18,9 @@ public class Id extends Nodo{
     public String toString(){
         return id;
     }
+
+    @Override
+    public String generarCodigo() {
+        return "";
+    }
 }

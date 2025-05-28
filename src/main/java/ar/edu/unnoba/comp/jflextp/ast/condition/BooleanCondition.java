@@ -1,5 +1,7 @@
 package ar.edu.unnoba.comp.jflextp.ast.condition;
 
+import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
+
 public class BooleanCondition extends Condition{
     private final boolean value;
 
@@ -18,5 +20,12 @@ public class BooleanCondition extends Condition{
     @Override
     public String toString(){
         return "BOOLEAN CONDITION";
+    }
+
+    @Override
+    public String generarCodigo() {
+        this.setIr_ref(CodeGeneratorHelper.getNewPointer());
+        return (String.format("%1$s =xor i1 0, %2$s\n", this.getIr_ref(),
+                value ? 1 : 0));
     }
 }

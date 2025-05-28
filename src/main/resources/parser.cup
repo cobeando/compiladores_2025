@@ -401,7 +401,7 @@ factor ::= MENOS factor:f {:
     checkSymbol(id);
     addInfo("REGLA 16.3: factor -> IDENTIFICADOR");
     addInfo("REGLA 16.3: factor -> %s", id);
-    RESULT = new Constant(id);
+    RESULT = new IdValue(id);
     :}
     | inputs:ip {:
     addInfo("REGLA 16.4: factor -> inputs");
