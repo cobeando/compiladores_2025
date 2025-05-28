@@ -2,7 +2,7 @@ package ar.edu.unnoba.comp.jflextp.ast.factor;
 
 import ar.edu.unnoba.comp.jflextp.ast.Nodo;
 import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
-import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
+import ar.edu.unnoba.comp.jflextp.llvm.CodeGeneratorHelper;
 
 public class AnyFactor extends Factor{
     private Expression expression;

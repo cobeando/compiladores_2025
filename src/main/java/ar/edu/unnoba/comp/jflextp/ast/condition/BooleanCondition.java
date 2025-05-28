@@ -1,6 +1,6 @@
 package ar.edu.unnoba.comp.jflextp.ast.condition;
 
-import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
+import ar.edu.unnoba.comp.jflextp.llvm.CodeGeneratorHelper;
 
 public class BooleanCondition extends Condition{
     private final boolean value;

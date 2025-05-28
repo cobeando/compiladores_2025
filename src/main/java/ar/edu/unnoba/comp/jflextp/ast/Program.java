@@ -3,8 +3,8 @@ package ar.edu.unnoba.comp.jflextp.ast;
 import ar.edu.unnoba.comp.jflextp.ast.statement.DeclareStatement;
 import ar.edu.unnoba.comp.jflextp.ast.statement.Statement;
 import ar.edu.unnoba.comp.jflextp.ast.statement.StatementList;
+import ar.edu.unnoba.comp.jflextp.llvm.CodeGeneratorHelper;
 import ar.edu.unnoba.comp.jflextp.utils.SymbolTable;
-import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
 
 public class Program extends Nodo {
     private StatementList statement;

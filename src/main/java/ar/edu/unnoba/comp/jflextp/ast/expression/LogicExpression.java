@@ -1,7 +1,7 @@
 package ar.edu.unnoba.comp.jflextp.ast.expression;
 
 import ar.edu.unnoba.comp.jflextp.ast.factor.DataType;
-import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
+import ar.edu.unnoba.comp.jflextp.llvm.CodeGeneratorHelper;
 import ar.edu.unnoba.comp.jflextp.ast.condition.Operator;
 
 public class LogicExpression extends Expression{

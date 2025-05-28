@@ -1,7 +1,7 @@
 package ar.edu.unnoba.comp.jflextp.ast.factor;
 
 import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
-import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
+import ar.edu.unnoba.comp.jflextp.llvm.CodeGeneratorHelper;
 
 public class LogicExpressionFactor extends Factor{
     private Expression logicExpression;

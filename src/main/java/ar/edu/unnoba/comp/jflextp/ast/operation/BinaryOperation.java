@@ -2,7 +2,7 @@ package ar.edu.unnoba.comp.jflextp.ast.operation;
 
 import ar.edu.unnoba.comp.jflextp.ast.factor.DataType;
 import ar.edu.unnoba.comp.jflextp.ast.factor.Factor;
-import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
+import ar.edu.unnoba.comp.jflextp.llvm.CodeGeneratorHelper;
 import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
 
 public abstract class BinaryOperation extends Factor{

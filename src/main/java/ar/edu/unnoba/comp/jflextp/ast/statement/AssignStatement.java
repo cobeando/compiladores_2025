@@ -1,9 +1,8 @@
 package ar.edu.unnoba.comp.jflextp.ast.statement;
 
 import ar.edu.unnoba.comp.jflextp.ast.factor.DataType;
-
+import ar.edu.unnoba.comp.jflextp.llvm.CodeGeneratorHelper;
 import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
-import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
 
 public class AssignStatement extends Statement {
     private Id idAssignment;
@@ -52,10 +51,9 @@ public class AssignStatement extends Statement {
     @Override
     public String generarCodigo() {
         StringBuilder resultado = new StringBuilder();
-        /*
-        resultado.append(expression.generarCodigo());
+        resultado.append(expression1.generarCodigo());
         DataType destinationType = CodeGeneratorHelper.getTypeForId(idAssignment.getEtiqueta());
-        DataType expressionType = expression.getType();
+        DataType expressionType = expression1.getType();
         String globalPointer = CodeGeneratorHelper.getPointerForId(idAssignment.getEtiqueta());
 
 
@@ -68,20 +66,20 @@ public class AssignStatement extends Statement {
         CodeGeneratorHelper.setVariableAsInitialized(idAssignment.getEtiqueta());
 
         if (destinationType != DataType.INTEGER && expressionType == DataType.INTEGER) {
-            resultado.append(CodeGeneratorHelper.convertToFloat(expression));
+            resultado.append(CodeGeneratorHelper.convertToFloat(expression1));
             return resultado.toString();
         }
 
 
         if (destinationType != DataType.DUPLE) {
-            resultado.append(String.format("store %1$s %2$s, %1$s* %3$s\n", destinationType.getLlvmSymbol(), expression.getIr_ref(), globalPointer));
+            resultado.append(String.format("store %1$s %2$s, %1$s* %3$s\n", destinationType.getLlvmSymbol(), expression1.getIr_ref(), globalPointer));
             return resultado.toString();
         }
 
         String secondGlobalPointer = CodeGeneratorHelper.getSecondPointerForId(idAssignment.getEtiqueta());
 
-        resultado.append(String.format("store %1$s %2$s, %1$s* %3$s\n", DataType.FLOAT.getLlvmSymbol(), expression.getIr_ref(), globalPointer));
-        resultado.append(String.format("store %1$s %2$s, %1$s* %3$s\n", DataType.FLOAT.getLlvmSymbol(), expression.getIr_ref_2(), secondGlobalPointer)); */
+        resultado.append(String.format("store %1$s %2$s, %1$s* %3$s\n", DataType.FLOAT.getLlvmSymbol(), expression1.getIr_ref(), globalPointer));
+        resultado.append(String.format("store %1$s %2$s, %1$s* %3$s\n", DataType.FLOAT.getLlvmSymbol(), expression1.getIr_ref_2(), secondGlobalPointer)); 
         return resultado.toString();
     }
 }

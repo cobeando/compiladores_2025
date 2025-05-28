@@ -3,7 +3,7 @@ package ar.edu.unnoba.comp.jflextp.ast.factor;
 
 import java.util.Objects;
 import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
-import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
+import ar.edu.unnoba.comp.jflextp.llvm.CodeGeneratorHelper;
 
 public class ArrayFactor extends Factor{
     private final String arrayId;

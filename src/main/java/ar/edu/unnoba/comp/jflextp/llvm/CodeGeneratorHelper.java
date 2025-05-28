@@ -1,4 +1,4 @@
-package ar.edu.unnoba.comp.jflextp.ast.llvm;
+package ar.edu.unnoba.comp.jflextp.llvm;
 
 import ar.edu.unnoba.comp.jflextp.ast.Nodo;
 import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;

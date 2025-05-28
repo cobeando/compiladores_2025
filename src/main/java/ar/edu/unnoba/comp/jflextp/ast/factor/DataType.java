@@ -2,7 +2,7 @@ package ar.edu.unnoba.comp.jflextp.ast.factor;
 
 public enum DataType {
     INTEGER("INTEGER", "i32"),
-    FLOAT("FLOAT", "double"),
+    FLOAT("FLOAT", "float", "0.000000e+00"),
     DUPLE("DUPLE", "%struct.Tuple", "{ float 0.000000e+00, float 0.000000e+00 }"),
     BOOLEAN("BOOLEAN", "i1"),
     FLOAT_ARRAY("FLOAT_ARRAY", "float*"),

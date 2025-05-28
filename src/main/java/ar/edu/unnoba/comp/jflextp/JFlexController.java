@@ -65,40 +65,39 @@ public class JFlexController {
         parseCupText.setOnAction(this::handleParseCupText);
         symbolTableDownload.setOnAction(this::descargarArchivo);
         generateGraphButton.setOnAction(this::generateGraph);
-        // generateLLVMButton.setOnAction(this::generateLLVM);
-        // executeLLVMButton.setOnAction(this::executeLLVM);
+        generateLLVMButton.setOnAction(this::generateLLVM);
+        executeLLVMButton.setOnAction(this::executeLLVM);
     }
 
-    // private void executeLLVM(ActionEvent event) {
-    //     StringReader textToParse = new StringReader(inputJFlex.getText());
-    //     MiLexico lexico = new MiLexico(textToParse);
-    //     MiParser parser = new MiParser(lexico);
-    //     StringBuilder content = new StringBuilder();
-    //     String code = "";
+    private void executeLLVM(ActionEvent event) {
+        StringReader textToParse = new StringReader(inputJFlex.getText());
+        MiLexico lexico = new MiLexico(textToParse);
+        MiParser parser = new MiParser(lexico);
+        StringBuilder content = new StringBuilder();
+        String code = "";
 
 
-    //     try {
-    //         Program program = (Program) parser.parse().value;
-    //         SymbolTable symbolTable = parser.action_obj.symbolTable;
-    //         PrintWriter pw;
-    //         code = program.generarCodigo(symbolTable);
-    //         pw = new PrintWriter(new FileWriter("programa.ll"));
-    //         pw.println(code);
-    //         pw.close();
-    //         content.append("Execution output:\n");
-    //         content.append(ejecutar2("clang", "-c", "-o", "programa.o", "programa.ll") + "\n");
-    //         content.append(ejecutar2("clang", "-o", "programa.exe", "programa.o", "scanf.o") + "\n");
-    //         System.out.println("Ejecutable generado");
-    //         content.append(ejecutar2("./programa.exe"));
-    //         content.append("\n\n"+ code );
+        try {
+            Program program = (Program) parser.parse().value;
+            SymbolTable symbolTable = parser.action_obj.symbolTable;
+            PrintWriter pw;
+            code = program.generarCodigo(symbolTable);
+            pw = new PrintWriter(new FileWriter("programa.ll"));
+            pw.println(code);
+            pw.close();
+            content.append("Execution output:\n");
+            content.append(ejecutar2("clang", "-c", "-o", "programa.o", "programa.ll") + "\n");
+            content.append(ejecutar2("clang", "-o", "programa.exe", "programa.o", "scanf.o") + "\n");
+            System.out.println("Ejecutable generado");
+            content.append(ejecutar2("./programa.exe"));
+            content.append("\n\n"+ code );
+            resultJFlex.setText(content.toString());
+        } catch (Exception e) {
+            resultJFlex.setText(e.getMessage() +  "\n" + code);
+            e.printStackTrace();
+        }
 
-    //         resultJFlex.setText(content.toString());
-    //     } catch (Exception e) {
-    //         resultJFlex.setText(e.getMessage() +  "\n" + code);
-    //         e.printStackTrace();
-    //     }
-
-    // }
+    }   
 
 
     private void generateGraph(ActionEvent event) {
@@ -140,46 +139,46 @@ public class JFlexController {
         }
     }
 
-//     private void generateLLVM(ActionEvent event) {
-//         StringReader textToParse = new StringReader(inputJFlex.getText());
-//         MiLexico lexico = new MiLexico(textToParse);
-//         MiParser parser = new MiParser(lexico);
+    private void generateLLVM(ActionEvent event) {
+        StringReader textToParse = new StringReader(inputJFlex.getText());
+        MiLexico lexico = new MiLexico(textToParse);
+        MiParser parser = new MiParser(lexico);
 
-//         try {
-//             Program program = (Program) parser.parse().value;
-//             SymbolTable symbolTable = parser.action_obj.symbolTable;
-//             String llvm = program.generarCodigo(symbolTable);
-//             resultJFlex.setText(llvm);
-// //            PrintWriter grafico = new PrintWriter(new FileWriter("arbol.dot"));
-// //            grafico.println(graphic);
-// //            grafico.close();
-// //            String cmdDot = "ls; dot -Tpng arbol.dot -o arbol.png";
-// //            String outputPath = getClass().getResource("/").toExternalForm();
-// //            outputPath = "src/main/resources/";
-// //            outputPath = "target/classes/";
-// //            String[] command = {
-// //                    "dot", "-Tpng", "arbol.dot", "-o", outputPath + "graph.png"
-// //            };
-// //
-// //            Process process = new ProcessBuilder(command).start();
-// //            process.waitFor();
-// //            System.out.println("Imagen generada en " + outputPath + "graph.png");
-// //
-// //            String[] command2 = {
-// //                    "dot", "-Tsvg", "arbol.dot", "-o", outputPath + "graph.svg"
-// //            };
-// //
-// //            Process process2 = new ProcessBuilder(command2).start();
-// //            process2.waitFor();
-// //            System.out.println("Imagen generada en " + outputPath + "graph.svg");
-// //            sleep(2000);
-// //
-// //            showGraphInNewWindow();
-//         } catch (Exception e ) {
-//             resultJFlex.setText("Error: " + e.getMessage());
-//             e.printStackTrace();
-//         }
-//     }
+        try {
+            Program program = (Program) parser.parse().value;
+            SymbolTable symbolTable = parser.action_obj.symbolTable;
+            String llvm = program.generarCodigo(symbolTable);
+            resultJFlex.setText(llvm);
+            /*PrintWriter grafico = new PrintWriter(new FileWriter("arbol.dot"));
+            grafico.println(graphic);
+            grafico.close();
+            String cmdDot = "ls; dot -Tpng arbol.dot -o arbol.png";
+            String outputPath = getClass().getResource("/").toExternalForm();
+            outputPath = "src/main/resources/";
+            outputPath = "target/classes/";
+            String[] command = {
+                    "dot", "-Tpng", "arbol.dot", "-o", outputPath + "graph.png"
+            };
+ 
+            Process process = new ProcessBuilder(command).start();
+            process.waitFor();
+            System.out.println("Imagen generada en " + outputPath + "graph.png");
+ 
+            String[] command2 = {
+                     "dot", "-Tsvg", "arbol.dot", "-o", outputPath + "graph.svg"
+            };
+ 
+             Process process2 = new ProcessBuilder(command2).start();
+             process2.waitFor();
+             System.out.println("Imagen generada en " + outputPath + "graph.svg");
+             sleep(2000);
+ 
+             showGraphInNewWindow();*/
+         } catch (Exception e ) {
+             resultJFlex.setText("Error: " + e.getMessage());
+             e.printStackTrace();
+         }
+     }
 
     private void showGraphInNewWindow() {
         try {
@@ -293,5 +292,56 @@ public class JFlexController {
             }
         }
         System.out.println("Archivo descargado correctamente.");
+    }
+
+
+    private static int ejecutar(String... cmd) throws IOException, InterruptedException {
+        ProcessBuilder pb = new ProcessBuilder(cmd);
+
+        // Usar E/S del proceso actual
+        pb.inheritIO();
+
+        // Iniciar proceso
+        Process proc;
+        proc = pb.start();
+
+        // Esperar que finalice
+        proc.waitFor();
+
+        return proc.exitValue();
+    }
+
+
+    public static String ejecutar2(String... cmd) throws IOException, InterruptedException {
+        ProcessBuilder pb = new ProcessBuilder(cmd);
+
+        // Iniciar proceso
+        Process proc = pb.start();
+
+        StringBuilder output = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                output.append(line).append(System.lineSeparator());
+            }
+        }
+
+        StringBuilder errorOutput = new StringBuilder();
+        try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(proc.getErrorStream()))) {
+            String line;
+            while ((line = errorReader.readLine()) != null) {
+                errorOutput.append(line).append(System.lineSeparator());
+            }
+        }
+
+        // Esperar que finalice
+        int exitValue = proc.waitFor();
+
+        // Lanzar una excepción si el proceso no finaliza correctamente
+        if (exitValue != 0) {
+            throw new IOException("Error during process execution: " + errorOutput.toString());
+        }
+
+        return output.toString();
     }
 }

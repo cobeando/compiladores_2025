@@ -3,7 +3,7 @@ package ar.edu.unnoba.comp.jflextp.ast.statement;
 import java.util.ArrayList;
 
 import ar.edu.unnoba.comp.jflextp.ast.factor.DataType;
-import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
+import ar.edu.unnoba.comp.jflextp.llvm.CodeGeneratorHelper;
 
 public class DeclareStatement extends Statement{
     private ArrayList<Id> idAssignmentDeclarations;

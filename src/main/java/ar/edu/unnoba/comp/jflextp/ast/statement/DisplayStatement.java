@@ -2,7 +2,7 @@ package ar.edu.unnoba.comp.jflextp.ast.statement;
 
 import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
 import ar.edu.unnoba.comp.jflextp.ast.expression.StringConstant;
-import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
+import ar.edu.unnoba.comp.jflextp.llvm.CodeGeneratorHelper;
 
 public class DisplayStatement extends Statement {
     private Expression expression;

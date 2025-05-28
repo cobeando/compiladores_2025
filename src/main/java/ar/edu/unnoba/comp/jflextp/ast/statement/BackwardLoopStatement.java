@@ -2,7 +2,7 @@ package ar.edu.unnoba.comp.jflextp.ast.statement;
 
 import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
 import ar.edu.unnoba.comp.jflextp.ast.factor.Constant;
-import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
+import ar.edu.unnoba.comp.jflextp.llvm.CodeGeneratorHelper;
 
 public class BackwardLoopStatement extends LoopStatement{
     public BackwardLoopStatement(Expression condition, StatementList codeBlock) {

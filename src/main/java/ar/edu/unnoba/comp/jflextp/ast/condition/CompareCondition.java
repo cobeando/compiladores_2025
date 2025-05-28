@@ -1,8 +1,8 @@
 package ar.edu.unnoba.comp.jflextp.ast.condition;
 
 import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
-import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
 import ar.edu.unnoba.comp.jflextp.ast.factor.DataType;
+import ar.edu.unnoba.comp.jflextp.llvm.CodeGeneratorHelper;
 
 public class CompareCondition extends Condition{
     private Expression left;
