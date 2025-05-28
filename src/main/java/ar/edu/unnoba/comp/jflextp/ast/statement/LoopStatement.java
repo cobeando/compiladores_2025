@@ -65,6 +65,11 @@ public class LoopStatement extends Statement{
     }
 
     @Override
+    public String toString(){
+        return String.format("LOOP WHEN\n%s\nTHEN\n%s\nEND_LOOP", getCondition(), getStatementsList());
+    }
+
+    @Override
     public String generarCodigo(){
         StringBuilder resultado = new StringBuilder();
         this.setTag_Repeat(CodeGeneratorHelper.getNewTag());

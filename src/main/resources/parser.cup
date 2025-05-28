@@ -106,7 +106,7 @@ nonterminal Factor termino, factor;
 nonterminal BooleanCondition constante_bool; 
 nonterminal Expression expresion_logica;
 nonterminal Expression expresion_simple, expresion;
-nonterminal Input inputs;
+nonterminal Factor inputs;
 nonterminal String numero_literal, ID_list;
 nonterminal DataType data_type;
 nonterminal List<Expression> number_list;
@@ -295,12 +295,12 @@ asignacion ::=IDENTIFICADOR:id ABRE_CORCHETE expresion:e CIERRA_CORCHETE IGUAL e
 expresion_logica ::= expresion_logica:exp_log1 OR expresion_logica:exp_log2 {:
         addInfo("REGLA 11.1: expresion_logica -> expresion_logica OR expresion_logica");
         addInfo("REGLA 11.1: expresion_logica -> %s OR %s", exp_log1, exp_log2 );
-        RESULT = new LogicExpression(exp_log1, exp_log2, "OR");
+        RESULT = new LogicExpression(exp_log1, exp_log2, Operator.OR);
     :}
     | expresion_logica:exp_log1 AND expresion_logica:exp_log2 {:
         addInfo("REGLA 11.2: expresion_logica -> expresion_logica AND expresion_logica");
         addInfo("REGLA 11.2: expresion_logica -> %s AND %s", exp_log1, exp_log2 );
-        RESULT =  new LogicExpression(exp_log1, exp_log2, "AND");
+        RESULT =  new LogicExpression(exp_log1, exp_log2, Operator.AND);
     :}
     | NOT expresion_logica:exp_log {:
         addInfo("REGLA 11.3: expresion_logica -> NOT expresion_logica");
@@ -327,32 +327,32 @@ expresion_simple ::= comparacion:cond {:
 comparacion ::= expresion:e1 EQUIVALE expresion:e2 {:
     addInfo("REGLA 13.1: comparacion -> expresion EQUIVALE expresion");
     addInfo("REGLA 13.1: comparacion -> %s == %s", e1, e2);
-    RESULT = new CompareCondition(e1, "==", e2);
+    RESULT = new CompareCondition(e1, Operator.EQEQ, e2);
     :}
     | expresion:e1 DIFERENTE expresion:e2 {:
     addInfo("REGLA 13.2: comparacion -> expresion DIFERENTE expresion");
     addInfo("REGLA 13.2: comparacion -> %s != %s", e1, e2);
-    RESULT = new CompareCondition(e1, "!=", e2);
+    RESULT = new CompareCondition(e1, Operator.DIFFERENT, e2);
     :}
     | expresion:e1 MENOR_QUE expresion:e2 {:
     addInfo("REGLA 13.3: comparacion -> expresion MENOR_QUE expresion");
     addInfo("REGLA 13.3: comparacion -> %s < %s", e1, e2);
-    RESULT = new CompareCondition(e1, "<", e2);
+    RESULT = new CompareCondition(e1, Operator.LESS, e2);
     :}
     | expresion:e1 MAYOR_QUE expresion:e2 {:
     addInfo("REGLA 13.4: comparacion -> expresion MAYOR_QUE expresion");
     addInfo("REGLA 13.4: comparacion -> %s > %s", e1, e2);
-    RESULT = new CompareCondition(e1, ">", e2);
+    RESULT = new CompareCondition(e1, Operator.GREATER, e2);
     :}
     | expresion:e1 MENOR_IGUAL_QUE expresion:e2 {:
     addInfo("REGLA 13.5: comparacion -> expresion MENOR_IGUAL_QUE expresion");
     addInfo("REGLA 13.5: comparacion -> %s <= %s", e1, e2);
-    RESULT = new CompareCondition(e1, "<=", e2);
+    RESULT = new CompareCondition(e1, Operator.LEQ, e2);
     :}
     | expresion:e1 MAYOR_IGUAL_QUE expresion:e2 {:
     addInfo("REGLA 13.6: comparacion -> expresion MAYOR_IGUAL_QUE expresion");
     addInfo("REGLA 13.6: comparacion -> %s >= %s", e1, e2);
-    RESULT = new CompareCondition(e1, ">=", e2);
+    RESULT = new CompareCondition(e1, Operator.GEQ, e2);
 :};
 
 expresion ::= expresion:e MAS termino:t {:
@@ -461,7 +461,7 @@ sentenciaDisplay ::= DISPLAY ABRE_PARENTESIS expresion_logica:exp_log CIERRA_PAR
     RESULT = new DisplayStatement(exp_log);
     :}
     | DISPLAY ABRE_PARENTESIS STRING_LITERAL:str_lit CIERRA_PARENTESIS {:
-    registerSymbol("CTE_STR", str_lit , "STRING");
+    registerSymbol("CTE_STR", str_lit , DataType.STRING);
     addInfo("REGLA 18.2: sentenciaDisplay -> DISPLAY ABRE_PARENTESIS STRING_LITERAL CIERRA_PARENTESIS");
     addInfo("REGLA 18.2: sentenciaDisplay -> DISPLAY(%s)" ,str_lit);
     RESULT = new DisplayStatement(str_lit);

@@ -19,6 +19,11 @@ public class IdValue extends Factor{
         return id;
     }
 
+    @Override
+    public String toString(){
+        return id;
+    }
+
 
     @Override
     public String generarCodigo(){

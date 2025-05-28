@@ -52,6 +52,7 @@ public class AssignStatement extends Statement {
     @Override
     public String generarCodigo() {
         StringBuilder resultado = new StringBuilder();
+        /*
         resultado.append(expression.generarCodigo());
         DataType destinationType = CodeGeneratorHelper.getTypeForId(idAssignment.getEtiqueta());
         DataType expressionType = expression.getType();
@@ -80,7 +81,7 @@ public class AssignStatement extends Statement {
         String secondGlobalPointer = CodeGeneratorHelper.getSecondPointerForId(idAssignment.getEtiqueta());
 
         resultado.append(String.format("store %1$s %2$s, %1$s* %3$s\n", DataType.FLOAT.getLlvmSymbol(), expression.getIr_ref(), globalPointer));
-        resultado.append(String.format("store %1$s %2$s, %1$s* %3$s\n", DataType.FLOAT.getLlvmSymbol(), expression.getIr_ref_2(), secondGlobalPointer));
+        resultado.append(String.format("store %1$s %2$s, %1$s* %3$s\n", DataType.FLOAT.getLlvmSymbol(), expression.getIr_ref_2(), secondGlobalPointer)); */
         return resultado.toString();
     }
 }

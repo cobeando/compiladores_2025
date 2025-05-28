@@ -2,8 +2,8 @@ package ar.edu.unnoba.comp.jflextp.ast.factor;
 
 public class InputBool extends Factor{
     private DataType type;
-    public InputBool(DataType type) {
-        this.type = type;
+    public InputBool() {
+        this.type = DataType.BOOLEAN;
     }
 
     public String getEtiqueta() {

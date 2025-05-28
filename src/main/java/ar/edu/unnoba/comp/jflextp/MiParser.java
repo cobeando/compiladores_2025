@@ -1314,7 +1314,7 @@ class CUP$MiParser$actions {
 		
         addInfo("REGLA 11.1: expresion_logica -> expresion_logica OR expresion_logica");
         addInfo("REGLA 11.1: expresion_logica -> %s OR %s", exp_log1, exp_log2 );
-        RESULT = new LogicExpression(exp_log1, exp_log2, "OR");
+        RESULT = new LogicExpression(exp_log1, exp_log2, Operator.OR);
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("expresion_logica",11, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -1333,7 +1333,7 @@ class CUP$MiParser$actions {
 		
         addInfo("REGLA 11.2: expresion_logica -> expresion_logica AND expresion_logica");
         addInfo("REGLA 11.2: expresion_logica -> %s AND %s", exp_log1, exp_log2 );
-        RESULT =  new LogicExpression(exp_log1, exp_log2, "AND");
+        RESULT =  new LogicExpression(exp_log1, exp_log2, Operator.AND);
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("expresion_logica",11, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -1416,7 +1416,7 @@ class CUP$MiParser$actions {
 		
     addInfo("REGLA 13.1: comparacion -> expresion EQUIVALE expresion");
     addInfo("REGLA 13.1: comparacion -> %s == %s", e1, e2);
-    RESULT = new CompareCondition(e1, "==", e2);
+    RESULT = new CompareCondition(e1, Operator.EQEQ, e2);
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("comparacion",7, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -1435,7 +1435,7 @@ class CUP$MiParser$actions {
 		
     addInfo("REGLA 13.2: comparacion -> expresion DIFERENTE expresion");
     addInfo("REGLA 13.2: comparacion -> %s != %s", e1, e2);
-    RESULT = new CompareCondition(e1, "!=", e2);
+    RESULT = new CompareCondition(e1, Operator.DIFFERENT, e2);
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("comparacion",7, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -1454,7 +1454,7 @@ class CUP$MiParser$actions {
 		
     addInfo("REGLA 13.3: comparacion -> expresion MENOR_QUE expresion");
     addInfo("REGLA 13.3: comparacion -> %s < %s", e1, e2);
-    RESULT = new CompareCondition(e1, "<", e2);
+    RESULT = new CompareCondition(e1, Operator.LESS, e2);
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("comparacion",7, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -1473,7 +1473,7 @@ class CUP$MiParser$actions {
 		
     addInfo("REGLA 13.4: comparacion -> expresion MAYOR_QUE expresion");
     addInfo("REGLA 13.4: comparacion -> %s > %s", e1, e2);
-    RESULT = new CompareCondition(e1, ">", e2);
+    RESULT = new CompareCondition(e1, Operator.GREATER, e2);
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("comparacion",7, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -1492,7 +1492,7 @@ class CUP$MiParser$actions {
 		
     addInfo("REGLA 13.5: comparacion -> expresion MENOR_IGUAL_QUE expresion");
     addInfo("REGLA 13.5: comparacion -> %s <= %s", e1, e2);
-    RESULT = new CompareCondition(e1, "<=", e2);
+    RESULT = new CompareCondition(e1, Operator.LEQ, e2);
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("comparacion",7, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -1511,7 +1511,7 @@ class CUP$MiParser$actions {
 		
     addInfo("REGLA 13.6: comparacion -> expresion MAYOR_IGUAL_QUE expresion");
     addInfo("REGLA 13.6: comparacion -> %s >= %s", e1, e2);
-    RESULT = new CompareCondition(e1, ">=", e2);
+    RESULT = new CompareCondition(e1, Operator.GEQ, e2);
 
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("comparacion",7, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -1680,7 +1680,7 @@ class CUP$MiParser$actions {
               Factor RESULT =null;
 		int ipleft = ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()).left;
 		int ipright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()).right;
-		Input ip = (Input)((java_cup.runtime.Symbol) CUP$MiParser$stack.peek()).value;
+		Factor ip = (Factor)((java_cup.runtime.Symbol) CUP$MiParser$stack.peek()).value;
 		
     addInfo("REGLA 16.4: factor -> inputs");
     addInfo("REGLA 16.4: factor -> %s", ip);
@@ -1854,7 +1854,7 @@ class CUP$MiParser$actions {
 		int str_litright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-1)).right;
 		String str_lit = (String)((java_cup.runtime.Symbol) CUP$MiParser$stack.elementAt(CUP$MiParser$top-1)).value;
 		
-    registerSymbol("CTE_STR", str_lit , "STRING");
+    registerSymbol("CTE_STR", str_lit , DataType.STRING);
     addInfo("REGLA 18.2: sentenciaDisplay -> DISPLAY ABRE_PARENTESIS STRING_LITERAL CIERRA_PARENTESIS");
     addInfo("REGLA 18.2: sentenciaDisplay -> DISPLAY(%s)" ,str_lit);
     RESULT = new DisplayStatement(str_lit);
@@ -1866,7 +1866,7 @@ class CUP$MiParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 65: // inputs ::= INPUT_BOOL ABRE_PARENTESIS CIERRA_PARENTESIS 
             {
-              Input RESULT =null;
+              Factor RESULT =null;
 		int ibleft = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).left;
 		int ibright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).right;
 		Object ib = (Object)((java_cup.runtime.Symbol) CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).value;
@@ -1882,7 +1882,7 @@ class CUP$MiParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 66: // inputs ::= INPUT_INT ABRE_PARENTESIS CIERRA_PARENTESIS 
             {
-              Input RESULT =null;
+              Factor RESULT =null;
 		int iileft = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).left;
 		int iiright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).right;
 		Object ii = (Object)((java_cup.runtime.Symbol) CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).value;
@@ -1898,7 +1898,7 @@ class CUP$MiParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 67: // inputs ::= INPUT_FLOAT ABRE_PARENTESIS CIERRA_PARENTESIS 
             {
-              Input RESULT =null;
+              Factor RESULT =null;
 		int iflleft = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).left;
 		int iflright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).right;
 		Object ifl = (Object)((java_cup.runtime.Symbol) CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).value;
@@ -1914,7 +1914,7 @@ class CUP$MiParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 68: // inputs ::= INPUT_ARRAY ABRE_PARENTESIS CIERRA_PARENTESIS 
             {
-              Input RESULT =null;
+              Factor RESULT =null;
 		int ialeft = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).left;
 		int iaright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).right;
 		Object ia = (Object)((java_cup.runtime.Symbol) CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).value;

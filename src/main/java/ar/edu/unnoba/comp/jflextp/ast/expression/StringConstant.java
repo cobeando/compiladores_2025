@@ -29,6 +29,11 @@ public class StringConstant extends Expression {
             return "";
         }
 
+        @Override
+        public String toString(){
+            return this.value;
+        }
+
         public int countReplaces() {
             return (value.length() - value.replace("\\n", "").length() +
                     value.length() - value.replace("\\t", "").length() +
