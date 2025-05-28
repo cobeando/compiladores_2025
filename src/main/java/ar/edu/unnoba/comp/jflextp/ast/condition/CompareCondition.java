@@ -49,6 +49,11 @@ public class CompareCondition extends Condition{
     }
 
     @Override
+    public String toString(){
+        return String.format("%s %s %s", this.left, this.operator, this.right);
+    }
+
+    @Override
     public String generarCodigo() {
         StringBuilder resultado = new StringBuilder();
         resultado.append(this.left.generarCodigo());

@@ -17,4 +17,9 @@ public class MinusOperation extends BinaryOperation {
         public String get_llvm_op_code(boolean isFloat) {
                 return isFloat ? "fsub" : "sub";
         }
+
+        @Override
+        public String toString(){
+            return String.format("(%s - %s)", left, right);
+        }
 }

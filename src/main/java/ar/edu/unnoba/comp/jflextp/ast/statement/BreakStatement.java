@@ -19,6 +19,16 @@ public class BreakStatement extends Statement{
     }
 
     @Override
+    public String toString(){
+        return "BREAK";
+    }
+
+    @Override
+    public String graficar(String idPadre) {
+        return super.graficar(idPadre);
+    }
+
+    @Override
     public String generarCodigo(){
         if(getTag_Break() == null){
             throw new RuntimeException("Error: Break outside Repeat Block");

@@ -39,6 +39,11 @@ public class LogicExpression extends Expression{
                 + right.graficar(thisId);
     }
 
+    @Override
+    public String toString(){
+        return String.format("%s %s %s", this.left, this.operator, this.right);
+    }
+
      @Override
     public String generarCodigo(){
         StringBuilder resultado = new StringBuilder();        

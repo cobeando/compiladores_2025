@@ -711,7 +711,7 @@ class CUP$MiParser$actions {
         stringBuilder.append(formatted).append("\n");
     }
 
-    public void registerSymbol(String token, String nombre, String tipo) throws RuntimeException{
+    public void registerSymbol(String token, String nombre, DataType tipo) throws RuntimeException{
         symbolTable.addSymbol(nombre.trim(),tipo,token);
     }
 
@@ -858,7 +858,7 @@ class CUP$MiParser$actions {
               DeclareStatement RESULT =null;
 		int dtleft = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).left;
 		int dtright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).right;
-		String dt = (String)((java_cup.runtime.Symbol) CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).value;
+		DataType dt = (DataType)((java_cup.runtime.Symbol) CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)).value;
 		int idlistleft = ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()).left;
 		int idlistright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()).right;
 		String idlist = (String)((java_cup.runtime.Symbol) CUP$MiParser$stack.peek()).value;
@@ -877,10 +877,10 @@ class CUP$MiParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 8: // data_type ::= ENTERO 
             {
-              String RESULT =null;
+              DataType RESULT =null;
 		
         addInfo("REGLA 4.1: data_type -> ENTERO");
-        RESULT = "ENTERO";
+        RESULT = DataType.INTEGER;
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("data_type",17, ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -889,10 +889,10 @@ class CUP$MiParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 9: // data_type ::= FLOTANTE 
             {
-              String RESULT =null;
+              DataType RESULT =null;
 		
         addInfo("REGLA 4.2: data_type -> FLOAT");
-        RESULT = "FLOTANTE";
+        RESULT = DataType.FLOAT;
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("data_type",17, ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -901,10 +901,10 @@ class CUP$MiParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 10: // data_type ::= BOOLEAN 
             {
-              String RESULT =null;
+              DataType RESULT =null;
 		
         addInfo("REGLA 4.3: data_type -> BOOLEAN");
-        RESULT = "BOOLEAN";
+        RESULT = DataType.BOOLEAN;
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("data_type",17, ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -913,14 +913,14 @@ class CUP$MiParser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 11: // data_type ::= FLOAT_ARRAY ABRE_CORCHETE ENTERO_LITERAL CIERRA_CORCHETE 
             {
-              String RESULT =null;
+              DataType RESULT =null;
 		int int_litleft = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-1)).left;
 		int int_litright = ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-1)).right;
 		String int_lit = (String)((java_cup.runtime.Symbol) CUP$MiParser$stack.elementAt(CUP$MiParser$top-1)).value;
 		
         addInfo("REGLA 4.4: data_type ->  FLOAT_ARRAY ABRE_CORCHETE ENTERO_LITERAL CIERRA_CORCHETE");
         addInfo("REGLA 4.4: data_type -> FLOAT_ARRAY [ %s ]", int_lit);
-        RESULT = "FLOAT_ARRAY" + "[" + int_lit + "]";
+        RESULT = DataType.FLOAT_ARRAY;
 
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("data_type",17, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-3)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -1668,7 +1668,7 @@ class CUP$MiParser$actions {
     checkSymbol(id);
     addInfo("REGLA 16.3: factor -> IDENTIFICADOR");
     addInfo("REGLA 16.3: factor -> %s", id);
-    RESULT = new Constant(id);
+    RESULT = new IdValue(id);
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("factor",9, ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -1873,7 +1873,7 @@ class CUP$MiParser$actions {
 		
     addInfo("REGLA 19.1: inputs -> INPUT_BOOL ABRE_PARENTESIS CIERRA_PARENTESIS");
     addInfo("REGLA 19.1: inputs -> ( %s )", ib );
-    RESULT = new Input("BOOLEAN");
+    RESULT = new InputBool();
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("inputs",14, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -1889,7 +1889,7 @@ class CUP$MiParser$actions {
 		
     addInfo("REGLA 19.2: inputs -> INPUT_INT ABRE_PARENTESIS CIERRA_PARENTESIS");
     addInfo("REGLA 19.2: inputs -> ( %s )", ii );
-    RESULT = new Input("INT");
+    RESULT = new InputInt();
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("inputs",14, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -1905,7 +1905,7 @@ class CUP$MiParser$actions {
 		
     addInfo("REGLA 19.3: inputs -> INPUT_FLOAT ABRE_PARENTESIS CIERRA_PARENTESIS");
     addInfo("REGLA 19.3: inputs -> ( %s )", ifl );
-    RESULT = new Input("FLOAT");
+    RESULT = new InputFloat();
     
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("inputs",14, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }
@@ -1921,7 +1921,7 @@ class CUP$MiParser$actions {
 		
     addInfo("REGLA 19.4: inputs -> INPUT_ARRAY ABRE_PARENTESIS CIERRA_PARENTESIS");
     addInfo("REGLA 19.4: inputs -> ( %s )", ia );
-    RESULT = new Input("FLOAT_ARRAY");
+    RESULT = new InputFloatArray();
 
               CUP$MiParser$result = parser.getSymbolFactory().newSymbol("inputs",14, ((java_cup.runtime.Symbol)CUP$MiParser$stack.elementAt(CUP$MiParser$top-2)), ((java_cup.runtime.Symbol)CUP$MiParser$stack.peek()), RESULT);
             }

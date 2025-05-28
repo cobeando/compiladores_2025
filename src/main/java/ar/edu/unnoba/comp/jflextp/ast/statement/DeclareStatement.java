@@ -34,6 +34,11 @@ public class DeclareStatement extends Statement{
         return super.graficar(idPadre) + graficarDeclarations;
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s: %s", type, idAssignmentDeclarations);
+    }
+
     public String generarCodigo(){
         StringBuilder resultado = new StringBuilder();
         String llvmType = this.type.getLlvmSymbol();

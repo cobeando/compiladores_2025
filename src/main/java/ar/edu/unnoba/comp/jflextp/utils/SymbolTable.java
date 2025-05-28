@@ -8,7 +8,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import org.apache.tools.ant.types.DataType;
+import ar.edu.unnoba.comp.jflextp.ast.factor.DataType;
+import ar.edu.unnoba.comp.jflextp.ast.factor.ValorMasCercano;
+import ar.edu.unnoba.comp.jflextp.ast.factor.ValorMasCercano.*;
 
 public class SymbolTable {
     private Map<String, Symbol> symbolTable;
@@ -84,9 +86,9 @@ public class SymbolTable {
     }
 
     private void addVMCConstants() {
-        symbolTable.put(VMC_NO_ELEMENTS, new Symbol(VMC_NO_ELEMENTS, DataType.STRING, "VMC_helper"));
-        symbolTable.put(VMC_EMPTY_LIST, new Symbol(VMC_EMPTY_LIST, DataType.STRING, "VMC_helper"));
-        symbolTable.put(VMC_RESULT, new Symbol(VMC_RESULT, DataType.STRING, "VMC_helper"));
+        //symbolTable.put(VMC_NO_ELEMENTS, new Symbol(VMC_NO_ELEMENTS, DataType.STRING, "VMC_helper"));
+        symbolTable.put(ValorMasCercano.VMC_EMPTY_LIST, new Symbol(ValorMasCercano.VMC_EMPTY_LIST, DataType.STRING, "VMC_helper"));
+        symbolTable.put(ValorMasCercano.VMC_RESULT, new Symbol(ValorMasCercano.VMC_RESULT, DataType.STRING, "VMC_helper"));
     }
 
 

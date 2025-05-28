@@ -2,6 +2,7 @@ package ar.edu.unnoba.comp.jflextp.ast.statement;
 
 import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
 import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
+import ar.edu.unnoba.comp.jflextp.ast.factor.Constant;
 
 public class LoopStatement extends Statement{
     private StatementList codeBlock;
@@ -42,9 +43,25 @@ public class LoopStatement extends Statement{
         this.tagEnd = tagEnd;
     }
 
-    public String graficar(String idPadre){
-        String miId = this.getId();
-        return super.graficar(idPadre) + condition.graficar(miId) + codeBlock.graficar(miId);
+    @Override
+    public String graficar(String idPadre) {
+        final String miId = this.getId();
+        StringBuilder graphic = new StringBuilder(graficarEtiqueta(idPadre));
+
+        Constant whenConst = new Constant("WHEN");
+        graphic.append(condition.graficar(miId));
+        graphic.append(whenConst.graficar(miId));
+
+        Constant thenConst = new Constant("THEN");
+        graphic.append(thenConst.graficar(miId));
+        graphic.append(codeBlock.graficar(thenConst.getId()));
+        Constant endConst = new Constant("END_LOOP");
+        graphic.append(endConst.graficar(miId));
+        return graphic.toString();
+    }
+
+    protected String graficarEtiqueta(String idPadre) {
+        return super.graficar(idPadre);
     }
 
     @Override

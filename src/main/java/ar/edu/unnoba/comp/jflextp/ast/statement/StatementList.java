@@ -1,6 +1,7 @@
 package ar.edu.unnoba.comp.jflextp.ast.statement;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class StatementList extends Statement{
     private String tagBreak;
@@ -52,6 +53,13 @@ public class StatementList extends Statement{
             graphic.append(statement.graficar(idPadre));
         }
         return graphic.toString();
+    }
+
+    @Override
+    public String toString(){
+        return statements.stream()
+                     .map(Object::toString)
+                     .collect(Collectors.joining("\n\t"));
     }
 
     @Override

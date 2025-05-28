@@ -19,4 +19,9 @@ public class PlusOperation extends BinaryOperation {
     public String get_llvm_op_code(boolean isFloat) {
         return isFloat ? "fadd" : "add";
     }
+
+    @Override
+    public String toString(){
+        return String.format("(%s + %s)", left, right);
+    }
 }

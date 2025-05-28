@@ -36,6 +36,14 @@ public class BackwardConditionStatement extends ConditionStatement{
         return graphic.toString();
     }
 
+    @Override
+    public String toString(){
+        if (getElseStatements() == null){
+            return String.format("BACKWARD_CONDITION\n%s\nTHEN\n%s\nEND", getCondition(), getStatements());
+        } else {
+            return String.format("BACKWARD_CONDITION\n%s\nTHEN\n%s\nELSE_BACKWARD\n%s\nEND", getCondition(), getStatements(), getElseStatements());
+        }
+    }
     
     @Override
     public String generarCodigo(){

@@ -70,6 +70,15 @@ public class CodeGeneratorHelper {
         return ret.toString();
     }
 
+    public static String getNewTemp() {
+    return String.format("%%tmp.%d", ++nextID);
+}
+
+    public static String getNewLabel(String base) {
+        return String.format("%s.%d", base, ++nextID);
+    }
+
+    
     public static String generateStringConstants() {
         return symbolTable.generateStringConstants();
     }

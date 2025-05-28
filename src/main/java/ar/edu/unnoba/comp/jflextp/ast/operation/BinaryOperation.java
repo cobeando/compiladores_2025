@@ -65,6 +65,9 @@ public abstract class BinaryOperation extends Factor{
     }
 
     public abstract String get_llvm_op_code(boolean isFloat);
+
+    @Override
+    public abstract String toString();
     
     @Override
     public String generarCodigo(){

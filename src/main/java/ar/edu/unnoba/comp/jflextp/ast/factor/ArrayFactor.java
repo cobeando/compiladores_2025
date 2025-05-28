@@ -3,6 +3,7 @@ package ar.edu.unnoba.comp.jflextp.ast.factor;
 
 import java.util.Objects;
 import ar.edu.unnoba.comp.jflextp.ast.expression.Expression;
+import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
 
 public class ArrayFactor extends Factor{
     private final String arrayId;
@@ -54,5 +55,31 @@ public class ArrayFactor extends Factor{
         return Objects.hash(arrayId, index);
     }
 
-    
+    @Override
+    public String generarCodigo() {
+        StringBuilder codigo = new StringBuilder();
+        // Generar código para el índice
+        codigo.append(index.generarCodigo());
+        String idx = index.getIr_ref();
+
+        // Obtener punteros asociados al array
+        String arrayPtr = CodeGeneratorHelper.getPointerForId(arrayId);       // float*
+        String resultPtr = CodeGeneratorHelper.getNewPointer();               // float
+        String value = CodeGeneratorHelper.getNewPointer();                   // valor final
+
+        // Obtener el valor del elemento en la posición idx
+        codigo.append(String.format(
+            "%s = getelementptr float, float* %s, i32 %s\n",
+            resultPtr, arrayPtr, idx
+        ));
+        codigo.append(String.format(
+            "%s = load float, float* %s\n",
+            value, resultPtr
+        ));
+
+        // Guardamos el valor en ir_ref para otros nodos que lo necesiten
+        this.setIr_ref(value);
+
+        return codigo.toString();
+    }
 }

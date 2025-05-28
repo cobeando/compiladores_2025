@@ -49,7 +49,12 @@ public class ValorMasCercano extends Factor{
 
         sb.append(referencia.graficar(miId));
 
-        Nodo listaNodo = new Nodo("Lista") {};
+        Nodo listaNodo = new Nodo("Lista") {
+            @Override
+            public String generarCodigo() {
+                return ""; // No hace nada en código LLVM, solo es para graficar
+            }
+        };
         sb.append(listaNodo.graficar(miId));
 
         for (Expression expr : lista) {
@@ -69,24 +74,86 @@ public class ValorMasCercano extends Factor{
     }
 
     @Override
-    public String generarCodigo(){
-        StringBuilder resultado = new StringBuilder();
-        setType(DataType.FLOAT);
-        IdValue idValue = new IdValue(pivot);
-        this.setIr_ref(CodeGeneratorHelper.getNewPointer());
-        StatementList actionBlock = new StatementList( new AssignStatement("promrSum", new Constant("0", DataType.INTEGER)));
-        actionBlock.addStatement(new AssignStatement("promrCount", new Constant("0", DataType.INTEGER)));
+public String generarCodigo() {
+    StringBuilder codigo = new StringBuilder();
+    this.setType(DataType.FLOAT);
 
-        for (String number : this.getNumberList().split(",")) {
-            actionBlock.addStatement(getUnlessStatement(number, idValue));
-        }
-        actionBlock.addStatement(getResultStatement());
-        resultado.append(actionBlock.generarCodigo());
-        resultado.append((String.format("%1$s = load %2$s, %2$s* %3$s\n", this.getIr_ref(), DataType.FLOAT.getLlvmSymbol(), CodeGeneratorHelper.getPointerForId("promrSum"))));
-        return resultado.toString();
+    // Generar código para la referencia
+    codigo.append(referencia.generarCodigo());
+
+    String pivotPtr = CodeGeneratorHelper.getNewPointer();
+    codigo.append(String.format("%s = alloca float\n", pivotPtr));
+    codigo.append(String.format("store float %s, float* %s\n", referencia.getIr_ref(), pivotPtr));
+
+    // Inicializamos el resultado con el primer valor de la lista
+    Expression primerValor = lista.get(0);
+    codigo.append(primerValor.generarCodigo());
+
+    String resultPtr = CodeGeneratorHelper.getNewPointer();
+    this.setIr_ref(resultPtr);
+    codigo.append(String.format("%s = alloca float\n", resultPtr));
+    codigo.append(String.format("store float %s, float* %s\n", primerValor.getIr_ref(), resultPtr));
+
+    String pivotTemp = CodeGeneratorHelper.getNewTemp();
+    codigo.append(String.format("%s = load float, float* %s\n", pivotTemp, pivotPtr));
+
+    // Calcular la distancia inicial: abs(referencia - primerValor)
+    String diffInit = CodeGeneratorHelper.getNewTemp();
+    codigo.append(String.format("%s = fsub float %s, %s\n", diffInit, pivotTemp, primerValor.getIr_ref()));
+
+    String absInit = CodeGeneratorHelper.getNewTemp();
+    codigo.append(String.format("%s = call float @llvm.fabs.f32(float %s)\n", absInit, diffInit));
+
+    String closestDiffPtr = CodeGeneratorHelper.getNewPointer();
+    codigo.append(String.format("%s = alloca float\n", closestDiffPtr));
+    codigo.append(String.format("store float %s, float* %s\n", absInit, closestDiffPtr));
+
+    // Recorremos el resto de la lista (empezando desde el índice 1)
+    for (int i = 1; i < lista.size(); i++) {
+        Expression expr = lista.get(i);
+        codigo.append(expr.generarCodigo());
+
+        // Calculamos diferencia con el pivot
+        String diff = CodeGeneratorHelper.getNewTemp();
+        codigo.append(String.format("%s = fsub float %s, %s\n", diff, pivotTemp, expr.getIr_ref()));
+
+        String absDiff = CodeGeneratorHelper.getNewTemp();
+        codigo.append(String.format("%s = call float @llvm.fabs.f32(float %s)\n", absDiff, diff));
+
+        // Comparamos con el mejor hasta ahora
+        String prevDiff = CodeGeneratorHelper.getNewTemp();
+        codigo.append(String.format("%s = load float, float* %s\n", prevDiff, closestDiffPtr));
+
+        String cmp = CodeGeneratorHelper.getNewTemp();
+        codigo.append(String.format("%s = fcmp olt float %s, %s\n", cmp, absDiff, prevDiff));
+
+        // Generar etiquetas
+        String tagUpdate = CodeGeneratorHelper.getNewLabel("closer");
+        String tagSkip = CodeGeneratorHelper.getNewLabel("skip");
+        String tagEnd = CodeGeneratorHelper.getNewLabel("end");
+
+        // Branch según comparación
+        codigo.append(String.format("br i1 %s, label %%%s, label %%%s\n", cmp, tagUpdate, tagSkip));
+
+        // Si es más cercano: actualizar el valor
+        codigo.append(String.format("%s:\n", tagUpdate));
+        codigo.append(String.format("store float %s, float* %s\n", absDiff, closestDiffPtr));
+        codigo.append(String.format("store float %s, float* %s\n", expr.getIr_ref(), resultPtr));
+        codigo.append(String.format("br label %%%s\n", tagEnd));
+
+        // Salto si no se actualiza
+        codigo.append(String.format("%s:\n", tagSkip));
+        codigo.append(String.format("br label %%%s\n", tagEnd));
+
+        // Etiqueta de unión
+        codigo.append(String.format("%s:\n", tagEnd));
     }
 
-    public Object transformar(){
-        Program program = new Program();
+    // Cargar resultado final
+    String finalResult = CodeGeneratorHelper.getNewTemp();
+    codigo.append(String.format("%s = load float, float* %s\n", finalResult, resultPtr));
+    this.setIr_ref(finalResult);
+
+    return codigo.toString();
     }
 }

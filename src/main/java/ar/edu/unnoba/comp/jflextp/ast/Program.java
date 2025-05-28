@@ -19,6 +19,9 @@ public class Program extends Nodo {
         this.statement2 = statement2;
     }
 
+    public Program() {
+    }
+
     public Statement getStatement() {
         return statement;
     }
@@ -49,6 +52,7 @@ public class Program extends Nodo {
         resultado.append(";Programa: Prueba\n");
         resultado.append("source_filename = \"Prueba.txt\"\n");
         resultado.append("declare i32 @printf(i8*, ...)\n");
+        resultado.append("declare float @llvm.fabs.f32(float)\n");
         resultado.append("\n");
         resultado.append("@.integer = private constant [4 x i8] c\"%d\\0A\\00\"\n");
         resultado.append("@.float = private constant [4 x i8] c\"%f\\0A\\00\"\n");

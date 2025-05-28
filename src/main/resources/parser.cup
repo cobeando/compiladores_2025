@@ -47,7 +47,7 @@ action code {:
         stringBuilder.append(formatted).append("\n");
     }
 
-    public void registerSymbol(String token, String nombre, String tipo) throws RuntimeException{
+    public void registerSymbol(String token, String nombre, DataType tipo) throws RuntimeException{
         symbolTable.addSymbol(nombre.trim(),tipo,token);
     }
 
@@ -107,7 +107,8 @@ nonterminal BooleanCondition constante_bool;
 nonterminal Expression expresion_logica;
 nonterminal Expression expresion_simple, expresion;
 nonterminal Input inputs;
-nonterminal String numero_literal, ID_list, data_type;
+nonterminal String numero_literal, ID_list;
+nonterminal DataType data_type;
 nonterminal List<Expression> number_list;
 nonterminal Program program;
 nonterminal Statement program_line, sentencia_de_seleccion, asignacion, sentenciaDisplay, sentencia_de_iteracion, program_line_loop;
@@ -163,20 +164,20 @@ declaration ::= data_type:dt DOS_PUNTOS ID_list:idlist {:
 
 data_type ::= ENTERO {:
         addInfo("REGLA 4.1: data_type -> ENTERO");
-        RESULT = "ENTERO";
+        RESULT = DataType.INTEGER;
     :}
     | FLOTANTE {:
         addInfo("REGLA 4.2: data_type -> FLOAT");
-        RESULT = "FLOTANTE";
+        RESULT = DataType.FLOAT;
     :}
     | BOOLEAN {:
         addInfo("REGLA 4.3: data_type -> BOOLEAN");
-        RESULT = "BOOLEAN";
+        RESULT = DataType.BOOLEAN;
     :}
     | FLOAT_ARRAY ABRE_CORCHETE ENTERO_LITERAL:int_lit CIERRA_CORCHETE {:
         addInfo("REGLA 4.4: data_type ->  FLOAT_ARRAY ABRE_CORCHETE ENTERO_LITERAL CIERRA_CORCHETE");
         addInfo("REGLA 4.4: data_type -> FLOAT_ARRAY [ %s ]", int_lit);
-        RESULT = "FLOAT_ARRAY" + "[" + int_lit + "]";
+        RESULT = DataType.FLOAT_ARRAY;
 :};
 
 ID_list ::= IDENTIFICADOR:id COMA ID_list:list {:
@@ -469,22 +470,22 @@ sentenciaDisplay ::= DISPLAY ABRE_PARENTESIS expresion_logica:exp_log CIERRA_PAR
 inputs ::= INPUT_BOOL:ib ABRE_PARENTESIS CIERRA_PARENTESIS {:
     addInfo("REGLA 19.1: inputs -> INPUT_BOOL ABRE_PARENTESIS CIERRA_PARENTESIS");
     addInfo("REGLA 19.1: inputs -> ( %s )", ib );
-    RESULT = new Input("BOOLEAN");
+    RESULT = new InputBool();
     :}
     |INPUT_INT:ii ABRE_PARENTESIS CIERRA_PARENTESIS {:
     addInfo("REGLA 19.2: inputs -> INPUT_INT ABRE_PARENTESIS CIERRA_PARENTESIS");
     addInfo("REGLA 19.2: inputs -> ( %s )", ii );
-    RESULT = new Input("INT");
+    RESULT = new InputInt();
     :}
     |INPUT_FLOAT:ifl ABRE_PARENTESIS CIERRA_PARENTESIS {:
     addInfo("REGLA 19.3: inputs -> INPUT_FLOAT ABRE_PARENTESIS CIERRA_PARENTESIS");
     addInfo("REGLA 19.3: inputs -> ( %s )", ifl );
-    RESULT = new Input("FLOAT");
+    RESULT = new InputFloat();
     :}
     |INPUT_ARRAY:ia ABRE_PARENTESIS CIERRA_PARENTESIS {:
     addInfo("REGLA 19.4: inputs -> INPUT_ARRAY ABRE_PARENTESIS CIERRA_PARENTESIS");
     addInfo("REGLA 19.4: inputs -> ( %s )", ia );
-    RESULT = new Input("FLOAT_ARRAY");
+    RESULT = new InputFloatArray();
 :};
 
 sentencia_de_seleccion ::= CONDITION expresion_logica:exp_log THEN program_lines:p END {:

@@ -31,6 +31,15 @@ public class DisplayStatement extends Statement {
     }
 
     @Override
+    public String toString(){
+        if (expression == null){
+            return String.format("DISPLAY(%s)", displayString);
+        } else {
+            return String.format("DISPLAY(%s)", expression);
+        }
+    }
+
+    @Override
     public String generarCodigo() {
         if (expression != null) {
             StringBuilder resultado = new StringBuilder();

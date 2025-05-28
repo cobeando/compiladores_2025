@@ -7,11 +7,18 @@ import ar.edu.unnoba.comp.jflextp.ast.llvm.CodeGeneratorHelper;
 
 public class AssignStatement extends Statement {
     private Id idAssignment;
-    private Expression expression;
+    private Expression expression1;
+    private Expression expression2;
 
     public AssignStatement(String id, Expression expression){
         this.idAssignment = new Id(id);
-        this.expression = expression;
+        this.expression1 = expression;
+    }
+
+    public AssignStatement(String id, Expression expression1, Expression expression2){
+        this.expression1 = expression1;
+        this.expression2 = expression2;
+        this.idAssignment = new Id(id);
     }
 
     public String getEtiqueta(){
@@ -20,11 +27,27 @@ public class AssignStatement extends Statement {
 
     public String graficar(String idPadre){
         String thisId = this.getId();
+
+
+        if (expression2 == null){
+             return super.graficar(idPadre)
+                + idAssignment.graficar(thisId)
+                + expression1.graficar(thisId);
+        }
         return super.graficar(idPadre)
                 + idAssignment.graficar(thisId)
-                + expression.graficar(thisId);
+                + expression1.graficar(thisId)
+                + expression2.graficar(thisId);
     }
 
+    @Override
+    public String toString(){
+        if (expression2 == null){
+            return String.format("%s = %s", idAssignment, expression1);
+        } else {
+            return String.format("%s[%s] = %s", idAssignment, expression1, expression2);
+        }
+    }
 
     @Override
     public String generarCodigo() {

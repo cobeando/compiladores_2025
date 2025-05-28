@@ -64,6 +64,14 @@ public class ConditionStatement extends Statement {
         this.tagEnd = tagEnd;
     }
 
+    @Override
+    public String toString(){
+        if (getElseStatements() == null){
+            return String.format("CONDITION\n%s\nTHEN\n%s\nEND", getCondition(), getStatements());
+        } else {
+            return String.format("CONDITION\n%s\nTHEN\n%s\nELSE\n%s\nEND", getCondition(), getStatements(), getElseStatements());
+        }
+    }
 
     public String graficar(String idPadre) {
         final String miId = this.getId();
