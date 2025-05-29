@@ -24,11 +24,15 @@ git clone <URL-del-repositorio>
 ```bash
 mvn install 
 ```
-3. El ejecutable esta en target. Ejecuta la interfaz grafica en tu IDE o a traves de la consola:
+3. Ejecuta la interfaz grafica en tu IDE o a traves de la consola:
 
 ```bash
 mvn javafx:run
 ```
+
+Alternativas:
+    -Ejecutar el ejecutable que se encuentra en la carpeta target.
+    -Ejecutar directamente Main.java
 
 ## Desarrollo
 
