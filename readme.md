@@ -45,3 +45,5 @@ mvn clean
 mvn install 
 ```
 
+- Hay disponible un archivo de pruebas.txt para testear el proyecto.
+

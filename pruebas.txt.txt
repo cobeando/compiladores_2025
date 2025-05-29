@@ -1,0 +1,90 @@
+DECLARE.SECTION
+INT : a, b , c, v, resultado_all , resultado_any
+FLOAT : x, y
+BOOLEAN : flag, otroFlag
+FLOAT_ARRAY[5]: arr, datos
+ENDDECLARE.SECTION
+
+PROGRAM.SECTION
+
+
+a = 3
+b = a + 5 * (2 - 1)
+c = arr[4] + arr[1]
+x = 10.5
+y = x / 2 - 0.5
+flag = TRUE
+otroFlag = FALSE
+
+
+a = INPUT_INT()
+x = INPUT_FLOAT()
+flag = INPUT_BOOL()
+arr = INPUT_ARRAY()
+
+
+DISPLAY("Comienzo del programa\n\tIndentado y")
+DISPLAY(a)
+DISPLAY(x + y)
+
+
+v = valor_mas_cercano(10, [1, 2, 3, 4, 5])
+resultado_all = all(3, >=, arr)
+resultado_any = any(7, <, datos)
+
+
+CONDITION a > 0 THEN
+DISPLAY("a es positivo")
+CONDITION b == 5 THEN
+DISPLAY("b es cinco")
+ELSE
+DISPLAY("b no es cinco")
+END
+ELSE
+DISPLAY("a no es positivo")
+END
+
+
+BACKWARD_CONDITION x <= 10.0 THEN
+DISPLAY("x pequeño")
+ELSE_BACKWARD
+DISPLAY("x grande")
+END
+
+
+LOOP WHEN a < 20 THEN
+a = a + 1
+DISPLAY(a)
+CONDITION a == 10 THEN
+b = 35/6
+ELSE
+x =0.3
+END
+END_LOOP
+
+
+BACKWARD_LOOP WHEN flag OR otroFlag THEN
+DISPLAY("Backward loop activo")
+b = b - 1
+CONTINUE
+END_LOOP
+
+
+flag = NOT ((a >= 5) AND (b != 2 OR x < y)) OR FALSE
+
+
+arr = [1.1,2.2,-3.3,0.,5.5]
+datos = [9.0,8.5,7.0,6.1,5.3]
+
+
+arr[2 + 1] = a
+
+
+DISPLAY(a > 1 AND NOT (flag OR otroFlag))
+
+
+c = INPUT_INT() + 5
+x = x + INPUT_FLOAT()
+flag = flag AND INPUT_BOOL()
+
+ENDPROGRAM.SECTION
