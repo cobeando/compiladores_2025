@@ -133,10 +133,19 @@
         <version>11b-20160615-3</version>
         <executions>
           <execution>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-          </execution>
+          <phase>package</phase>
+          <goals>
+            <goal>generate</goal>
+          </goals>
+          <configuration>
+            <finalName>MiEjecutable</finalName> <!-- Nombre del jar final -->
+            <transformers>
+              <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                <mainClass>ar.edu.unnoba.comp.jflextp</mainClass> <!-- Cambialo por tu clase principal -->
+              </transformer>
+            </transformers>
+          </configuration>
+        </execution>
         </executions>
         <configuration>
           <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
@@ -247,6 +256,27 @@
               <noManPages>true</noManPages>
               <stripDebug>true</stripDebug>
               <noHeaderFiles>true</noHeaderFiles>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.4</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <finalName>Compilador</finalName> <!-- Este nombre se usará -->
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>ar.edu.unnoba.comp.jflextp.Main</mainClass> <!-- Asegurate de que sea tu clase con método main -->
+                </transformer>
+              </transformers>
             </configuration>
           </execution>
         </executions>
